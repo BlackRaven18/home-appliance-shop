@@ -1,0 +1,43 @@
+package com.homeappliancesshop.service;
+
+import com.homeappliancesshop.model.Person;
+import com.homeappliancesshop.repository.PersonRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.UUID;
+
+@Service
+public class PersonService {
+
+    @Autowired
+    private PersonRepository repository;
+
+    public List<Person> findAllPersons(){
+        return repository.findAll();
+    }
+
+    public Person getPersonById(String personId){
+        return repository.findById(personId).get();
+    }
+
+    public Person addPerson(Person person){
+        person.setPersonId(UUID.randomUUID().toString().split("-")[0]);
+        return repository.save(person);
+    }
+
+    public Person updatePerson(Person personRequest){
+        Person existingPerson = repository.findById(personRequest.getPersonId()).get();
+        existingPerson.setName(personRequest.getName());
+        existingPerson.setSurname(personRequest.getSurname());
+        existingPerson.setEmail(personRequest.getEmail());
+        existingPerson.setPhoneNumber(personRequest.getPhoneNumber());
+        return repository.save(existingPerson);
+    }
+
+    public String deletePerson(String personId){
+        repository.deleteById(personId);
+        return personId + "person deleted from database";
+    }
+}

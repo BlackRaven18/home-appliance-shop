@@ -1,5 +1,6 @@
 package com.homeappliancesshop.service;
 
+import com.homeappliancesshop.model.Address;
 import com.homeappliancesshop.model.Person;
 import com.homeappliancesshop.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,9 @@ public class PersonService {
     @Autowired
     private PersonRepository repository;
 
+    @Autowired
+    private AddressService addressService;
+
     public List<Person> findAllPersons(){
         return repository.findAll();
     }
@@ -23,7 +27,8 @@ public class PersonService {
     }
 
     public Person addPerson(Person person){
-        person.setPersonId(UUID.randomUUID().toString().split("-")[0]);
+        //person.setPersonId(UUID.randomUUID().toString().split("-")[0]);
+        addressService.addAddress(person.getAddress());
         return repository.save(person);
     }
 

@@ -27,7 +27,6 @@ public class PersonService {
     }
 
     public Person addPerson(Person person){
-        //person.setPersonId(UUID.randomUUID().toString().split("-")[0]);
         addressService.addAddress(person.getAddress());
         return repository.save(person);
     }

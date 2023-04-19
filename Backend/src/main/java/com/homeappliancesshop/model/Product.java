@@ -23,5 +23,5 @@ public class Product {
     private double price;
 
     @DocumentReference
-    private String categoryId;
+    private Category category;
 }

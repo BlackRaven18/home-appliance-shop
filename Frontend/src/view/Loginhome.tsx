@@ -16,7 +16,7 @@ import { Grid, List, ListItem, ListItemText } from '@mui/material';
 const categories = [
   {
     name: 'Komputery i tablety',
-    subcategories: ['Laptopy', 'Monitory', 'Podzespoły komputerowe'],
+    subcategories: ['Laptopy', 'Komputery', 'Podzespoły komputerowe'],
   },
   {
     name: 'Kategoria 2',

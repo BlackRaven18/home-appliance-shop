@@ -21,6 +21,7 @@ public class Product {
     private String color;
     private String specification;
     private double price;
+    private String imageURL;
 
     @DocumentReference
     private Category category;

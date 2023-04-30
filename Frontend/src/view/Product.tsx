@@ -4,6 +4,9 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import axios from 'axios';
 import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid'; 
+
+
 
 interface Product {
     productId: string;
@@ -12,6 +15,7 @@ interface Product {
     color: string;
     specification: string;
     price: number;
+    imageURL: string;
     category: {
         categoryId: string;
         name: string;
@@ -87,25 +91,42 @@ function ProductContent({ category }: ProductContentProps) {
                     sx={{ mb: 2, width: '50%' }}
                 />
             </Box>
-                {filteredProducts.length > 0 ? (
-                    <Box sx={{ border: '1px solid grey', padding: '17px', borderRadius: '8px' }}>
-                        <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+
+            {filteredProducts.length > 0 ? (
+                <Box sx={{ border: '1px solid grey', padding: '17px', borderRadius: '8px' }}>
+                    <Grid container spacing = '2'>
+                        <Grid item  xs = {8}>
+                            <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+                                {filteredProducts.map((product) => (
+                                    <li key={product.productId}>
+                                        <Typography>Nazwa: {product.name ?? 'unknown'}</Typography>
+                                        <Typography>Marka: {product.brand ?? 'unknown'}</Typography>
+                                        <Typography>Kolor: {product.color ?? 'unknown'}</Typography>
+                                        <Typography>Specyfikacja: {product.specification ?? 'unknown'}</Typography>
+                                        <Typography>Cena: {product.price ?? 'unknown'}</Typography>
+                                    </li>
+                                ))}
+                            </ul>
+                        </Grid>
+                        <Grid item xs = {4}>
                             {filteredProducts.map((product) => (
-                                <li key={product.productId}>
-                                    <Typography>Nazwa: {product.name ?? 'unknown'}</Typography>
-                                    <Typography>Marka: {product.brand ?? 'unknown'}</Typography>
-                                    <Typography>Kolor: {product.color ?? 'unknown'}</Typography>
-                                    <Typography>Specyfikacja: {product.specification ?? 'unknown'}</Typography>
-                                    <Typography>Cena: {product.price ?? 'unknown'}</Typography>
-                                </li>
+                                <Box 
+                                    component="img"
+                                    sx={{
+                                        height: 200,
+                                        width: 300,
+                                        maxHeight: { xs: 233, md: 167 },
+                                        maxWidth: { xs: 350, md: 250 },
+                                    }}
+                                    src={product.imageURL}
+                                />
                             ))}
-                        </ul>
-                    </Box>
-                ) : (
-                    <p></p>
-                )}
+                        </Grid>
 
-
+                    </Grid>
+                </Box>
+            
+            ) : ( <p></p>)}
         </>
     );
 }

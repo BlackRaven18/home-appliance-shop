@@ -32,7 +32,6 @@ function Home() {
   const [activeCategory, setActiveCategory] = useState('');
   const handleSearch = () => {
     // przekieruj użytkownika na stronę z wynikami wyszukiwania
-    console.log(`Szukaj: ${searchQuery}`);
   };
 
     return (

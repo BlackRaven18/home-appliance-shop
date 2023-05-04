@@ -4,9 +4,10 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import axios from 'axios';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid'; 
+import ProductListElement from './ProductListElement';
 
 
+let url = 'http://localhost:8080';
 
 interface Product {
     productId: string;
@@ -22,7 +23,6 @@ interface Product {
     };
 }
 
-let url = 'http://localhost:8080';
 
 function Products() {
     const location = useLocation();
@@ -93,39 +93,10 @@ function ProductContent({ category }: ProductContentProps) {
             </Box>
 
             {filteredProducts.length > 0 ? (
-                <Box sx={{ border: '1px solid grey', padding: '17px', borderRadius: '8px' }}>
-                    <Grid container spacing = '2'>
-                        <Grid item  xs = {8}>
-                            <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
-                                {filteredProducts.map((product) => (
-                                    <li key={product.productId}>
-                                        <Typography>Nazwa: {product.name ?? 'unknown'}</Typography>
-                                        <Typography>Marka: {product.brand ?? 'unknown'}</Typography>
-                                        <Typography>Kolor: {product.color ?? 'unknown'}</Typography>
-                                        <Typography>Specyfikacja: {product.specification ?? 'unknown'}</Typography>
-                                        <Typography>Cena: {product.price ?? 'unknown'}</Typography>
-                                    </li>
-                                ))}
-                            </ul>
-                        </Grid>
-                        <Grid item xs = {4}>
-                            {filteredProducts.map((product) => (
-                                <Box 
-                                    component="img"
-                                    sx={{
-                                        height: 200,
-                                        width: 300,
-                                        maxHeight: { xs: 233, md: 167 },
-                                        maxWidth: { xs: 350, md: 250 },
-                                    }}
-                                    src={product.imageURL}
-                                />
-                            ))}
-                        </Grid>
+                filteredProducts.map((product) => (
+                    <ProductListElement {...product}/>
+                ))
 
-                    </Grid>
-                </Box>
-            
             ) : ( <p></p>)}
         </>
     );

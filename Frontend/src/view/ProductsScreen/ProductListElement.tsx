@@ -1,19 +1,7 @@
 import { Box, Grid, Typography } from "@mui/material";
 import { StyleSheet } from 'react-native'
+import Product from "./ProductInterface";
 
-interface Product {
-    productId: string;
-    name: string;
-    brand: string;
-    color: string;
-    specification: string;
-    price: number;
-    imageURL: string;
-    category: {
-        categoryId: string;
-        name: string;
-    };
-}
 
 const ProductListElement = (product: Product) => {
     return(

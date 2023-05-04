@@ -6,7 +6,7 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Topbar from './../topbar/Topbar';
-import Product from './../view/Product';
+import Product from './../view/ProductsScreen/Product';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { Grid, List, ListItem, ListItemText } from '@mui/material';
 

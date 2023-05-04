@@ -5,7 +5,7 @@ import Home from './../view/Home';
 import Loginhome from './../view/Loginhome';
 import Adminlogin from './../view/Adminlogin';
 import Adminhome from './../view/Adminhome';
-import Product from './../view/Product';
+import Product from './../view/ProductsScreen/Product';
 import Koszyk from './../view/Koszyk';
 import Historia from './../view/Historia';
 import Profil from './../view/Profil';

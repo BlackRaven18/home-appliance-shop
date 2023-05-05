@@ -1,6 +1,7 @@
 import { useState, useEffect} from 'react'
 import { Box, TextField } from '@mui/material';
 import  axios  from 'axios';
+import {StyleSheet} from 'react-native'
 import ProductListElement from './ProductListElement';
 import Product from './ProductInterface';
 
@@ -39,7 +40,7 @@ const ProductList = (category: Category) => {
 
     return (
         <>
-            <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
+            <Box sx={styles.boxStyle}>
                 <TextField
                     label="Szukaj"
                     variant="outlined"
@@ -51,12 +52,21 @@ const ProductList = (category: Category) => {
 
             {filteredProducts.length > 0 ? (
                 filteredProducts.map((product) => (
-                    <ProductListElement {...product}/>
+                    <ProductListElement {...product} key={product.productId}/>
                 ))
 
             ) : ( <p></p>)}
         </>
     );
 }
+
+const styles = StyleSheet.create({
+    boxStyle: {
+        display: 'flex',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        alignItems: 'center'
+    },
+})
 
 export default ProductList

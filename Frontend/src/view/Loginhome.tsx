@@ -1,14 +1,10 @@
-import * as React from 'react';
-import Button from '@mui/material/Button';
-import LinkMaterial from '@mui/material/Link';
-import { Link } from "react-router-dom";
+import { Grid, List, ListItem, ListItemText } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import * as React from 'react';
+import { Link } from "react-router-dom";
 import Topbar from './../topbar/Topbar';
 import Product from './../view/ProductsScreen/Product';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
-import { Grid, List, ListItem, ListItemText } from '@mui/material';
 
 const categories = [
   {

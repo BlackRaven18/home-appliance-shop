@@ -4,7 +4,8 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import axios from 'axios';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid'; 
+import Grid from '@mui/material/Grid';
+import { Button } from '@mui/material';
 
 
 
@@ -93,30 +94,45 @@ function ProductContent({ category }: ProductContentProps) {
             </Box>
 
             {filteredProducts.length > 0 ? (
-                <Box sx={{ border: '1px solid grey', padding: '17px', borderRadius: '8px' }}>
-                    <Grid container spacing = '2'>
-                        <Grid item  xs = {8}>
-                            <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
-                                {filteredProducts.map((product) => (
-                                    <li key={product.productId}>
-                                        <Typography>Nazwa: {product.name ?? 'unknown'}</Typography>
-                                        <Typography>Marka: {product.brand ?? 'unknown'}</Typography>
-                                        <Typography>Kolor: {product.color ?? 'unknown'}</Typography>
-                                        <Typography>Specyfikacja: {product.specification ?? 'unknown'}</Typography>
-                                        <Typography>Cena: {product.price ?? 'unknown'}</Typography>
-                                    </li>
-                                ))}
-                            </ul>
-                        </Grid>
-                        <Grid item xs = {4}>
+                <Box sx={{ border: '1px solid grey', padding: '17px', borderRadius: '8px', width: '90%' }}>
+                <Grid container spacing = '2'>
+                    <Grid item xs={9}>
+                        <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
                             {filteredProducts.map((product) => (
-                                <Box 
+                                <li key={product.productId}>
+                                    <Typography>Nazwa: {product.name ?? 'unknown'}</Typography>
+                                    <Typography>Marka: {product.brand ?? 'unknown'}</Typography>
+                                    <Typography>Kolor: {product.color ?? 'unknown'}</Typography>
+                                    <Typography>Specyfikacja: {product.specification ?? 'unknown'}</Typography>
+                                    <Typography>Cena: {product.price ?? 'unknown'}</Typography>
+                                    <Button variant="contained" color="primary">
+                                        Dodaj do koszyka
+                                    </Button>
+                                    <Grid item xs={12}>
+                                        <Box sx={{ borderBottom: '1px solid grey', marginTop: 2 }} />
+                                    </Grid>
+                                </li>
+                            ))}
+                        </ul>
+                    </Grid>
+                        <Grid item xs={1} sx={{ textAlign: 'center' }}>
+                            {filteredProducts.map((product) => (
+                                <Box
                                     component="img"
                                     sx={{
-                                        height: 200,
-                                        width: 300,
-                                        maxHeight: { xs: 233, md: 167 },
+                                        height: 173,
+                                        width: 250,
+
                                         maxWidth: { xs: 350, md: 250 },
+                                        padding: 0,
+                                        border: '1px solid grey',
+                                        borderRadius: 0,
+                                        display: 'block',
+                                        margin: 'auto',
+                                        boxSizing: 'border-box',
+                                        borderTop: '0',
+                                        borderLeft: '0',
+                                        borderRight: '0'
                                     }}
                                     src={product.imageURL}
                                 />
@@ -125,8 +141,10 @@ function ProductContent({ category }: ProductContentProps) {
 
                     </Grid>
                 </Box>
-            
-            ) : ( <p></p>)}
+            ) : (
+                <p></p>
+            )}
+
         </>
     );
 }

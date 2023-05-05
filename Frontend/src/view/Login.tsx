@@ -13,6 +13,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { GoogleLoginButton, FacebookLoginButton } from "react-social-login-buttons";
+import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
+import { ReactFacebookLoginInfo, ReactFacebookFailureResponse } from 'react-facebook-login';
 
 
 const theme = createTheme();
@@ -31,6 +33,14 @@ export default function SignInSide() {
 
     };
 
+    const responseFacebook = (response: ReactFacebookLoginInfo | ReactFacebookFailureResponse) => {
+        if ('accessToken' in response) {
+            console.log(response.accessToken);
+            navigate('/loginhome');
+        } else {
+            console.log('Nie udało się zalogować przez Facebooka');
+        }
+    }
 
     return (
         <ThemeProvider theme={theme}>
@@ -91,7 +101,15 @@ export default function SignInSide() {
                                 control={<Checkbox value="remember" color="primary" />}
                                 label="Pokaż hasło"
                             />
-                            <FacebookLoginButton/>
+                            <FacebookLogin
+                                appId="3179163212375828"
+                                autoLoad={false}
+                                fields="name,email,picture"
+                                callback={responseFacebook}
+                                render={(renderProps: { onClick: () => void; }) => (
+                                    <FacebookLoginButton onClick={renderProps.onClick} />
+                                )}
+                            />
                             <Button
                                 type="submit"
                                 fullWidth

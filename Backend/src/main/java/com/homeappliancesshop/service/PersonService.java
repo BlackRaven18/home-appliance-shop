@@ -25,6 +25,7 @@ public class PersonService {
     public Person getPersonById(String personId){
         return repository.findById(personId).get();
     }
+    public Person getPersonByEmail(String email) { return repository.findByEmail(email); }
 
     public Person addPerson(Person person){
         addressService.addAddress(person.getAddress());
@@ -33,9 +34,10 @@ public class PersonService {
 
     public Person updatePerson(Person personRequest){
         Person existingPerson = repository.findById(personRequest.getPersonId()).get();
+        existingPerson.setEmail(personRequest.getEmail());
+        existingPerson.setPassword(personRequest.getPassword());
         existingPerson.setName(personRequest.getName());
         existingPerson.setSurname(personRequest.getSurname());
-        existingPerson.setEmail(personRequest.getEmail());
         existingPerson.setPhoneNumber(personRequest.getPhoneNumber());
         return repository.save(existingPerson);
     }

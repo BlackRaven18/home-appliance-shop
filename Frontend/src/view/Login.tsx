@@ -21,16 +21,39 @@ const theme = createTheme();
 
 export default function SignInSide() {
     const navigate = useNavigate();
+
+    const handleLogin = async (email: string, password: string) => {
+        try {
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Zalogowano:', data);
+                navigate('/loginhome');
+            } else {
+                console.log('Błędne dane logowania.');
+            }
+        } catch (error) {
+            console.error('Wystąpił błąd podczas logowania:', error);
+        }
+    };
+
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
+        const email = data.get('email') as string;
+        const password = data.get('password') as string;
         console.log({
-            email: data.get('email'),
-            password: data.get('password'),
+            email: email,
+            password: password,
         });
-
-        navigate('/loginhome');
-
+        handleLogin(email, password);
     };
 
     const responseFacebook = (response: ReactFacebookLoginInfo | ReactFacebookFailureResponse) => {
@@ -116,7 +139,7 @@ export default function SignInSide() {
                                 variant="contained"
                                 sx={{ mt: 3, mb: 2 }}
                             >
-                                Zaloguj
+                                Zaloguj się
                             </Button>
                             <Grid container>
                                 <Grid item xs>

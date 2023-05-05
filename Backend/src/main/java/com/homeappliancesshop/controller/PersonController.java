@@ -41,7 +41,8 @@ public class PersonController {
         return service.deletePerson(personId);
     }
 
-
-
-
+    @GetMapping("/email/{email}")
+    public Person getPersonByEmail(@PathVariable String email) {
+        return service.getPersonByEmail(email);
+    }
 }

@@ -18,9 +18,10 @@ public class Person {
 
     @Id
     private String personId;
+    private String email;
+    private String password;
     private String name;
     private String surname;
-    private String email;
     private String phoneNumber;
     @DocumentReference
     private Address address;

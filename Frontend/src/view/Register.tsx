@@ -14,6 +14,9 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { GoogleLoginButton, FacebookLoginButton } from "react-social-login-buttons";
+import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
+import {ReactFacebookFailureResponse, ReactFacebookLoginInfo} from "react-facebook-login";
+
 
 
 const theme = createTheme();
@@ -31,7 +34,14 @@ export default function Register() {
             navigate('/loginhome');
 
         };
-
+    const responseFacebook = (response: ReactFacebookLoginInfo | ReactFacebookFailureResponse) => {
+        if ('accessToken' in response) {
+            console.log(response.accessToken);
+            navigate('/loginhome');
+        } else {
+            console.log('Nie udało się zalogować przez Facebooka');
+        }
+    }
     return (
         <ThemeProvider theme={theme}>
             <Grid container component="main" sx={{ height: '100vh' }}>
@@ -105,7 +115,15 @@ export default function Register() {
                                 id="surname"
                                 autoComplete="Nazwisko"
                             />
-                            <FacebookLoginButton/>
+                            <FacebookLogin
+                                appId="3179163212375828"
+                                autoLoad={false}
+                                fields="name,email,picture"
+                                callback={responseFacebook}
+                                render={(renderProps: { onClick: () => void; }) => (
+                                    <FacebookLoginButton onClick={renderProps.onClick} />
+                                )}
+                            />
                                     <Button
                                         type="submit"
                                         fullWidth

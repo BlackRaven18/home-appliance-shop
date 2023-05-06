@@ -7,8 +7,6 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import { Button } from '@mui/material';
 
-
-
 interface Product {
     productId: string;
     name: string;
@@ -76,6 +74,22 @@ function ProductContent({ category }: ProductContentProps) {
             });
     };
 
+    const addCart = (product: Product) => {
+        axios.post("http://localhost:8080/cart", {
+            cartId: product.productId,
+            name: product.name,
+            brand: product.brand,
+            color: product.color,
+            specification: product.specification,
+            price: product.price,
+            imageURL: product.imageURL,
+        })
+            .then((response) => {
+                console.log(response)
+            })
+            .catch(err => console.log(err))
+    }
+
     const filteredProducts = products.filter((product) => {
         const productString = `${product.name} ${product.brand} ${product.color} ${product.specification}`.toLowerCase();
         return product.category.categoryId === category && productString.includes(searchText.toLowerCase());
@@ -105,9 +119,10 @@ function ProductContent({ category }: ProductContentProps) {
                                     <Typography>Kolor: {product.color ?? 'unknown'}</Typography>
                                     <Typography>Specyfikacja: {product.specification ?? 'unknown'}</Typography>
                                     <Typography>Cena: {product.price ?? 'unknown'}</Typography>
-                                    <Button variant="contained" color="primary">
+                                    <Button variant="contained" color="primary" onClick={() => addCart(product)}>
                                         Dodaj do koszyka
                                     </Button>
+
                                     <Grid item xs={12}>
                                         <Box sx={{ borderBottom: '1px solid grey', marginTop: 2 }} />
                                     </Grid>

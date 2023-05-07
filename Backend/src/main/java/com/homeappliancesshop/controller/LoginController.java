@@ -6,6 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTCreationException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +29,7 @@ public class LoginController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        System.out.println("login");
         String email = loginRequest.getEmail();
         String password = loginRequest.getPassword();
 
@@ -36,8 +45,25 @@ public class LoginController {
     }
 
     private String generateToken(Person person) {
-        // TODO: implementacja generowania tokenu
-        return "";
+        String token = "";
+        try {
+            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+            keyPairGenerator.initialize(2048);
+            KeyPair keyPair = keyPairGenerator.generateKeyPair();
+
+            RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
+            RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
+
+            Algorithm algorithm = Algorithm.RSA256(publicKey, privateKey);
+
+            token = JWT.create()
+                    .withIssuer("auth0")
+                    .withClaim("personId", person.getPersonId())
+                    .sign(algorithm);
+        } catch (NoSuchAlgorithmException | JWTCreationException exception) {
+            System.err.println("Cannot create JWT token for user: " + exception.getMessage());
+        }
+        return token;
     }
 
     private static class LoginRequest {

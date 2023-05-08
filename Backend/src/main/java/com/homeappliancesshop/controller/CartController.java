@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+@CrossOrigin
 @RestController
 @RequestMapping("/cart")
 public class CartController {
@@ -20,7 +22,7 @@ public class CartController {
     }
 
     @GetMapping("/{cartId}")
-    public Cart getPersonById(@PathVariable String cartId){
+    public Cart getCartById(@PathVariable String cartId){
         return service.getCartById(cartId);
     }
 

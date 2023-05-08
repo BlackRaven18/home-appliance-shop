@@ -12,7 +12,7 @@ interface Person {
 }
 
 function Profil() {
-    const [person, setPerson] = useState<Person>({name: "mietek", surname: "wolski"});
+    const [person, setPerson] = useState<Person>();
     // funkcja pobierająca dane z bazy danych
     const personId = '64314d722094072d790a5e00';
     React.useEffect(() => {
@@ -20,7 +20,7 @@ function Profil() {
     }, []);
     const getPerson = () => {
         axios
-            .get(`http://localhost:8080/persons?personId=64314d722094072d790a5e00`)
+            .get(url + `/persons/` + personId)
             .then( (response)=> {
                 setPerson(response.data);
             })
@@ -41,8 +41,8 @@ function Profil() {
             <div>
                 <img src={require('./Trybiki.png')} alt='' width='600'/>
                 <div>
-                    <p>Imię: {person.name}</p>
-                    <p>Nazwisko: {person.surname}</p>
+                    <p>Imię: {person? person.name: "unknown"}</p>
+                    <p>Nazwisko: {person? person.surname: "unknown"}</p>
                 </div>
             </div>
         </div>

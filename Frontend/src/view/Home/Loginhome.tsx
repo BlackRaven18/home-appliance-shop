@@ -1,6 +1,6 @@
 import * as React from 'react';
-import Topbar from './../topbar/Topbar';
-import Product from './../view/Product';
+import Topbar from '../../topbar/Topbar';
+import Product from '../Product/Product';
 import { Grid } from '@mui/material';
 import Categorylist from "./Categorylist";
 

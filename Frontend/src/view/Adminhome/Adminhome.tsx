@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Admintopbar from './../topbar/Admintopbar';
+import Admintopbar from '../../topbar/Admintopbar';
 import Admincategorylist from "./Admincategorylist";
 
 function Adminhome() {

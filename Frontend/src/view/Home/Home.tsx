@@ -1,6 +1,6 @@
-import Notloggedintopbar from './../topbar/Notloggedintopbar';
+import Notloggedintopbar from '../../topbar/Notloggedintopbar';
 import * as React from 'react';
-import Product from './../view/Product';
+import Product from '../Product/Product';
 import { Grid } from '@mui/material';
 import Categorylist from "./Categorylist";
 

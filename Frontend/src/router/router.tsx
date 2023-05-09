@@ -6,7 +6,7 @@ import Loginhome from './../view/Loginhome';
 import Adminlogin from './../view/Adminlogin';
 import Adminhome from './../view/Adminhome';
 import Product from './../view/Product';
-import Koszyk from './../view/Koszyk';
+import Koszyk from '../view/ShoppingCart';
 import Historia from './../view/Historia';
 import Profil from './../view/Profil';
 import Adminprofil from './../view/Adminprofil';

@@ -6,6 +6,7 @@ import axios from 'axios';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import { Button } from '@mui/material';
+import Productlist from './Productlist';
 
 interface Product {
     productId: string;
@@ -68,27 +69,12 @@ function ProductContent({ category }: ProductContentProps) {
             .get(`${url}/products`)
             .then(function (response) {
                 setProducts(response.data);
+                console.log(response.data);
             })
             .catch(function (error) {
                 console.log(error);
             });
     };
-
-    const addCart = (product: Product) => {
-        axios.post("http://localhost:8080/cart", {
-            cartId: product.productId,
-            name: product.name,
-            brand: product.brand,
-            color: product.color,
-            specification: product.specification,
-            price: product.price,
-            imageURL: product.imageURL,
-        })
-            .then((response) => {
-                console.log(response)
-            })
-            .catch(err => console.log(err))
-    }
 
     const filteredProducts = products.filter((product) => {
         const productString = `${product.name} ${product.brand} ${product.color} ${product.specification}`.toLowerCase();
@@ -109,27 +95,14 @@ function ProductContent({ category }: ProductContentProps) {
 
             {filteredProducts.length > 0 ? (
                 <Box sx={{ border: '1px solid grey', padding: '17px', borderRadius: '8px', width: '90%' }}>
-                <Grid container spacing = '2'>
-                    <Grid item xs={9}>
-                        <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
-                            {filteredProducts.map((product) => (
-                                <li key={product.productId}>
-                                    <Typography>Nazwa: {product.name ?? 'unknown'}</Typography>
-                                    <Typography>Marka: {product.brand ?? 'unknown'}</Typography>
-                                    <Typography>Kolor: {product.color ?? 'unknown'}</Typography>
-                                    <Typography>Specyfikacja: {product.specification ?? 'unknown'}</Typography>
-                                    <Typography>Cena: {product.price ?? 'unknown'}</Typography>
-                                    <Button variant="contained" color="primary" onClick={() => addCart(product)}>
-                                        Dodaj do koszyka
-                                    </Button>
-
-                                    <Grid item xs={12}>
-                                        <Box sx={{ borderBottom: '1px solid grey', marginTop: 2 }} />
-                                    </Grid>
-                                </li>
-                            ))}
-                        </ul>
-                    </Grid>
+                    <Grid container spacing = '2'>
+                        <Grid item xs={9}>
+                            <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+                                {filteredProducts.map((product) => (
+                                    <Productlist {...product} />
+                                ))}
+                            </ul>
+                        </Grid>
                         <Grid item xs={1} sx={{ textAlign: 'center' }}>
                             {filteredProducts.map((product) => (
                                 <Box

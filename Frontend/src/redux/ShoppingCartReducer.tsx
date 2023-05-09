@@ -2,58 +2,77 @@ import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
 interface Product {
-    productId: string;
+  productId: string;
+  name: string;
+  brand: string;
+  color: string;
+  specification: string;
+  price: number;
+  imageURL: string;
+  category: {
+    categoryId: string;
     name: string;
-    brand: string;
-    color: string;
-    specification: string;
-    price: number;
-    imageURL: string;
-    category: {
-        categoryId: string;
-        name: string;
-    };
+  };
 }
 
-export interface CartState {
+
+interface CartState {
+  cart: {
     quantity: number,
-    products: Product[]
- 
-
+    productDetails: Product
+  }[]
 }
+
 
 const initialState: CartState = {
-    quantity: 0,
-    products:[],
-    
+  cart: []
 }
+
 
 export const shoppingCartSlice = createSlice({
   name: 'shoppingCart',
   initialState,
   reducers: {
 
-    addProductToCart: (state, action: PayloadAction<Product>) =>{
-        state.products.push(action.payload);
+    addProductToCart: (state, action: PayloadAction<Product>) => {
+      const itemInCart = state.cart.find(
+        (item) => item.productDetails.productId == action.payload.productId);
+
+      if (itemInCart) {
+        itemInCart.quantity++;
+      } else {
+        state.cart.push({ quantity: 1, productDetails: action.payload });
+      }
     },
 
-    increment: (state) => {
-      // Redux Toolkit allows us to write "mutating" logic in reducers. It
-      // doesn't actually mutate the state because it uses the Immer library,
-      // which detects changes to a "draft state" and produces a brand new
-      // immutable state based off those changes
-      state.quantity += 1
+    decrementAmountOfProduct: (state, action: PayloadAction<Product>) => {
+      const itemInCart = state.cart.find(
+        (item) => item.productDetails.productId == action.payload.productId);
+
+      if (itemInCart) {
+        if (itemInCart.quantity == 1) {
+          const productsArrayWithoutRemovedItem = state.cart.filter(
+            (item) => item.productDetails.productId !== action.payload.productId)
+
+          state.cart = productsArrayWithoutRemovedItem;
+        } else {
+          itemInCart.quantity--;
+        }
+      }
     },
-    decrement: (state) => {
-      state.quantity -= 1
-    },
-    incrementByAmount: (state, action: PayloadAction<number>) => {
-      state.quantity += action.payload
+
+    incrementAmountOfProduct: (state, action: PayloadAction<Product>) => {
+      const itemInCart = state.cart.find(
+        (item) => item.productDetails.productId == action.payload.productId);
+
+      if (itemInCart) {
+        itemInCart.quantity++;
+      }
     },
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { addProductToCart, increment, decrement, incrementByAmount } = shoppingCartSlice.actions
+export const { addProductToCart, decrementAmountOfProduct, incrementAmountOfProduct } = shoppingCartSlice.actions
 
 export default shoppingCartSlice.reducer

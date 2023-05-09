@@ -6,6 +6,9 @@ import axios from 'axios';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import { Button } from '@mui/material';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../redux/store';
+import { addProductToCart } from '../redux/ShoppingCartReducer';
 
 interface Product {
     productId: string;
@@ -27,6 +30,7 @@ function Products() {
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const subcategory = searchParams.get('subcategory');
+
 
     let text = '';
     let category = '';
@@ -59,6 +63,9 @@ function ProductContent({ category }: ProductContentProps) {
     const [products, setProducts] = useState<Product[]>([]);
     const [searchText, setSearchText] = useState('');
 
+    const shoppingCart = useSelector((state: RootState) => state.shoppingCart);
+    const dispatch = useDispatch();
+
     useEffect(() => {
         getProducts();
     }, []);
@@ -90,6 +97,10 @@ function ProductContent({ category }: ProductContentProps) {
             .catch(err => console.log(err))
     }
 
+     const addProductToShoppingCart = (product: Product) => {
+        dispatch(addProductToCart(product));
+     }
+
     const filteredProducts = products.filter((product) => {
         const productString = `${product.name} ${product.brand} ${product.color} ${product.specification}`.toLowerCase();
         return product.category.categoryId === category && productString.includes(searchText.toLowerCase());
@@ -119,7 +130,7 @@ function ProductContent({ category }: ProductContentProps) {
                                     <Typography>Kolor: {product.color ?? 'unknown'}</Typography>
                                     <Typography>Specyfikacja: {product.specification ?? 'unknown'}</Typography>
                                     <Typography>Cena: {product.price ?? 'unknown'}</Typography>
-                                    <Button variant="contained" color="primary" onClick={() => addCart(product)}>
+                                    <Button variant="contained" color="primary" onClick={() => addProductToShoppingCart(product)}>
                                         Dodaj do koszyka
                                     </Button>
 

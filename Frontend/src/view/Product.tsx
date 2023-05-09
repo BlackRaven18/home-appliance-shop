@@ -1,11 +1,5 @@
-import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
-import axios from 'axios';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import { Button } from '@mui/material';
 import Productlist from './Productlist';
 
 let url = 'http://localhost:8080';

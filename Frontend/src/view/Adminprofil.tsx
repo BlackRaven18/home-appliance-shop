@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import Admintopbar from './../topbar/Admintopbar';
-import { useState } from 'react';
 
 function Adminprofil() {
   return (

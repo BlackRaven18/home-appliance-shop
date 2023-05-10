@@ -36,7 +36,7 @@ export const shoppingCartSlice = createSlice({
 
     addProductToCart: (state, action: PayloadAction<Product>) => {
       const itemInCart = state.cart.find(
-        (item) => item.productDetails.productId == action.payload.productId);
+        (item) => item.productDetails.productId === action.payload.productId);
 
       if (itemInCart) {
         itemInCart.quantity++;
@@ -47,10 +47,10 @@ export const shoppingCartSlice = createSlice({
 
     decrementAmountOfProduct: (state, action: PayloadAction<Product>) => {
       const itemInCart = state.cart.find(
-        (item) => item.productDetails.productId == action.payload.productId);
+        (item) => item.productDetails.productId === action.payload.productId);
 
       if (itemInCart) {
-        if (itemInCart.quantity == 1) {
+        if (itemInCart.quantity === 1) {
           const productsArrayWithoutRemovedItem = state.cart.filter(
             (item) => item.productDetails.productId !== action.payload.productId)
 
@@ -63,7 +63,7 @@ export const shoppingCartSlice = createSlice({
 
     incrementAmountOfProduct: (state, action: PayloadAction<Product>) => {
       const itemInCart = state.cart.find(
-        (item) => item.productDetails.productId == action.payload.productId);
+        (item) => item.productDetails.productId === action.payload.productId);
 
       if (itemInCart) {
         itemInCart.quantity++;

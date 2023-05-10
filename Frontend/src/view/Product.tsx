@@ -10,6 +10,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../redux/store';
 import { addProductToCart } from '../redux/ShoppingCartReducer';
 
+
 interface Product {
     productId: string;
     name: string;
@@ -25,6 +26,8 @@ interface Product {
 }
 
 let url = 'http://localhost:8080';
+
+
 
 function Products() {
     const location = useLocation();
@@ -77,25 +80,9 @@ function ProductContent({ category }: ProductContentProps) {
                 setProducts(response.data);
             })
             .catch(function (error) {
-                console.log(error);
+                setProducts([]);
             });
     };
-
-    const addCart = (product: Product) => {
-        axios.post("http://localhost:8080/cart", {
-            cartId: product.productId,
-            name: product.name,
-            brand: product.brand,
-            color: product.color,
-            specification: product.specification,
-            price: product.price,
-            imageURL: product.imageURL,
-        })
-            .then((response) => {
-                console.log(response)
-            })
-            .catch(err => console.log(err))
-    }
 
      const addProductToShoppingCart = (product: Product) => {
         dispatch(addProductToCart(product));

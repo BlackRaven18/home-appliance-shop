@@ -16,7 +16,6 @@ import { GoogleLoginButton, FacebookLoginButton } from "react-social-login-butto
 import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
 import { ReactFacebookLoginInfo, ReactFacebookFailureResponse } from 'react-facebook-login';
 
-
 const theme = createTheme();
 
 export default function SignInSide() {

@@ -25,10 +25,15 @@ public class PersonService {
     public Person getPersonById(String personId){
         return repository.findById(personId).get();
     }
-    public Person getPersonByEmail(String email) { return repository.findByEmail(email); }
+    public Person getPersonByEmail(String email) {
+        return repository.findByEmail(email);
+    }
 
     public Person addPerson(Person person){
-        addressService.addAddress(person.getAddress());
+        Address address = person.getAddress();
+        if (address != null) {
+            addressService.addAddress(address);
+        }
         return repository.save(person);
     }
 

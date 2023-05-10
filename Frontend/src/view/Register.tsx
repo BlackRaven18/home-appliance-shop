@@ -17,23 +17,43 @@ import { GoogleLoginButton, FacebookLoginButton } from "react-social-login-butto
 import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
 import {ReactFacebookFailureResponse, ReactFacebookLoginInfo} from "react-facebook-login";
 
-
-
 const theme = createTheme();
 
 export default function Register() {
     const navigate = useNavigate();
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-            event.preventDefault();
-            const data = new FormData(event.currentTarget);
-            console.log({
-                email: data.get('email'),
-                password: data.get('password'),
-            });
-
-            navigate('/loginhome');
-
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        const person = {
+          email: data.get('email') as string,
+          password: data.get('password') as string,
+          name: data.get('name') as string,
+          surname: data.get('surname') as string,
         };
+
+        console.log(person.email);
+        console.log(person.password);
+        console.log(person.name);
+        console.log(person.surname);
+        try {
+          const response = await fetch('/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(person),
+          });
+      
+          if (response.ok) {
+            navigate('/loginhome');
+          } else {
+            console.error(`HTTP error! status: ${response.status}`);
+          }
+        } catch (error) {
+          console.error(`Fetch error: ${error}`);
+        }
+      };
+      
     const responseFacebook = (response: ReactFacebookLoginInfo | ReactFacebookFailureResponse) => {
         if ('accessToken' in response) {
             console.log(response.accessToken);

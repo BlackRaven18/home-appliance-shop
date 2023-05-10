@@ -8,8 +8,8 @@ import Adminhome from '../view/Adminhome/Adminhome';
 import Product from '../view/Product/Product';
 import Koszyk from './../view/Koszyk';
 import Historia from './../view/Historia';
-import Profil from './../view/Profil';
-import Adminprofil from './../view/Adminprofil';
+import Profil from '../view/Profil/Profil';
+import Adminprofil from '../view/Profil/Adminprofil';
 import {
     createBrowserRouter,
 } from "react-router-dom";

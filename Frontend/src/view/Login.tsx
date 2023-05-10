@@ -15,14 +15,16 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { GoogleLoginButton, FacebookLoginButton } from "react-social-login-buttons";
 import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
 import { ReactFacebookLoginInfo, ReactFacebookFailureResponse } from 'react-facebook-login';
-
+import { BrowserRouter as Router } from "react-router-dom";
 
 const theme = createTheme();
 
 export default function SignInSide() {
     const navigate = useNavigate();
 
-    const handleLogin = async (email: string, password: string) => {
+    const handleLogin = async (event: React.FormEvent, email: string, password: string) => {
+        console.log("handle_login");
+        event.preventDefault();
         try {
             const response = await fetch('/login', {
                 method: 'POST',
@@ -45,6 +47,7 @@ export default function SignInSide() {
     };
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        console.log("handle_submit");
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         const email = data.get('email') as string;
@@ -53,10 +56,12 @@ export default function SignInSide() {
             email: email,
             password: password,
         });
-        handleLogin(email, password);
+        handleLogin(event, email, password); // add event parameter here
     };
 
+
     const responseFacebook = (response: ReactFacebookLoginInfo | ReactFacebookFailureResponse) => {
+        console.log("responce_facebook");
         if ('accessToken' in response) {
             console.log(response.accessToken);
             navigate('/loginhome');

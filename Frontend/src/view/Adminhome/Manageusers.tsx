@@ -55,36 +55,36 @@ const Manageusers = () => {
     return (
         <>
             <div style={{display: 'flex', flexDirection: 'column', flex: 1}}>
-            <TextField
-                label="Wyszukaj osobę"
-                variant="outlined"
-                value={searchTerm}
-                onChange={handleSearchTermChange}
-                style={{marginTop: '20px'}}
-            />
-            {filteredPeople.length === 0 ? (
-                <Typography>Nie znaleziono osób spełniających kryteria wyszukiwania</Typography>
-            ) : (
-                filteredPeople.map((person, index) => (
-                    <div key={index} style={{
-                        border: '1px solid #ccc',
-                        borderRadius: '5px',
-                        padding: '10px',
-                        margin: '20px'
-                    }}>
-                        <p style={{fontSize: '20px'}}>Imię: {person ? person.name : 'unknown'}</p>
-                        <p style={{fontSize: '20px'}}>Nazwisko: {person ? person.surname : 'unknown'}</p>
-                        <p style={{fontSize: '20px'}}>Email: {person ? person.email : 'unknown'}</p>
-                        <p style={{fontSize: '20px'}}>Numer telefonu: {person ? person.phoneNumber : 'unknown'}</p>
-                        <p style={{fontSize: '20px'}}>Województwo: {person && person.address && person.address.state ? person.address.state : 'unknown'}</p>
-                        <p style={{fontSize: '20px'}}>Miasto: {person && person.address && person.address.city ? person.address.city : 'unknown'}</p>
-                        <p style={{fontSize: '20px'}}>Ulica: {person && person.address && person.address.street ? person.address.street : 'unknown'}</p>
-                        <p style={{fontSize: '20px'}}>Kod pocztowy: {person && person.address && person.address.postCode ? person.address.postCode : 'unknown'}</p>
-                        <Button variant="contained">Usuń</Button>
-                    </div>
-                ))
-            )}
-        </div>
+                <TextField
+                    label="Wyszukaj osobę"
+                    variant="outlined"
+                    value={searchTerm}
+                    onChange={handleSearchTermChange}
+                    style={{marginTop: '20px'}}
+                />
+                {filteredPeople.length === 0 ? (
+                    <Typography>Nie znaleziono osób spełniających kryteria wyszukiwania</Typography>
+                ) : (
+                    filteredPeople.map((person, index) => (
+                        <div key={index} style={{
+                            border: '1px solid #ccc',
+                            borderRadius: '5px',
+                            padding: '10px',
+                            margin: '20px'
+                        }}>
+                            <p style={{fontSize: '20px'}}>Imię: {person ? person.name : 'unknown'}</p>
+                            <p style={{fontSize: '20px'}}>Nazwisko: {person ? person.surname : 'unknown'}</p>
+                            <p style={{fontSize: '20px'}}>Email: {person ? person.email : 'unknown'}</p>
+                            <p style={{fontSize: '20px'}}>Numer telefonu: {person ? person.phoneNumber : 'unknown'}</p>
+                            <p style={{fontSize: '20px'}}>Województwo: {person && person.address && person.address.state ? person.address.state : 'unknown'}</p>
+                            <p style={{fontSize: '20px'}}>Miasto: {person && person.address && person.address.city ? person.address.city : 'unknown'}</p>
+                            <p style={{fontSize: '20px'}}>Ulica: {person && person.address && person.address.street ? person.address.street : 'unknown'}</p>
+                            <p style={{fontSize: '20px'}}>Kod pocztowy: {person && person.address && person.address.postCode ? person.address.postCode : 'unknown'}</p>
+                            <Button variant="contained">Usuń</Button>
+                        </div>
+                    ))
+                )}
+            </div>
             <Box
                 component="form"
                 noValidate
@@ -94,55 +94,55 @@ const Manageusers = () => {
                 }}
                 style={{ margin: '5px' }}
             >
-        <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Adres email"
-            name="email"
-            autoComplete="email"
-            autoFocus
-        />
-        <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Hasło"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-        />
-        <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="name"
-            label="Imię"
-            id="name"
-            autoComplete="Imię"
-        />
-        <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="surname"
-            label="Nazwisko"
-            id="surname"
-            autoComplete="Nazwisko"
-        />
-        <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-        >
-            Zarejestruj użytkownika
-        </Button>
+                <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="email"
+                    label="Adres email"
+                    name="email"
+                    autoComplete="email"
+                    autoFocus
+                />
+                <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="password"
+                    label="Hasło"
+                    type="password"
+                    id="password"
+                    autoComplete="current-password"
+                />
+                <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="name"
+                    label="Imię"
+                    id="name"
+                    autoComplete="Imię"
+                />
+                <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="surname"
+                    label="Nazwisko"
+                    id="surname"
+                    autoComplete="Nazwisko"
+                />
+                <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2 }}
+                >
+                    Zarejestruj użytkownika
+                </Button>
 
-    </Box>
-            </>
+            </Box>
+        </>
     );
 };
 

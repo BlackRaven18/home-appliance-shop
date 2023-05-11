@@ -1,10 +1,26 @@
 import {configureStore} from '@reduxjs/toolkit'
 import shoppingCartReducer from './ShoppingCartReducer'
+import storage from 'redux-persist/lib/storage'
+import { persistReducer } from 'redux-persist'
+import { combineReducers } from '@reduxjs/toolkit'
+
+const persistConfiguration = {
+    key: "root",
+    version: 1,
+    storage
+};
+
+const reducer = combineReducers({
+    shoppingCart: shoppingCartReducer,
+})
+
+const persistedReducer = persistReducer(persistConfiguration, reducer)
 
 export const store = configureStore({
-    reducer:{
-        shoppingCart: shoppingCartReducer,
-    }
+    reducer: persistedReducer,
+    // reducer:{
+    //     shoppingCart: shoppingCartReducer,
+    // }
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

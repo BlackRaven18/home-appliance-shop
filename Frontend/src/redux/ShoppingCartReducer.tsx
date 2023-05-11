@@ -15,19 +15,43 @@ interface Product {
   };
 }
 
-
 interface CartState {
   cart: {
     quantity: number,
     productDetails: Product
   }[]
+
+  totalAmount: number,
 }
+
+
+enum Operation {
+  Increment,
+  Decrement,
+}
+
+function updateTotalAmount(totalAmount: number, operation: Operation, price: number) {
+
+  switch (operation) {
+    case Operation.Increment:
+      totalAmount += price;
+      break;
+    case Operation.Decrement:
+      totalAmount -= price;
+      break;
+  }
+
+  totalAmount = Number(totalAmount.toFixed(2));
+
+  return totalAmount;
+}
+
 
 
 const initialState: CartState = {
-  cart: []
+  cart: [],
+  totalAmount: 0.00,
 }
-
 
 export const shoppingCartSlice = createSlice({
   name: 'shoppingCart',
@@ -40,8 +64,10 @@ export const shoppingCartSlice = createSlice({
 
       if (itemInCart) {
         itemInCart.quantity++;
+        state.totalAmount = updateTotalAmount(state.totalAmount, Operation.Increment, itemInCart.productDetails.price);
       } else {
         state.cart.push({ quantity: 1, productDetails: action.payload });
+        state.totalAmount = updateTotalAmount(state.totalAmount, Operation.Increment, action.payload.price);
       }
     },
 
@@ -49,15 +75,23 @@ export const shoppingCartSlice = createSlice({
       const itemInCart = state.cart.find(
         (item) => item.productDetails.productId === action.payload.productId);
 
-      if (itemInCart) {
-        if (itemInCart.quantity === 1) {
-          const productsArrayWithoutRemovedItem = state.cart.filter(
-            (item) => item.productDetails.productId !== action.payload.productId)
+      if (!itemInCart) return;
 
-          state.cart = productsArrayWithoutRemovedItem;
+      if (itemInCart.quantity === 1) {
+        const productsArrayWithoutRemovedItem = state.cart.filter(
+          (item) => item.productDetails.productId !== action.payload.productId)
+        state.cart = productsArrayWithoutRemovedItem;
+
+        if (state.cart.length > 0) {
+          state.totalAmount = updateTotalAmount(state.totalAmount, Operation.Decrement, itemInCart.productDetails.price);
         } else {
-          itemInCart.quantity--;
+          state.totalAmount = 0;
         }
+
+
+      } else {
+        itemInCart.quantity--;
+        state.totalAmount = updateTotalAmount(state.totalAmount, Operation.Decrement, itemInCart.productDetails.price);
       }
     },
 
@@ -67,6 +101,7 @@ export const shoppingCartSlice = createSlice({
 
       if (itemInCart) {
         itemInCart.quantity++;
+        state.totalAmount = updateTotalAmount(state.totalAmount, Operation.Increment, itemInCart.productDetails.price);
       }
     },
   },

@@ -1,53 +1,51 @@
-import * as React from 'react';
-import { Link } from "react-router-dom";
+import { Grid, List, ListItemButton, ListItemText } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import { Grid, List, ListItem, ListItemText } from '@mui/material';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { Category, setActiveCategory } from '../../redux/CategoryReducer';
 
-const categories = [
-    {
-        name: 'Komputery i tablety',
-        subcategories: ['Laptopy', 'Komputery', 'Podzespoły komputerowe'],
-    },
-    {
-        name: 'Kategoria 2',
-        subcategories: ['Podkategoria 4', 'Podkategoria 5', 'Podkategoria 6'],
-    },
-    {
-        name: 'Kategoria 3',
-        subcategories: ['Podkategoria 7', 'Podkategoria 8', 'Podkategoria 9'],
-    },
-];
+
 const Categorylist = () => {
-    const [activeCategory, setActiveCategory] = React.useState('');
+    const [categoriesFromEndpoint, setCategoriesFromEndpoint] = useState<Category[]>([]);
+
+    const dispatch = useDispatch();
+
+    const setCategory = (category: Category) => {
+        dispatch(setActiveCategory(category))
+    }
+
+    useEffect(() => {
+        getCategories();
+    }, [])
+
+    const getCategories = () => {
+        axios.get("http://localhost:8080/categories")
+            .then((response) => {
+                setCategoriesFromEndpoint(response.data);
+            })
+            .catch((error) => {
+                setCategoriesFromEndpoint([]);
+            })
+    }
+
     return (
-            <Grid item xs={12} md={2} sx={{ position: 'sticky', top: 0 }}>
-                <Paper sx={{ backgroundColor: '#f5f5f5', padding: '16px', height: '100%' }}>
-                    <Typography variant="h6">Kategorie</Typography>
-                    <List sx={{ marginTop: '16px' }}>
-                        {categories.map((category) => (
-                            <div key={category.name}>
-                                <ListItem button onClick={() => setActiveCategory(category.name)}>
-                                    <ListItemText primary={category.name} />
-                                </ListItem>
-                                <List sx={{ marginTop: '8px' }}>
-                                    {activeCategory === category.name &&
-                                        category.subcategories.map((subcategory) => (
-                                            <ListItem
-                                                key={subcategory}
-                                                button
-                                                component={Link}
-                                                to={`/Loginhome?subcategory=${subcategory}`}
-                                            >
-                                                <ListItemText primary={subcategory} />
-                                            </ListItem>
-                                        ))}
-                                </List>
-                            </div>
-                        ))}
-                    </List>
-                </Paper>
-            </Grid>
+        <Grid item xs={12} md={2} sx={{ position: 'sticky', top: 0 }}>
+            <Paper sx={{ backgroundColor: '#f5f5f5', padding: '16px', height: '100%' }}>
+                <Typography variant="h6">Kategorie</Typography>
+                <List sx={{ marginTop: '16px' }}>
+                    {categoriesFromEndpoint.map((category) => (
+                        <div key={category.name}>
+                    
+                            <ListItemButton onClick={() => setCategory(category)}>
+                                <ListItemText primary={category.name} />
+                            </ListItemButton>
+                        </div>
+                    ))}
+                </List>
+            </Paper>
+        </Grid>
     )
 }
 

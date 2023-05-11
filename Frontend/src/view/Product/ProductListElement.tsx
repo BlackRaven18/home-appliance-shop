@@ -1,7 +1,7 @@
 
-import { Box, Grid, Typography, Button } from "@mui/material";
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../../redux/store';
+import { Alert, Box, Button, Grid, Snackbar, Typography } from "@mui/material";
+import { useState } from "react";
+import { useDispatch } from 'react-redux';
 import { addProductToCart } from '../../redux/ShoppingCartReducer';
 
 interface Product {
@@ -20,12 +20,20 @@ interface Product {
 
 const ProductListElement = (product: Product) => {
 
-    const shoppingCart = useSelector((state: RootState) => state.shoppingCart);
+    const [open, setOpen] = useState(false);
     const dispatch = useDispatch();
 
     const addProductToShoppingCart = (product: Product) => {
         dispatch(addProductToCart(product));
     }
+
+    const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpen(false);
+    };
 
     return (
 
@@ -44,9 +52,18 @@ const ProductListElement = (product: Product) => {
                     <Typography>Specyfikacja: {product.specification ?? 'unknown'}</Typography>
                     <Typography>Cena: {product.price ?? 'unknown'}</Typography>
 
-                    <Button variant="contained" color="primary" onClick={() => addProductToShoppingCart(product)}>
+                    <Button variant="contained" color="primary" onClick={() => {
+                        addProductToShoppingCart(product);
+                        setOpen(true);
+                    }}>
                         Dodaj do koszyka
                     </Button>
+
+                    <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
+                        <Alert variant="filled" onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                            Produkt został dodany do koszyka!
+                        </Alert>
+                    </Snackbar>
 
                 </Grid>
                 <Grid item xs={4} >
@@ -61,8 +78,8 @@ const ProductListElement = (product: Product) => {
                     ></Box>
                 </Grid>
             </Grid>
-        </Box>
-    );
+        </Box >
+    )
 }
 
 export default ProductListElement;

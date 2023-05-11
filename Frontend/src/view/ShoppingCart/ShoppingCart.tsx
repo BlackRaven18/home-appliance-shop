@@ -1,9 +1,9 @@
+import { Box } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import Topbar from '../../topbar/Topbar';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../../redux/store';
-import { Button, Box, Grid } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
 import { decrementAmountOfProduct, incrementAmountOfProduct } from '../../redux/ShoppingCartReducer';
+import { RootState } from '../../redux/store';
+import Topbar from '../../topbar/Topbar';
 import ShoppingCartElement from './ShoppingCartElement';
 
 
@@ -27,14 +27,6 @@ function ShoppingCart() {
 
   const shoppingCart = useSelector((state: RootState) => state.shoppingCart);
   const dispatch = useDispatch();
-
-  const incrementAmount = (product: Product) => {
-    dispatch(incrementAmountOfProduct(product));
-  }
-
-  const decrementAmount = (product: Product) => {
-    dispatch(decrementAmountOfProduct(product))
-  }
 
   return (
     <>

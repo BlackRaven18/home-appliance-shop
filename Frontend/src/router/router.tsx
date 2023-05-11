@@ -5,7 +5,6 @@ import Home from '../view/Home/Home';
 import Loginhome from '../view/Home/Loginhome';
 import Adminlogin from './../view/Adminlogin';
 import Adminhome from './../view/Adminhome/Adminhome';
-import Product from './../view/Product';
 import ShoppingCart from './../view/ShoppingCart/ShoppingCart';
 import History from '../view/History';
 import Profil from '../view/Profil/Profil';
@@ -46,10 +45,6 @@ const router = createBrowserRouter([
     {
             path: "/adminlogin",
             element: <Adminlogin />,
-    },
-    {
-            path: "/product",
-            element: <Product />,
     },
     {
             path: "/shoppingcart",

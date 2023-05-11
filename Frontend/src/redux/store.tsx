@@ -1,5 +1,6 @@
 import {configureStore} from '@reduxjs/toolkit'
 import shoppingCartReducer from './ShoppingCartReducer'
+import categoriesReducer from './CategoryReducer'
 import storage from 'redux-persist/lib/storage'
 import { persistReducer } from 'redux-persist'
 import { combineReducers } from '@reduxjs/toolkit'
@@ -7,11 +8,13 @@ import { combineReducers } from '@reduxjs/toolkit'
 const persistConfiguration = {
     key: "root",
     version: 1,
+    blacklist:['categories'],
     storage
 };
 
 const reducer = combineReducers({
     shoppingCart: shoppingCartReducer,
+    categories: categoriesReducer,
 })
 
 const persistedReducer = persistReducer(persistConfiguration, reducer)

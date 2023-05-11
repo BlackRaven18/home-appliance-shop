@@ -4,10 +4,10 @@ import Register from './../view/Register';
 import Home from '../view/Home/Home';
 import Loginhome from '../view/Home/Loginhome';
 import Adminlogin from './../view/Adminlogin';
-import Adminhome from '../view/Adminhome/Adminhome';
-import Product from '../view/Product/Product';
-import Koszyk from './../view/Koszyk';
-import Historia from './../view/Historia';
+import Adminhome from './../view/Adminhome/Adminhome';
+import Product from './../view/Product';
+import ShoppingCart from './../view/ShoppingCart/ShoppingCart';
+import History from '../view/History';
 import Profil from '../view/Profil/Profil';
 import Adminprofil from '../view/Profil/Adminprofil';
 import {
@@ -52,12 +52,12 @@ const router = createBrowserRouter([
             element: <Product />,
     },
     {
-            path: "/koszyk",
-            element: <Koszyk />,
+            path: "/shoppingcart",
+            element: <ShoppingCart />,
     },
     {
-            path: "/historia",
-            element: <Historia />,
+            path: "/history",
+            element: <History />,
     },
     {
             path: "/profil",

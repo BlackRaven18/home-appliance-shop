@@ -1,10 +1,8 @@
-import { useEffect, useState } from 'react';
-import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import axios from 'axios';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import { Button } from '@mui/material';
+import { useEffect, useState } from 'react';
+import ProductListElement from './ProductListElement';
 
 interface Product {
     productId: string;
@@ -55,66 +53,27 @@ const ProductList = ({ category }: ProductListProps) => {
     });
     return (
         <>
-        <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
-            <TextField
-                label="Szukaj"
-                variant="outlined"
-                value={searchText}
-                onChange={(event) => setSearchText(event.target.value)}
-                sx={{ mb: 2, width: '50%' }}
-            />
-        </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
+                <TextField
+                    label="Szukaj"
+                    variant="outlined"
+                    value={searchText}
+                    onChange={(event) => setSearchText(event.target.value)}
+                    sx={{ mb: 2, width: '50%' }}
+                />
+            </Box>
 
-    {filteredProducts.length > 0 ? (
-        <Box sx={{ border: '1px solid grey', padding: '17px', borderRadius: '8px', width: '90%' }}>
-            <Grid container spacing = '2'>
-                <Grid item xs={9}>
-                    {filteredProducts.map((product) => (
-                        <li key={product.productId} style={{ listStyleType: 'none' }}>
-                            <Typography>Nazwa: {product.name ?? 'unknown'}</Typography>
-                            <Typography>Marka: {product.brand ?? 'unknown'}</Typography>
-                            <Typography>Kolor: {product.color ?? 'unknown'}</Typography>
-                            <Typography>Specyfikacja: {product.specification ?? 'unknown'}</Typography>
-                            <Typography>Cena: {product.price ?? 'unknown'}</Typography>
-                            <Button variant="contained" color="primary">
-                                Dodaj do koszyka
-                            </Button>
-                            <Grid item xs={12}>
-                                <Box sx={{ borderBottom: '1px solid grey', marginTop: 2 }} />
-                            </Grid>
-                        </li>
-                    ))}
-                </Grid>
-                <Grid item xs={1} sx={{ textAlign: 'center' }}>
-                    {filteredProducts.map((product) => (
-                        <Box
-                            component="img"
-                            sx={{
-                                height: 173.5,
-                                width: 250,
+            {filteredProducts.length > 0 ? (
 
-                                maxWidth: { xs: 350, md: 250 },
-                                padding: 0,
-                                border: '1px solid grey',
-                                borderRadius: 0,
-                                display: 'block',
-                                margin: 'auto',
-                                boxSizing: 'border-box',
-                                borderTop: '0',
-                                borderLeft: '0',
-                                borderRight: '0'
-                            }}
-                            src={product.imageURL}
-                        />
-                    ))}
-                </Grid>
+                filteredProducts.map((product) => (
+                    <ProductListElement {...product} />
+                ))
 
-            </Grid>
-        </Box>
-    ) : (
-        <p></p>
-    )}
-    </>
+
+            ) : (
+                <p></p>
+            )}
+        </>
     );
 }
 export default ProductList;

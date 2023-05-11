@@ -1,15 +1,15 @@
 import React from "react";
 import Login from './../view/Login';
 import Register from './../view/Register';
-import Home from './../view/Home';
-import Loginhome from './../view/Loginhome';
+import Home from '../view/Home/Home';
+import Loginhome from '../view/Home/Loginhome';
 import Adminlogin from './../view/Adminlogin';
-import Adminhome from './../view/Adminhome';
+import Adminhome from './../view/Adminhome/Adminhome';
 import Product from './../view/Product';
-import Koszyk from '../view/ShoppingCart/ShoppingCart';
-import Historia from './../view/Historia';
-import Profil from './../view/Profil';
-import Adminprofil from './../view/Adminprofil';
+import ShoppingCart from './../view/ShoppingCart/ShoppingCart';
+import History from '../view/History';
+import Profil from '../view/Profil/Profil';
+import Adminprofil from '../view/Profil/Adminprofil';
 import {
     createBrowserRouter,
 } from "react-router-dom";
@@ -52,12 +52,12 @@ const router = createBrowserRouter([
             element: <Product />,
     },
     {
-            path: "/koszyk",
-            element: <Koszyk />,
+            path: "/shoppingcart",
+            element: <ShoppingCart />,
     },
     {
-            path: "/historia",
-            element: <Historia />,
+            path: "/history",
+            element: <History />,
     },
     {
             path: "/profil",

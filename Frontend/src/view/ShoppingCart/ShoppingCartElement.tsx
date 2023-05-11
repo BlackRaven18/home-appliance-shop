@@ -17,11 +17,6 @@ type Product = {
     };
 }
 
-type CartElement = {
-    quantity: number,
-    productDetails: Product,
-};
-
 interface ShoppingCartElementProps {
     quantity: number;
     productDetails: Product;

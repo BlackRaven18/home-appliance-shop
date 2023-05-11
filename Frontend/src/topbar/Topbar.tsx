@@ -17,10 +17,10 @@ export default function Topbar() {
                 <Button color="inherit" component={Link} to="/loginhome">
                     Strona główna
                 </Button>
-                <Button color="inherit" component={Link} to="/koszyk">
+                <Button color="inherit" component={Link} to="/shoppingcart">
                     Koszyk
                 </Button>
-                <Button color="inherit" component={Link} to="/historia">
+                <Button color="inherit" component={Link} to="/history">
                     Historia
                 </Button>
                 <Button color="inherit" component={Link} to="/login">

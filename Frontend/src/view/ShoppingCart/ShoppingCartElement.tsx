@@ -2,6 +2,7 @@ import { Box, Button, Grid, Typography } from '@mui/material';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { decrementAmountOfProduct, incrementAmountOfProduct } from '../../redux/ShoppingCartReducer';
+import { useNavigate } from "react-router";
 
 type Product = {
     productId: string;
@@ -23,6 +24,7 @@ interface ShoppingCartElementProps {
 }
 
 const ShoppingCartElement: React.FC<ShoppingCartElementProps> = ({ quantity, productDetails }) => {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const incrementAmount = (productDetails: Product) => {
@@ -33,16 +35,25 @@ const ShoppingCartElement: React.FC<ShoppingCartElementProps> = ({ quantity, pro
         dispatch(decrementAmountOfProduct(productDetails))
     }
 
+    const goToProductDetails = () => {
+        navigate('/productdetails', { state: productDetails });
+    }
+
 
     return (
 
         <Box
+            onClick={goToProductDetails}
             sx={{
                 border: '1px solid grey',
                 padding: '15px',
                 margin: '5px',
                 borderRadius: '8px',
                 width: '90%',
+                cursor: 'pointer',
+                '&:hover': {
+                    backgroundColor: 'lightgrey',
+                }
             }}>
             <Grid container spacing='2'>
                 <Grid item xs={8}>
@@ -56,12 +67,18 @@ const ShoppingCartElement: React.FC<ShoppingCartElementProps> = ({ quantity, pro
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={() => incrementAmount(productDetails)}>+</Button>
+                        onClick={(event) => {
+                            event.stopPropagation();
+                            incrementAmount(productDetails)
+                        }}>+</Button>
 
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={() => decrementAmount(productDetails)}>-</Button>
+                        onClick={(event) => {
+                            event.stopPropagation();
+                            decrementAmount(productDetails)
+                        }}>-</Button>
                 </Grid>
                 <Grid item xs={4} >
                     <Box

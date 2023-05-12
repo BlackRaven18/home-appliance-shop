@@ -1,10 +1,15 @@
 import { AppBar, Button, Grid, Toolbar, Typography, Box } from '@mui/material'
 import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
+
 
 export default function Topbar() {
 
     const navigate = useNavigate();
+
+    const shoppingCart = useSelector((state: RootState) => state.shoppingCart);
 
     const goToHome = () => {
         navigate('/loginhome');
@@ -29,6 +34,9 @@ export default function Topbar() {
                 </Button>
                 <Button color="inherit" component={Link} to="/shoppingcart">
                     Koszyk
+                    {shoppingCart.productsNumber > 0 ?
+                        <p>({shoppingCart.productsNumber})</p> :
+                        <p></p>}
                 </Button>
                 <Button color="inherit" component={Link} to="/history">
                     Historia

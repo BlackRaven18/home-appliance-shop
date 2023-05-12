@@ -59,6 +59,12 @@ const ProductListElement = (product: Product) => {
                         Dodaj do koszyka
                     </Button>
 
+                    <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
+                        <Alert variant="filled" onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                            Produkt został dodany do koszyka!
+                        </Alert>
+                    </Snackbar>
+
                 </Grid>
                 <Grid item xs={4} >
                     <Box

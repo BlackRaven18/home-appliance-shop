@@ -1,5 +1,5 @@
+import { Box, Button, Grid, Typography } from '@mui/material';
 import React from 'react';
-import { Box, Grid, Typography, Button } from '@mui/material'
 import { useDispatch } from 'react-redux';
 import { decrementAmountOfProduct, incrementAmountOfProduct } from '../../redux/ShoppingCartReducer';
 
@@ -23,7 +23,6 @@ interface ShoppingCartElementProps {
 }
 
 const ShoppingCartElement: React.FC<ShoppingCartElementProps> = ({ quantity, productDetails }) => {
-
     const dispatch = useDispatch();
 
     const incrementAmount = (productDetails: Product) => {
@@ -34,14 +33,17 @@ const ShoppingCartElement: React.FC<ShoppingCartElementProps> = ({ quantity, pro
         dispatch(decrementAmountOfProduct(productDetails))
     }
 
+
     return (
-        <Box sx={{
-            border: '1px solid grey',
-            padding: '15px',
-            margin: '5px',
-            borderRadius: '8px',
-            width: '90%'
-        }}>         
+
+        <Box
+            sx={{
+                border: '1px solid grey',
+                padding: '15px',
+                margin: '5px',
+                borderRadius: '8px',
+                width: '90%',
+            }}>
             <Grid container spacing='2'>
                 <Grid item xs={8}>
                     <Typography>Nazwa: {productDetails.name ?? 'unknown'}</Typography>

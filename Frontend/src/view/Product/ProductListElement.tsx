@@ -1,8 +1,10 @@
 
 import { Alert, Box, Button, Grid, Snackbar, Typography } from "@mui/material";
-import { useState } from "react";
+import { useState, MouseEvent } from "react";
 import { useDispatch } from 'react-redux';
 import { addProductToCart } from '../../redux/ShoppingCartReducer';
+import { useNavigate } from "react-router";
+
 
 interface Product {
     productId: string;
@@ -19,11 +21,11 @@ interface Product {
 }
 
 const ProductListElement = (product: Product) => {
-
+    const navigate = useNavigate();
     const [open, setOpen] = useState(false);
     const dispatch = useDispatch();
 
-    const addProductToShoppingCart = (product: Product) => {
+    const addProductToShoppingCart = (product: Product)=> {
         dispatch(addProductToCart(product));
     }
 
@@ -35,15 +37,25 @@ const ProductListElement = (product: Product) => {
         setOpen(false);
     };
 
+    const goToProductDetails = () => {
+        navigate('/productdetails', {state: product});
+    }
+
     return (
 
-        <Box sx={{
-            border: '1px solid grey',
-            padding: '15px',
-            margin: '5px',
-            borderRadius: '8px',
-            width: '90%'
-        }}>
+        <Box
+            onClick={goToProductDetails}
+            sx={{
+                border: '1px solid grey',
+                padding: '15px',
+                margin: '5px',
+                borderRadius: '8px',
+                width: '90%',
+                cursor: 'pointer',
+                '&:hover': {
+                    backgroundColor: 'lightgrey',
+                }
+            }}>
             <Grid container spacing='2'>
                 <Grid item xs={8}>
                     <Typography>Nazwa: {product.name ?? 'unknown'}</Typography>
@@ -52,7 +64,10 @@ const ProductListElement = (product: Product) => {
                     <Typography>Specyfikacja: {product.specification ?? 'unknown'}</Typography>
                     <Typography>Cena: {product.price ?? 'unknown'}</Typography>
 
-                    <Button variant="contained" color="primary" onClick={() => {
+                    <Button variant="contained" color="primary" onClick={(event) => {
+                        // zatrzymanie propagacji zdarzenia, czyli nastąpi tylko obsługa kliknięcia
+                        // przycisku a nie najpierw obsługa zdarzenia kliknięcia w Box
+                        event.stopPropagation();
                         addProductToShoppingCart(product);
                         setOpen(true);
                     }}>

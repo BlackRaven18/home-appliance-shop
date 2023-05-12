@@ -12,6 +12,7 @@ import Adminprofil from '../view/Profil/Adminprofil';
 import {
     createBrowserRouter,
 } from "react-router-dom";
+import ProductDetails from "../view/ProductDetails/ProductDetails";
 
 const router = createBrowserRouter([
     {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
         element: <Home />,
     },
     {
+        path: "/productdetails",
+        element: <ProductDetails />,
+    },
+    {
         path: "/loginhome",
         element: <Loginhome />,
     },
@@ -43,24 +48,24 @@ const router = createBrowserRouter([
         element: <Adminlogin />,
     },
     {
-            path: "/adminlogin",
-            element: <Adminlogin />,
+        path: "/adminlogin",
+        element: <Adminlogin />,
     },
     {
-            path: "/shoppingcart",
-            element: <ShoppingCart />,
+        path: "/shoppingcart",
+        element: <ShoppingCart />,
     },
     {
-            path: "/history",
-            element: <History />,
+        path: "/history",
+        element: <History />,
     },
     {
-            path: "/profil",
-            element: <Profil />,
+        path: "/profil",
+        element: <Profil />,
     },
     {
-            path: "/adminprofil",
-            element: <Adminprofil />,
+        path: "/adminprofil",
+        element: <Adminprofil />,
     },
 ]);
 

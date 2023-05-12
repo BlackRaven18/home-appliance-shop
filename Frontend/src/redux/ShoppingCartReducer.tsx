@@ -22,6 +22,7 @@ interface CartState {
   }[]
 
   totalAmount: number,
+  productsNumber: number,
 }
 
 
@@ -51,6 +52,7 @@ function updateTotalAmount(totalAmount: number, operation: Operation, price: num
 const initialState: CartState = {
   cart: [],
   totalAmount: 0.00,
+  productsNumber: 0,
 }
 
 export const shoppingCartSlice = createSlice({
@@ -61,6 +63,8 @@ export const shoppingCartSlice = createSlice({
     addProductToCart: (state, action: PayloadAction<Product>) => {
       const itemInCart = state.cart.find(
         (item) => item.productDetails.productId === action.payload.productId);
+
+      state.productsNumber++;
 
       if (itemInCart) {
         itemInCart.quantity++;
@@ -76,6 +80,8 @@ export const shoppingCartSlice = createSlice({
         (item) => item.productDetails.productId === action.payload.productId);
 
       if (!itemInCart) return;
+
+      state.productsNumber--;
 
       if (itemInCart.quantity === 1) {
         const productsArrayWithoutRemovedItem = state.cart.filter(
@@ -101,6 +107,7 @@ export const shoppingCartSlice = createSlice({
 
       if (itemInCart) {
         itemInCart.quantity++;
+        state.productsNumber++;
         state.totalAmount = updateTotalAmount(state.totalAmount, Operation.Increment, itemInCart.productDetails.price);
       }
     },

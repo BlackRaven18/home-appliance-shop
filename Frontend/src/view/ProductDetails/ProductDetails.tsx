@@ -24,8 +24,16 @@ const ProductDetails = () => {
 
     return (
         <>
-            <Topbar/>
-            
+            <Topbar />
+
+            <Typography
+                variant="h4"
+                align='center'
+                margin="5px"
+            >
+                Szczegóły produktu
+            </Typography>
+
             <Box>
                 <Typography>Nazwa: {state.name ?? 'unknown'}</Typography>
                 <Typography>Marka: {state.brand ?? 'unknown'}</Typography>

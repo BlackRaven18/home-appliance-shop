@@ -20,15 +20,11 @@ interface Product {
 
 let url = 'http://localhost:8080';
 
-interface ProductContentProps {
-    category: string;
-}
-
 interface ProductListProps {
-    category: string;
+    categoryId: string;
 }
 
-const ProductList = ({ category }: ProductListProps) => {
+const ProductList = ({ categoryId }: ProductListProps) => {
     const [products, setProducts] = useState<Product[]>([]);
     const [searchText, setSearchText] = useState('');
 
@@ -49,10 +45,10 @@ const ProductList = ({ category }: ProductListProps) => {
 
     const filteredProducts = products.filter((product) => {
         const productString = `${product.name} ${product.brand} ${product.color} ${product.specification}`.toLowerCase();
-        return product.category.categoryId === category && productString.includes(searchText.toLowerCase());
+        return product.category.categoryId === categoryId && productString.includes(searchText.toLowerCase());
     });
     return (
-        <>
+        <Box>
             <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
                 <TextField
                     label="Szukaj"
@@ -66,14 +62,14 @@ const ProductList = ({ category }: ProductListProps) => {
             {filteredProducts.length > 0 ? (
 
                 filteredProducts.map((product) => (
-                    <ProductListElement {...product} />
+                    <ProductListElement key={product.productId} {...product} />
                 ))
 
 
             ) : (
                 <p></p>
             )}
-        </>
+        </Box>
     );
 }
 export default ProductList;

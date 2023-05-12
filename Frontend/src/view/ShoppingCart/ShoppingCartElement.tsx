@@ -41,7 +41,7 @@ const ShoppingCartElement: React.FC<ShoppingCartElementProps> = ({ quantity, pro
             margin: '5px',
             borderRadius: '8px',
             width: '90%'
-        }}>
+        }}>         
             <Grid container spacing='2'>
                 <Grid item xs={8}>
                     <Typography>Nazwa: {productDetails.name ?? 'unknown'}</Typography>

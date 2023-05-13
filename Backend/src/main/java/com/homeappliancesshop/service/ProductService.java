@@ -1,6 +1,6 @@
 package com.homeappliancesshop.service;
 
-import com.homeappliancesshop.model.Person;
+import com.homeappliancesshop.model.Category;
 import com.homeappliancesshop.model.Product;
 import com.homeappliancesshop.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;

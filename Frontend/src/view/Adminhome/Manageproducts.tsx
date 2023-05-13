@@ -83,17 +83,11 @@ const Manageproducts = () => {
             });
     };
 
-    const deleteProduct = (productId: string) => {
-        axios
-            .delete(url + `/products/${productId}`)
-            .then(() => {
-                const updatedProducts = products.filter((product) => product.productId !== productId);
-                setProducts(updatedProducts);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    };
+    const handleDeleteProduct = (index: number) => {
+        const newProduct = [...products];
+        newProduct.splice(index, 1);
+        setProducts(newProduct);
+    }
 
     return (
         <>
@@ -105,7 +99,7 @@ const Manageproducts = () => {
                     onChange={handleSearchTermChange}
                     style={{ margin: '20px' }}
                 />
-                {filteredProducts.map((product) => (
+                {filteredProducts.map((product, index) => (
                     <div key={product.productId} style={{ border: '1px solid gray', borderRadius: '10px', padding: '10px', width: '500px' }}>
                         <p style={{ fontSize: '20px' }}>Nazwa: {product.name}</p>
                         <p style={{ fontSize: '20px' }}>Marka: {product.brand}</p>
@@ -113,7 +107,7 @@ const Manageproducts = () => {
                         <p style={{ fontSize: '20px' }}>Specyfikacja: {product.specification}</p>
                         <p style={{ fontSize: '20px' }}>Cena: {product.price}</p>
                         <p style={{ fontSize: '20px' }}>Kategoria: {product && product.category && product.category.name ? product.category.name : 'unknown'}</p>
-                        <Button variant="contained" onClick={() => deleteProduct(product.productId)}>Usuń</Button>
+                        <Button variant="contained" onClick={() => handleDeleteProduct(index)}>Usuń</Button>
                     </div>
                 ))}
             </div>

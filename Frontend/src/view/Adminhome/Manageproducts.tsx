@@ -83,10 +83,13 @@ const Manageproducts = () => {
             });
     };
 
-    const handleDeleteProduct = (index: number) => {
-        const newProduct = [...products];
-        newProduct.splice(index, 1);
-        setProducts(newProduct);
+    const handleDeleteProduct = async (productId: string) => {
+        try {
+            await axios.delete(url + '/products/' + productId);
+            getProducts(); // reload the user list after deleting the user
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     return (
@@ -107,7 +110,7 @@ const Manageproducts = () => {
                         <p style={{ fontSize: '20px' }}>Specyfikacja: {product.specification}</p>
                         <p style={{ fontSize: '20px' }}>Cena: {product.price}</p>
                         <p style={{ fontSize: '20px' }}>Kategoria: {product && product.category && product.category.name ? product.category.name : 'unknown'}</p>
-                        <Button variant="contained" onClick={() => handleDeleteProduct(index)}>Usuń</Button>
+                        <Button variant="contained" onClick={() => handleDeleteProduct(product.productId)}>Usuń</Button>
                     </div>
                 ))}
             </div>

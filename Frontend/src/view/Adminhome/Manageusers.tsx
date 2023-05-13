@@ -12,6 +12,7 @@ import Box from "@mui/material/Box";
 let url = 'http://localhost:8080';
 
 interface Person {
+    personId: string;
     name: string;
     surname: string;
     email: string;
@@ -47,10 +48,13 @@ const Manageusers = () => {
         setSearchTerm(event.target.value);
     };
 
-    const handleDeleteUser = (index: number) => {
-        const newPeople = [...people];
-        newPeople.splice(index, 1);
-        setPeople(newPeople);
+    const handleDeleteUser = async (personId: string) => {
+        try {
+            await axios.delete(url + '/persons/' + personId);
+            getUsers(); // reload the user list after deleting the user
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     const filteredPeople = people.filter((person) => {
@@ -86,7 +90,8 @@ const Manageusers = () => {
                             <p style={{fontSize: '20px'}}>Miasto: {person && person.address && person.address.city ? person.address.city : 'unknown'}</p>
                             <p style={{fontSize: '20px'}}>Ulica: {person && person.address && person.address.street ? person.address.street : 'unknown'}</p>
                             <p style={{fontSize: '20px'}}>Kod pocztowy: {person && person.address && person.address.postCode ? person.address.postCode : 'unknown'}</p>
-                            <Button variant="contained" onClick={() => handleDeleteUser(index)}>Usuń</Button>
+                            <Button variant="contained" onClick={() => handleDeleteUser(person.personId)}>Usuń</Button>
+
                         </div>
                     ))
                 )}

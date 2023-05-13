@@ -2,7 +2,7 @@ import { AppBar, Button, Grid, Toolbar, Typography, Box } from '@mui/material'
 import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 
-export default function Notloggedintopbar() {
+export default function NotLoggedInTopbar() {
     const navigate = useNavigate();
     const goToHome = () => {
         navigate('/home');

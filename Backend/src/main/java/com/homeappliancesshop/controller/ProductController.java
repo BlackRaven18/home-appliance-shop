@@ -1,8 +1,10 @@
 package com.homeappliancesshop.controller;
 
+import com.homeappliancesshop.model.Person;
 import com.homeappliancesshop.model.Product;
 import com.homeappliancesshop.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,5 +26,14 @@ public class ProductController {
     @GetMapping("/{productId}")
     public Product getProduct(@PathVariable String productId){
         return service.getProductById(productId);
+    }
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Product createProduct(@RequestBody Product product){
+        return service.addProduct(product);
+    }
+    @DeleteMapping("/{productId}")
+    public String deleteProduct(@PathVariable String productId){
+        return service.deleteProduct(productId);
     }
 }

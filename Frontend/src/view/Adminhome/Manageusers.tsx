@@ -47,6 +47,12 @@ const Manageusers = () => {
         setSearchTerm(event.target.value);
     };
 
+    const handleDeleteUser = (index: number) => {
+        const newPeople = [...people];
+        newPeople.splice(index, 1);
+        setPeople(newPeople);
+    }
+
     const filteredPeople = people.filter((person) => {
         const fullName = `${person.name} ${person.surname}`;
         return fullName.toLowerCase().includes(searchTerm.toLowerCase());
@@ -80,7 +86,7 @@ const Manageusers = () => {
                             <p style={{fontSize: '20px'}}>Miasto: {person && person.address && person.address.city ? person.address.city : 'unknown'}</p>
                             <p style={{fontSize: '20px'}}>Ulica: {person && person.address && person.address.street ? person.address.street : 'unknown'}</p>
                             <p style={{fontSize: '20px'}}>Kod pocztowy: {person && person.address && person.address.postCode ? person.address.postCode : 'unknown'}</p>
-                            <Button variant="contained">Usuń</Button>
+                            <Button variant="contained" onClick={() => handleDeleteUser(index)}>Usuń</Button>
                         </div>
                     ))
                 )}

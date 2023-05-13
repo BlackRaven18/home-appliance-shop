@@ -1,5 +1,6 @@
 package com.homeappliancesshop.service;
 
+import com.homeappliancesshop.model.Person;
 import com.homeappliancesshop.model.Product;
 import com.homeappliancesshop.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,5 +18,12 @@ public class ProductService {
 
     public Product getProductById(String productId){
         return repository.findById(productId).get();
+    }
+    public Product addProduct(Product product){
+        return repository.save(product);
+    }
+    public String deleteProduct(String productId){
+        repository.deleteById(productId);
+        return productId + "product deleted from database";
     }
 }

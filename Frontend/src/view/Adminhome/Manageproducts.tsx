@@ -47,6 +47,54 @@ const Manageproducts = () => {
         setSearchTerm(event.target.value);
     };
 
+    const createProduct = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
+        const target = event.target as typeof event.target & {
+            name: { value: string };
+            brand: { value: string };
+            color: { value: string };
+            specification: { value: string };
+        };
+        const name = target.name.value;
+        const brand = target.brand.value;
+        const color = target.color.value;
+        const specification = target.specification.value;
+        const price = parseFloat(event.currentTarget.price.value);
+
+
+        const newProduct = {
+            name,
+            brand,
+            color,
+            specification,
+            price,
+
+        };
+
+        axios
+            .post(url + '/products', newProduct)
+            .then((response) => {
+                setProducts([...products, response.data]);
+                event.currentTarget.reset();
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    };
+
+    const deleteProduct = (productId: string) => {
+        axios
+            .delete(url + `/products/${productId}`)
+            .then(() => {
+                const updatedProducts = products.filter((product) => product.productId !== productId);
+                setProducts(updatedProducts);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
     return (
         <>
             <div>
@@ -65,13 +113,14 @@ const Manageproducts = () => {
                         <p style={{ fontSize: '20px' }}>Specyfikacja: {product.specification}</p>
                         <p style={{ fontSize: '20px' }}>Cena: {product.price}</p>
                         <p style={{ fontSize: '20px' }}>Kategoria: {product && product.category && product.category.name ? product.category.name : 'unknown'}</p>
-                        <Button variant="contained">Usuń</Button>
+                        <Button variant="contained" onClick={() => deleteProduct(product.productId)}>Usuń</Button>
                     </div>
                 ))}
             </div>
             <Box
                 component="form"
                 noValidate
+                onSubmit={createProduct}
                 sx={{
                     ml: 1,
                     width: '400px'
@@ -124,15 +173,6 @@ const Manageproducts = () => {
                     label="Cena"
                     id="price"
                     autoComplete="price"
-                />
-                <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    name="category"
-                    label="Kategoria"
-                    id="category"
-                    autoComplete="category"
                 />
                 <Button
                     type="submit"

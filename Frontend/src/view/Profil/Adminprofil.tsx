@@ -1,18 +1,20 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
-import Topbar from './../topbar/Topbar';
+import Admintopbar from '../../topbar/Admintopbar';
+import Profillist from './Profillist';
 
-function Koszyk() {
+function Adminprofil() {
   return (
     <div>
-      <Topbar />
+      <Admintopbar />
       <Typography variant="h4" align="center" sx={{ mt: 2 }}>
-        Koszyk
+        Profil
       </Typography>
+      <Profillist/>
     </div>
   );
 }
 
-export default Koszyk;
+export default Adminprofil;
 
 

@@ -10,20 +10,21 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
-@Document(collection = "persons")
+@Document(collection = "cart")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Person {
 
+public class Cart {
     @Id
-    private String personId;
+    private String cartId;
     private String name;
-    private String surname;
-    private String email;
-    private String password;
-    private String phoneNumber;
-    @DocumentReference
-    private Address address;
+    private String brand;
+    private String color;
+    private String specification;
+    private double price;
+    private String imageURL;
 
+    @DocumentReference
+    private Category category;
 }

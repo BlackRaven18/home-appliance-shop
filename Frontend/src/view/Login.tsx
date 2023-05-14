@@ -13,56 +13,24 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { GoogleLoginButton, FacebookLoginButton } from "react-social-login-buttons";
-import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
-import { ReactFacebookLoginInfo, ReactFacebookFailureResponse } from 'react-facebook-login';
+
 
 const theme = createTheme();
 
 export default function SignInSide() {
     const navigate = useNavigate();
-
-    const handleLogin = async (email: string, password: string) => {
-        try {
-            const response = await fetch('/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, password }),
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                console.log('Zalogowano:', data);
-                navigate('/loginhome');
-            } else {
-                console.log('Błędne dane logowania.');
-            }
-        } catch (error) {
-            console.error('Wystąpił błąd podczas logowania:', error);
-        }
-    };
-
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        const email = data.get('email') as string;
-        const password = data.get('password') as string;
         console.log({
-            email: email,
-            password: password,
+            email: data.get('email'),
+            password: data.get('password'),
         });
-        handleLogin(email, password);
+
+        navigate('/loginhome');
+
     };
 
-    const responseFacebook = (response: ReactFacebookLoginInfo | ReactFacebookFailureResponse) => {
-        if ('accessToken' in response) {
-            console.log(response.accessToken);
-            navigate('/loginhome');
-        } else {
-            console.log('Nie udało się zalogować przez Facebooka');
-        }
-    }
 
     return (
         <ThemeProvider theme={theme}>
@@ -123,22 +91,14 @@ export default function SignInSide() {
                                 control={<Checkbox value="remember" color="primary" />}
                                 label="Pokaż hasło"
                             />
-                            <FacebookLogin
-                                appId="3179163212375828"
-                                autoLoad={false}
-                                fields="name,email,picture"
-                                callback={responseFacebook}
-                                render={(renderProps: { onClick: () => void; }) => (
-                                    <FacebookLoginButton onClick={renderProps.onClick} />
-                                )}
-                            />
+                            <FacebookLoginButton/>
                             <Button
                                 type="submit"
                                 fullWidth
                                 variant="contained"
                                 sx={{ mt: 3, mb: 2 }}
                             >
-                                Zaloguj się
+                                Zaloguj
                             </Button>
                             <Grid container>
                                 <Grid item xs>

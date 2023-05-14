@@ -25,24 +25,18 @@ public class PersonService {
     public Person getPersonById(String personId){
         return repository.findById(personId).get();
     }
-    public Person getPersonByEmail(String email) {
-        return repository.findByEmail(email);
-    }
 
     public Person addPerson(Person person){
-        Address address = person.getAddress();
-        if (address != null) {
-            addressService.addAddress(address);
-        }
+        addressService.addAddress(person.getAddress());
         return repository.save(person);
     }
 
     public Person updatePerson(Person personRequest){
         Person existingPerson = repository.findById(personRequest.getPersonId()).get();
-        existingPerson.setEmail(personRequest.getEmail());
-        existingPerson.setPassword(personRequest.getPassword());
         existingPerson.setName(personRequest.getName());
         existingPerson.setSurname(personRequest.getSurname());
+        existingPerson.setEmail(personRequest.getEmail());
+        existingPerson.setPassword(personRequest.getPassword());
         existingPerson.setPhoneNumber(personRequest.getPhoneNumber());
         return repository.save(existingPerson);
     }
@@ -50,5 +44,8 @@ public class PersonService {
     public String deletePerson(String personId){
         repository.deleteById(personId);
         return personId + "person deleted from database";
+    }
+    public boolean existsByEmail(String email) {
+        return repository.findByEmail(email) != null;
     }
 }

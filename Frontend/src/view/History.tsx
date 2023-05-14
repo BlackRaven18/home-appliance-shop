@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
-import Topbar from './../topbar/Topbar';
+import Topbar from '../topbar/Topbar';
 
-function Historia() {
+function History() {
   return (
     <div>
       <Topbar />
@@ -13,4 +13,4 @@ function Historia() {
   );
 }
 
-export default Historia;
+export default History;

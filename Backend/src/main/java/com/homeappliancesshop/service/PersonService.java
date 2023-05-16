@@ -48,4 +48,16 @@ public class PersonService {
     public boolean existsByEmail(String email) {
         return repository.findByEmail(email) != null;
     }
+
+    public Person getPersonByLoginDatas(String email, String password) {
+        if(repository.findByEmail(email) != null){
+            Person person = repository.findByEmail(email);
+            if (person.getPassword().equals(password)) {
+                return person;
+            }
+            return null;
+        }
+        return null;
+    }
+
 }

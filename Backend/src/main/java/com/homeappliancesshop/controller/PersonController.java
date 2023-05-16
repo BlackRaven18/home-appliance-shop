@@ -7,7 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 @CrossOrigin
 @RestController
 @RequestMapping("/persons")
@@ -24,6 +27,16 @@ public class PersonController {
     @GetMapping("/{personId}")
     public Person getPersonById(@PathVariable String personId){
         return service.getPersonById(personId);
+    }
+
+    @GetMapping("/login/{email}/{password}")
+    public ResponseEntity<?> getPersonId(@PathVariable String email, @PathVariable String password) {
+        Person person = service.getPersonByLoginDatas(email, password);
+        if (person != null) {
+            return ResponseEntity.ok(person);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Błędne dane logowania lub użytkownik nie istnieje");
+        }
     }
 
     @PostMapping
@@ -45,8 +58,4 @@ public class PersonController {
     public String deletePerson(@PathVariable String personId){
         return service.deletePerson(personId);
     }
-
-
-
-
 }

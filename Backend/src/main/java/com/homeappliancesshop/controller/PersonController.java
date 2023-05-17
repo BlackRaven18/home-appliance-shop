@@ -35,7 +35,7 @@ public class PersonController {
         if (person != null) {
             return ResponseEntity.ok(person);
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Błędne dane logowania lub użytkownik nie istnieje");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("\n" + "Invalid login details or user does not exist");
         }
     }
 
@@ -46,7 +46,7 @@ public class PersonController {
         }
 
         service.addPerson(person);
-        return ResponseEntity.ok("User registered successfully");
+        return ResponseEntity.ok(person.getPersonId());
     }
 
     @PutMapping

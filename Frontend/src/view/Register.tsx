@@ -18,9 +18,7 @@ import {
 // import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
 // import {ReactFacebookFailureResponse, ReactFacebookLoginInfo} from "react-facebook-login";
 
-const theme = createTheme({
-
-});
+const theme = createTheme({});
 
 interface Person {
     name: string;
@@ -55,26 +53,45 @@ const Register = () => {
         password: '',
     });
 
+    const [formValid, setFormValid] = useState(false);
+
+    const ErrorMessage = () => (
+        <p className="text-rose-600 font-medium">Fill all forms in a correct way</p>
+    );
+
+    const isFormValid = () => {
+        return (
+            formData.name !== "" &&
+            formData.surname !== "" &&
+            formData.email !== "" &&
+            formData.phoneNumber !== "" &&
+            formData.address.state !== "" &&
+            formData.address.city !== "" &&
+            formData.address.street !== "" &&
+            formData.address.postCode !== "" &&
+            formData.address.apartment !== "" &&
+            formData.password !== ""
+        );
+    };
+
     const onChangeForm = (key: string, value: any) => {
         setFormData((prevFormData) => ({
             ...prevFormData,
             [key]: value,
         }));
+        setFormValid(isFormValid());
     };
 
     const registerNewUser = () => {
-
-
-
         axios.post("http://localhost:8080/persons", formData)
-            .then(() => {
+            .then(response => {
+                console.log(response.data);
+                localStorage.setItem("user", JSON.stringify(response.data));
                 navigate('/loginhome');
-            }).catch(e => {
-                console.log(e)
-            }
-            );
-
-
+            })
+            .catch(error => {
+                console.log(error);
+            });
     };
 
     //     // const responseFacebook = (response: ReactFacebookLoginInfo | ReactFacebookFailureResponse) => {
@@ -229,6 +246,8 @@ const Register = () => {
                                 value={formData.address.apartment}
                                 onChange={e => onChangeForm('address', { ...formData.address, apartment: e.target.value })}
                             />
+                            {formValid ? "" : <ErrorMessage />}
+
                             {/*<FacebookLogin*/}
                             {/*    appId="3179163212375828"*/}
                             {/*    autoLoad={false}*/}
@@ -243,6 +262,7 @@ const Register = () => {
                                 fullWidth
                                 variant="contained"
                                 sx={{ mt: 3, mb: 2 }}
+                                disabled={!formValid}
                             >
                                 Zarejestruj się
                             </Button>
@@ -261,7 +281,5 @@ const Register = () => {
         </ThemeProvider>
     );
 }
-
-
 
 export default Register;

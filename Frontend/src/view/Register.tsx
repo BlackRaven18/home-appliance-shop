@@ -1,25 +1,26 @@
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import LinkMaterial from '@mui/material/Link';
-import { Link, useNavigate } from "react-router-dom";
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useState } from 'react';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import axios from 'axios';
+import React, { useState } from 'react';
+import { Link, useNavigate } from "react-router-dom";
+
+import {
+    Avatar,
+    Box,
+    Button,
+    CssBaseline,
+    Grid,
+    Paper,
+    TextField,
+    Typography
+} from "@mui/material";
 // import { GoogleLoginButton, FacebookLoginButton } from "react-social-login-buttons";
 // import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
 // import {ReactFacebookFailureResponse, ReactFacebookLoginInfo} from "react-facebook-login";
 
-const theme = createTheme();
+const theme = createTheme({
+
+});
 
 interface Person {
     name: string;
@@ -36,45 +37,54 @@ interface Person {
     password: string;
 }
 
+
 const Register = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState<Person>({
-      name: '',
-      surname: '',
-      email: '',
-      phoneNumber: '',
-      address: {
-        state: '',
-        city: '',
-        street: '',
-        postCode: '',
-        apartment: '',
-      },
-      password: '',
+        name: '',
+        surname: '',
+        email: '',
+        phoneNumber: '',
+        address: {
+            state: '',
+            city: '',
+            street: '',
+            postCode: '',
+            apartment: '',
+        },
+        password: '',
     });
 
     const onChangeForm = (key: string, value: any) => {
         setFormData((prevFormData) => ({
-          ...prevFormData,
-          [key]: value,
+            ...prevFormData,
+            [key]: value,
         }));
-      };
-        
-            const registerNewUser = () => {
-                axios.post("http://localhost:8080/persons", formData)
-                  .then(() => {
-                    navigate('/loginhome');
-                  }).catch(e => console.log(e));
-              };
+    };
 
-//     // const responseFacebook = (response: ReactFacebookLoginInfo | ReactFacebookFailureResponse) => {
-//     //     if ('accessToken' in response) {
-//     //         console.log(response.accessToken);
-//     //         navigate('/loginhome');
-//     //     } else {
-//     //         console.log('Nie udało się zalogować przez Facebooka');
-//     //     }
-//     // }
+    const registerNewUser = () => {
+
+
+
+        axios.post("http://localhost:8080/persons", formData)
+            .then(() => {
+                navigate('/loginhome');
+            }).catch(e => {
+                console.log(e)
+            }
+            );
+
+
+    };
+
+    //     // const responseFacebook = (response: ReactFacebookLoginInfo | ReactFacebookFailureResponse) => {
+    //     //     if ('accessToken' in response) {
+    //     //         console.log(response.accessToken);
+    //     //         navigate('/loginhome');
+    //     //     } else {
+    //     //         console.log('Nie udało się zalogować przez Facebooka');
+    //     //     }
+    //     // }
 
 
     return (
@@ -112,18 +122,14 @@ const Register = () => {
                             Zarejestruj się
                         </Typography>
                         <Box component="form" noValidate sx={{ mt: 1 }}>
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="email"
-                            label="Adres email"
-                            name="email"
-                            autoComplete="email"
-                            autoFocus
-                            value={formData.email}
-                            onChange={e => onChangeForm('email', e.target.value)}
-                        />
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                label="Adres email"
+                                value={formData.email}
+                                onChange={e => onChangeForm('email', e.target.value)}
+                            />
                             <TextField
                                 margin="normal"
                                 required
@@ -132,106 +138,97 @@ const Register = () => {
                                 label="Password"
                                 name="password"
                                 autoComplete="password"
-                                autoFocus
                                 value={formData.password}
                                 onChange={e => onChangeForm('password', e.target.value)}
                             />
                             <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="name"
-                            label="Imie"
-                            name="name"
-                            autoComplete="Imie"
-                            autoFocus
-                            value={formData.name}
-                            onChange={e => onChangeForm('name', e.target.value)}
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="name"
+                                label="Imie"
+                                name="name"
+                                autoComplete="Imie"
+                                value={formData.name}
+                                onChange={e => onChangeForm('name', e.target.value)}
                             />
                             <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="surname"
-                            label="Surname"
-                            name="surname"
-                            autoComplete="Nazwisko"
-                            autoFocus
-                            value={formData.surname}
-                            onChange={e => onChangeForm('surname', e.target.value)}
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="phoneNumber"
-                            label="phoneNumber"
-                            name="phoneNumber"
-                            autoComplete="Nr telefonu"
-                            autoFocus
-                            value={formData.phoneNumber}
-                            onChange={e => onChangeForm('phoneNumber', e.target.value)}
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="state"
-                            label="state"
-                            name="state"
-                            autoComplete="Województwo"
-                            autoFocus
-                            value={formData.address.state}
-                            onChange={e => onChangeForm('address', { ...formData.address, state: e.target.value })}
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="city"
-                            label="city"
-                            name="city"
-                            autoComplete="Miasto"
-                            autoFocus
-                            value={formData.address.city}
-                            onChange={e => onChangeForm('address', { ...formData.address, city: e.target.value })}
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="street"
-                            label="street"
-                            name="street"
-                            autoComplete="Ulica"
-                            autoFocus
-                            value={formData.address.street}
-                            onChange={e => onChangeForm('address', { ...formData.address, street: e.target.value })}
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="postCode"
-                            label="postCode"
-                            name="postCode"
-                            autoComplete="Kod pocztowy"
-                            autoFocus
-                            value={formData.address.postCode}
-                            onChange={e => onChangeForm('address', { ...formData.address, postCode: e.target.value })}
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="apartment"
-                            label="apartment"
-                            name="apartment"
-                            autoComplete="Nr domu"
-                            autoFocus
-                            value={formData.address.apartment}
-                            onChange={e => onChangeForm('address', { ...formData.address, apartment: e.target.value })}
-                        />
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="surname"
+                                label="Surname"
+                                name="surname"
+                                autoComplete="Nazwisko"
+                                value={formData.surname}
+                                onChange={e => onChangeForm('surname', e.target.value)}
+                            />
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="phoneNumber"
+                                label="phoneNumber"
+                                name="phoneNumber"
+                                autoComplete="Nr telefonu"
+                                value={formData.phoneNumber}
+                                onChange={e => onChangeForm('phoneNumber', e.target.value)}
+                            />
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="state"
+                                label="state"
+                                name="state"
+                                autoComplete="Województwo"
+                                value={formData.address.state}
+                                onChange={e => onChangeForm('address', { ...formData.address, state: e.target.value })}
+                            />
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="city"
+                                label="city"
+                                name="city"
+                                autoComplete="Miasto"
+                                value={formData.address.city}
+                                onChange={e => onChangeForm('address', { ...formData.address, city: e.target.value })}
+                            />
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="street"
+                                label="street"
+                                name="street"
+                                autoComplete="Ulica"
+                                value={formData.address.street}
+                                onChange={e => onChangeForm('address', { ...formData.address, street: e.target.value })}
+                            />
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="postCode"
+                                label="postCode"
+                                name="postCode"
+                                autoComplete="Kod pocztowy"
+                                value={formData.address.postCode}
+                                onChange={e => onChangeForm('address', { ...formData.address, postCode: e.target.value })}
+                            />
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="apartment"
+                                label="apartment"
+                                name="apartment"
+                                autoComplete="Nr domu"
+                                value={formData.address.apartment}
+                                onChange={e => onChangeForm('address', { ...formData.address, apartment: e.target.value })}
+                            />
                             {/*<FacebookLogin*/}
                             {/*    appId="3179163212375828"*/}
                             {/*    autoLoad={false}*/}
@@ -242,7 +239,6 @@ const Register = () => {
                             {/*    )}*/}
                             {/*/>*/}
                             <Button
-                                type="submit"
                                 onClick={registerNewUser}
                                 fullWidth
                                 variant="contained"
@@ -253,11 +249,9 @@ const Register = () => {
                             <Grid container>
 
                                 <Grid item>
-                                    <LinkMaterial href="#" variant="body2">
-                                        <Link to='/login'>
-                                            {"Wróć do logowania"}
-                                        </Link>
-                                    </LinkMaterial>
+                                    <Link to='/login'>
+                                        {"Wróć do logowania"}
+                                    </Link>
                                 </Grid>
                             </Grid>
                         </Box>
@@ -267,4 +261,7 @@ const Register = () => {
         </ThemeProvider>
     );
 }
+
+
+
 export default Register;

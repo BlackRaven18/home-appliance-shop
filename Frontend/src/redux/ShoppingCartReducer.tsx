@@ -1,24 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
+import ProductInterface from '../view/ProductInterface'
 
-interface Product {
-  productId: string;
-  name: string;
-  brand: string;
-  color: string;
-  specification: string;
-  price: number;
-  imageURL: string;
-  category: {
-    categoryId: string;
-    name: string;
-  };
-}
 
 interface CartState {
   cart: {
     quantity: number,
-    productDetails: Product
+    productDetails: ProductInterface
   }[]
 
   totalAmount: number,
@@ -60,7 +48,7 @@ export const shoppingCartSlice = createSlice({
   initialState,
   reducers: {
 
-    addProductToCart: (state, action: PayloadAction<Product>) => {
+    addProductToCart: (state, action: PayloadAction<ProductInterface>) => {
       const itemInCart = state.cart.find(
         (item) => item.productDetails.productId === action.payload.productId);
 
@@ -75,7 +63,7 @@ export const shoppingCartSlice = createSlice({
       }
     },
 
-    decrementAmountOfProduct: (state, action: PayloadAction<Product>) => {
+    decrementAmountOfProduct: (state, action: PayloadAction<ProductInterface>) => {
       const itemInCart = state.cart.find(
         (item) => item.productDetails.productId === action.payload.productId);
 
@@ -101,7 +89,7 @@ export const shoppingCartSlice = createSlice({
       }
     },
 
-    incrementAmountOfProduct: (state, action: PayloadAction<Product>) => {
+    incrementAmountOfProduct: (state, action: PayloadAction<ProductInterface>) => {
       const itemInCart = state.cart.find(
         (item) => item.productDetails.productId === action.payload.productId);
 

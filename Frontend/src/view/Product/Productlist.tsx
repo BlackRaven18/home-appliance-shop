@@ -3,20 +3,8 @@ import TextField from '@mui/material/TextField';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import ProductListElement from './ProductListElement';
+import  ProductInterface  from '../ProductInterface'
 
-interface Product {
-    productId: string;
-    name: string;
-    brand: string;
-    color: string;
-    specification: string;
-    price: number;
-    imageURL: string;
-    category: {
-        categoryId: string;
-        name: string;
-    };
-}
 
 let url = 'http://localhost:8080';
 
@@ -25,7 +13,7 @@ interface ProductListProps {
 }
 
 const ProductList = ({ categoryId }: ProductListProps) => {
-    const [products, setProducts] = useState<Product[]>([]);
+    const [products, setProducts] = useState<ProductInterface[]>([]);
     const [searchText, setSearchText] = useState('');
 
     useEffect(() => {

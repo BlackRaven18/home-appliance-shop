@@ -1,32 +1,23 @@
-import { Box } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import { useDispatch, useSelector } from 'react-redux';
-import { decrementAmountOfProduct, incrementAmountOfProduct } from '../../redux/ShoppingCartReducer';
+import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import Topbar from '../../topbar/Topbar';
 import ShoppingCartElement from './ShoppingCartElement';
+import { useNavigate } from 'react-router';
 
 
 
 
-interface Product {
-  productId: string;
-  name: string;
-  brand: string;
-  color: string;
-  specification: string;
-  price: number;
-  imageURL: string;
-  category: {
-    categoryId: string;
-    name: string;
-  };
-}
 
 function ShoppingCart() {
 
   const shoppingCart = useSelector((state: RootState) => state.shoppingCart);
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const payForProducts = () => {
+    //navigate("/sumarry");
+  }
 
   return (
     <>
@@ -58,6 +49,14 @@ function ShoppingCart() {
       <Typography variant='h5' padding='10px'>
         Całkowity koszt: {shoppingCart.totalAmount}
       </Typography>
+
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={payForProducts}
+      >
+        Zapłać
+      </Button>
 
 
     </>

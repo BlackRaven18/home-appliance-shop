@@ -1,37 +1,24 @@
 import { Box, Button, Grid, Typography } from '@mui/material';
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { decrementAmountOfProduct, incrementAmountOfProduct } from '../../redux/ShoppingCartReducer';
 import { useNavigate } from "react-router";
-
-type Product = {
-    productId: string;
-    name: string;
-    brand: string;
-    color: string;
-    specification: string;
-    price: number;
-    imageURL: string;
-    category: {
-        categoryId: string;
-        name: string;
-    };
-}
+import { decrementAmountOfProduct, incrementAmountOfProduct } from '../../redux/ShoppingCartReducer';
+import  ProductInterface  from "../ProductInterface";
 
 interface ShoppingCartElementProps {
     quantity: number;
-    productDetails: Product;
+    productDetails: ProductInterface;
 }
 
 const ShoppingCartElement: React.FC<ShoppingCartElementProps> = ({ quantity, productDetails }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const incrementAmount = (productDetails: Product) => {
+    const incrementAmount = (productDetails: ProductInterface) => {
         dispatch(incrementAmountOfProduct(productDetails))
     }
 
-    const decrementAmount = (productDetails: Product) => {
+    const decrementAmount = (productDetails: ProductInterface) => {
         dispatch(decrementAmountOfProduct(productDetails))
     }
 

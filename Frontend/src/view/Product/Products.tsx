@@ -4,9 +4,7 @@ import { RootState } from '../../redux/store';
 import ProductList from './ProductList';
 
 function Products() {
-    // const location = useLocation();
-    // const searchParams = new URLSearchParams(location.search);
-    // const subcategory = searchParams.get('subcategory');
+
 
     const categories = useSelector((state: RootState) => state.categories)
 

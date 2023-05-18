@@ -9,6 +9,7 @@ import ShoppingCart from './../view/ShoppingCart/ShoppingCart';
 import History from '../view/History';
 import Profil from '../view/Profil/Profil';
 import Adminprofil from '../view/Profil/Adminprofil';
+import Summary from "../view/ShoppingCart/Summary";
 import {
     createBrowserRouter,
 } from "react-router-dom";
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
     {
         path: "/shoppingcart",
         element: <ShoppingCart />,
+    },
+    {
+        path: "/summary",
+        element: <Summary />,
     },
     {
         path: "/history",

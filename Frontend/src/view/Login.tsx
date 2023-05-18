@@ -27,7 +27,7 @@ interface Person {
 
 interface ErrorMessageProps {
     message: string;
-  }
+}
 
 const Login = () => {
     const navigate = useNavigate();
@@ -39,6 +39,8 @@ const Login = () => {
     const [serverErrorMessage, setServerErrorMessage] = useState('');
     const [errorMessages, setErrorMessages] = useState<string[]>([]);
 
+    const [isPasswordShown, setPasswordIsShown] = useState(false);
+
     const ErrorMessage = () => (
         <div>
             {errorMessages.map((errorMessage, index) => (
@@ -49,11 +51,11 @@ const Login = () => {
         </div>
     );
 
-      const ServerErrorMessage: React.FC<ErrorMessageProps> = ({ message }) => (
+    const ServerErrorMessage: React.FC<ErrorMessageProps> = ({ message }) => (
         <div>
-          <p className="text-rose-600 font-medium">{message}</p>
+            <p className="text-rose-600 font-medium">{message}</p>
         </div>
-      );
+    );
 
     const onChangeForm = (key: string, value: any) => {
         setFormData((prevFormData) => ({
@@ -82,7 +84,6 @@ const Login = () => {
             .post('http://localhost:8080/persons/login', formData)
             .then((response) => {
                 if (response.data) {
-                    console.log(response.data);
                     localStorage.setItem('user', JSON.stringify(response.data));
                     navigate('/loginhome');
                 } else {
@@ -90,7 +91,6 @@ const Login = () => {
                 }
             })
             .catch((error) => {
-                console.log(error.response.data);
                 setErrorMessages([error.response.data]);
                 setServerErrorMessage(error.response.data);
             });
@@ -151,6 +151,7 @@ const Login = () => {
                                 margin="normal"
                                 required
                                 fullWidth
+                                type={isPasswordShown ? 'text' : 'password'}
                                 id="password"
                                 label="Password"
                                 name="password"
@@ -163,7 +164,13 @@ const Login = () => {
                                 }
                             />
                             <FormControlLabel
-                                control={<Checkbox value="remember" color="primary" />}
+                                control={
+                                    <Checkbox
+                                        value={isPasswordShown}
+                                        onChange={() => setPasswordIsShown(!isPasswordShown)}
+                                        color="primary"
+                                    />
+                                }
                                 label="Pokaż hasło"
                             />
                             {/* <FacebookLoginButton /> */}

@@ -34,9 +34,6 @@ public class PersonController {
         String email = person.getEmail();
         String password = person.getPassword();
 
-        System.out.println("Email: " + email);
-        System.out.println("Password: " + password);
-
         Person retrievedPerson = service.getPersonByLoginDatas(email, password);
 
         if (retrievedPerson != null) {

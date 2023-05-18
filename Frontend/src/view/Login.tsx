@@ -1,74 +1,100 @@
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import { Link, useNavigate } from "react-router-dom";
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { GoogleLoginButton, FacebookLoginButton } from "react-social-login-buttons";
-import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
-import { ReactFacebookLoginInfo, ReactFacebookFailureResponse } from 'react-facebook-login';
-import { BrowserRouter as Router } from "react-router-dom";
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import axios from 'axios';
+import React, { useState } from 'react';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import {
+    Avatar,
+    Box,
+    Button,
+    Checkbox,
+    CssBaseline,
+    FormControlLabel,
+    Grid,
+    Paper,
+    TextField,
+    Typography,
+    List,
+    ListItem,
+} from '@mui/material';
 
 const theme = createTheme();
 
-export default function SignInSide() {
+interface Person {
+    email: string;
+    password: string;
+}
+
+interface ErrorMessageProps {
+    message: string;
+  }
+
+const Login = () => {
     const navigate = useNavigate();
+    const [formData, setFormData] = useState<Person>({
+        email: '',
+        password: '',
+    });
 
-    const handleLogin = async (event: React.FormEvent, email: string, password: string) => {
-        console.log("handle_login");
-        event.preventDefault();
-        try {
-            const response = await fetch('/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, password }),
-            });
+    const [serverErrorMessage, setServerErrorMessage] = useState('');
+    const [errorMessages, setErrorMessages] = useState<string[]>([]);
 
-            if (response.ok) {
-                const data = await response.json();
-                console.log('Zalogowano:', data);
-                navigate('/loginhome');
-            } else {
-                console.log('Błędne dane logowania.');
+    const ErrorMessage = () => (
+        <div>
+            {errorMessages.map((errorMessage, index) => (
+                <p key={index} className="text-rose-600 font-medium">
+                    {errorMessage}
+                </p>
+            ))}
+        </div>
+    );
+
+      const ServerErrorMessage: React.FC<ErrorMessageProps> = ({ message }) => (
+        <div>
+          <p className="text-rose-600 font-medium">{message}</p>
+        </div>
+      );
+
+    const onChangeForm = (key: string, value: any) => {
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            [key]: value,
+        }));
+    };
+
+    const loginUser = () => {
+        setErrorMessages([]);
+
+        const emptyFields = Object.entries(formData).filter(([key, value]) => {
+            if (typeof value === 'string') {
+                return value.trim() === '';
             }
-        } catch (error) {
-            console.error('Wystąpił błąd podczas logowania:', error);
-        }
-    };
-
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        console.log("handle_submit");
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        const email = data.get('email') as string;
-        const password = data.get('password') as string;
-        console.log({
-            email: email,
-            password: password,
+            return false;
         });
-        handleLogin(event, email, password); // add event parameter here
-    };
 
-
-    const responseFacebook = (response: ReactFacebookLoginInfo | ReactFacebookFailureResponse) => {
-        console.log("responce_facebook");
-        if ('accessToken' in response) {
-            console.log(response.accessToken);
-            navigate('/loginhome');
-        } else {
-            console.log('Nie udało się zalogować przez Facebooka');
+        if (emptyFields.length > 0) {
+            const emptyFieldNames = emptyFields.map(([key]) => key);
+            setErrorMessages([...emptyFieldNames, 'Wprowadź wartości w powyższych polach']);
+            return;
         }
-    }
+
+        axios
+            .post('http://localhost:8080/persons/login', formData)
+            .then((response) => {
+                if (response.data) {
+                    console.log(response.data);
+                    localStorage.setItem('user', JSON.stringify(response.data));
+                    navigate('/loginhome');
+                } else {
+                    console.log('Empty response data');
+                }
+            })
+            .catch((error) => {
+                console.log(error.response.data);
+                setErrorMessages([error.response.data]);
+                setServerErrorMessage(error.response.data);
+            });
+    };
 
     return (
         <ThemeProvider theme={theme}>
@@ -104,69 +130,77 @@ export default function SignInSide() {
                         <Typography component="h1" variant="h5">
                             Zaloguj się
                         </Typography>
-                        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                        <Box component="form" noValidate sx={{ mt: 1 }}>
                             <TextField
                                 margin="normal"
                                 required
                                 fullWidth
-                                id="email"
                                 label="Adres email"
-                                name="email"
-                                autoComplete="email"
-                                autoFocus
+                                value={formData.email}
+                                onChange={(e) => onChangeForm('email', e.target.value)}
+                                error={
+                                    errorMessages.includes('email')
+                                }
+                                helperText={
+                                    errorMessages.includes('email') ?
+                                        'Pole nie może być puste' :
+                                        ''
+                                }
                             />
                             <TextField
                                 margin="normal"
                                 required
                                 fullWidth
-                                name="password"
-                                label="Hasło"
-                                type="password"
                                 id="password"
-                                autoComplete="current-password"
+                                label="Password"
+                                name="password"
+                                autoComplete="password"
+                                value={formData.password}
+                                onChange={(e) => onChangeForm('password', e.target.value)}
+                                error={errorMessages.includes('password')}
+                                helperText={
+                                    errorMessages.includes('password') ? 'Pole nie może być puste' : ''
+                                }
                             />
                             <FormControlLabel
                                 control={<Checkbox value="remember" color="primary" />}
                                 label="Pokaż hasło"
                             />
-                            <FacebookLogin
-                                appId="3179163212375828"
-                                autoLoad={false}
-                                fields="name,email,picture"
-                                callback={responseFacebook}
-                                render={(renderProps: { onClick: () => void; }) => (
-                                    <FacebookLoginButton onClick={renderProps.onClick} />
-                                )}
-                            />
+                            {/* <FacebookLoginButton /> */}
+                            {serverErrorMessage && serverErrorMessage.includes('Invalid login details or user does not exist') ? (
+                                <ServerErrorMessage message="Nieprawidłowe dane logowania lub użytkownik nie istnieje" />
+                            ) : null}
                             <Button
-                                type="submit"
                                 fullWidth
                                 variant="contained"
                                 sx={{ mt: 3, mb: 2 }}
+                                onClick={loginUser}
                             >
-                                Zaloguj się
+                                Zaloguj
                             </Button>
-                            <Grid container>
-                                <Grid item xs>
+                            <List>
+                                <ListItem>
+                                    <NavLink to='/register'>
+                                        Nie masz konta? Zarejestruj się!
+                                    </NavLink>
+                                </ListItem>
+                                <ListItem>
                                     <Link to='/adminLogin'>
                                         {"Jestem administratorem"}
                                     </Link>
-                                </Grid>
-                                <Grid item>
-                                    <Link to='/register'>
-                                        {"Nie masz konta? Zarejestruj się!"}
+                                </ListItem>
+                                <ListItem>
+                                    <Link to='/home'>
+                                        {"Wejdź jako niezalogowany"}
                                     </Link>
-                                </Grid>
-                            </Grid>
-                            <Grid item>
-                                <Link to='/home'>
-                                    {"Wejdź jako niezalogowany"}
-                                </Link>
-                            </Grid>
+                                </ListItem>
+                            </List>
                         </Box>
                     </Box>
                 </Grid>
             </Grid>
-        </ThemeProvider>
+        </ThemeProvider >
     );
 }
+
+export default Login;

@@ -110,7 +110,8 @@ const Manageproducts = () => {
                         <p style={{ fontSize: '20px' }}>Specyfikacja: {product.specification}</p>
                         <p style={{ fontSize: '20px' }}>Cena: {product.price}</p>
                         <p style={{ fontSize: '20px' }}>Kategoria: {product && product.category && product.category.name ? product.category.name : 'unknown'}</p>
-                        <Button variant="contained" onClick={() => handleDeleteProduct(product.productId)}>Usuń</Button>
+                        <Button variant="contained" style={{ margin: '15px' }} onClick={() => handleDeleteProduct(product.productId)}>Usuń</Button>
+                        <Button variant="contained" onClick={() => handleDeleteProduct(product.productId)}>Modyfikuj</Button>
                     </div>
                 ))}
             </div>

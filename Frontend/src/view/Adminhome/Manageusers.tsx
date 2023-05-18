@@ -66,6 +66,13 @@ const Manageusers = () => {
 
     const [isModifyClicked, setIsModifyClicked] = useState(false);
     const [newFirstName, setNewFirstName] = useState("");
+    const [newLastName, setNewLastName] = useState("");
+    const [newEmail, setNewEmail] = useState("");
+    const [newNumber, setNewNumber] = useState("");
+    const [newState, setNewState] = useState("");
+    const [newCity, setNewCity] = useState("");
+    const [newStreet, setNewStreet] = useState("");
+    const [newPostCode, setNewPostCode] = useState("");
     const handleModifyClick = (personId: string) => {
         setIsModifyClicked(true);
         setPersonId(personId);
@@ -73,20 +80,49 @@ const Manageusers = () => {
 
     const handleModifySubmit = async () => {
         try {
-            // Wyślij zmodyfikowane dane na serwer
             await axios.put(url + '/persons/' + personId, {
                 name: newFirstName,
-                // Dodaj inne pola, które mogą być modyfikowane
+                surname: newLastName,
+                email: newEmail,
+                phoneNumber: newNumber,
+                address: {
+                    state: newState,
+                    city: newCity,
+                    street: newStreet,
+                    postCode: newPostCode
+                }
             });
             getUsers(); // załaduj ponownie listę użytkowników po modyfikacji
             setIsModifyClicked(false); // Zresetuj stan po zatwierdzeniu modyfikacji
         } catch (error) {
             console.error(error);
         }
-    }
+    };
+
 
     const handleFirstNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setNewFirstName(event.target.value);
+    };
+    const handleLastNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setNewLastName(event.target.value);
+    };
+    const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setNewEmail(event.target.value);
+    };
+    const handleNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setNewNumber(event.target.value);
+    };
+    const handleStateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setNewState(event.target.value);
+    };
+    const handleCityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setNewCity(event.target.value);
+    };
+    const handleStreetChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setNewStreet(event.target.value);
+    };
+    const handlePostCodeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setNewPostCode(event.target.value);
     };
 
     return (
@@ -121,18 +157,71 @@ const Manageusers = () => {
                             <Button variant="contained" onClick={() => handleModifyClick(person.personId)}>Modyfikuj</Button>
 
                             {isModifyClicked && personId === person.personId && (
-                                <>
-                                    <TextField
-                                        label="Nowe imię"
-                                        variant="outlined"
-                                        value={newFirstName}
-                                        onChange={handleFirstNameChange}
-                                        style={{ marginTop: '20px' }}
-                                    />
-                                    <Button variant="contained" onClick={handleModifySubmit}>
-                                        Zatwierdź
-                                    </Button>
-                                </>
+                                <Grid container direction="column" spacing={2}>
+                                    <Grid item>
+                                        <TextField
+                                            label="Nowe imię"
+                                            variant="outlined"
+                                            value={newFirstName}
+                                            onChange={handleFirstNameChange}
+                                            style={{margin: '5px'}}
+                                        />
+                                        <TextField
+                                            label="Nowe nazwisko"
+                                            variant="outlined"
+                                            value={newLastName}
+                                            onChange={handleLastNameChange}
+                                            style={{margin: '5px'}}
+                                        />
+                                        <TextField
+                                            label="Nowy email"
+                                            variant="outlined"
+                                            value={newEmail}
+                                            onChange={handleEmailChange}
+                                            style={{margin: '5px'}}
+                                        />
+                                        <TextField
+                                            label="Nowy numer telefonu"
+                                            variant="outlined"
+                                            value={newNumber}
+                                            onChange={handleNumberChange}
+                                            style={{margin: '5px'}}
+                                        />
+                                        <TextField
+                                            label="Nowe województwo"
+                                            variant="outlined"
+                                            value={newState}
+                                            onChange={handleStateChange}
+                                            style={{margin: '5px'}}
+                                        />
+                                        <TextField
+                                            label="Nowe miasto"
+                                            variant="outlined"
+                                            value={newCity}
+                                            onChange={handleCityChange}
+                                            style={{margin: '5px'}}
+                                        />
+                                        <TextField
+                                            label="Nowa ulica"
+                                            variant="outlined"
+                                            value={newStreet}
+                                            onChange={handleStreetChange}
+                                            style={{margin: '5px'}}
+                                        />
+                                        <TextField
+                                            label="Nowy kod pocztowy"
+                                            variant="outlined"
+                                            value={newPostCode}
+                                            onChange={handlePostCodeChange}
+                                            style={{margin: '5px'}}
+                                        />
+                                    </Grid>
+                                    <Grid item>
+                                        <Button variant="contained" onClick={handleModifySubmit}>
+                                            Zatwierdź
+                                        </Button>
+                                    </Grid>
+                                </Grid>
                             )}
 
 

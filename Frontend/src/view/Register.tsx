@@ -13,6 +13,8 @@ import {
     Paper,
     TextField,
     Typography,
+    FormControlLabel,
+    Checkbox,
 } from '@mui/material';
 
 const theme = createTheme({});
@@ -50,6 +52,8 @@ const Register = () => {
     });
 
     const [errorMessages, setErrorMessages] = useState<string[]>([]);
+
+    const [isPasswordShown, setPasswordIsShown] = useState(false);
 
     const ErrorMessage = () => (
         <div>
@@ -161,6 +165,7 @@ const Register = () => {
                                 margin="normal"
                                 required
                                 fullWidth
+                                type={isPasswordShown ? 'text' : 'password'}
                                 id="password"
                                 label="Password"
                                 name="password"
@@ -301,6 +306,16 @@ const Register = () => {
                                 helperText={
                                     errorMessages.includes('address.apartment') ? 'Pole nie może być puste' : ''
                                 }
+                            />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        value={isPasswordShown}
+                                        onChange={() => setPasswordIsShown(!isPasswordShown)}
+                                        color="primary"
+                                    />
+                                }
+                                label="Pokaż hasło"
                             />
                             <Button
                                 fullWidth

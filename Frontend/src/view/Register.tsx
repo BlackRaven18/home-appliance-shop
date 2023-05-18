@@ -2,7 +2,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import axios from 'axios';
 import React, { useState } from 'react';
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from 'react-router-dom';
 
 import {
     Avatar,
@@ -12,11 +12,8 @@ import {
     Grid,
     Paper,
     TextField,
-    Typography
-} from "@mui/material";
-// import { GoogleLoginButton, FacebookLoginButton } from "react-social-login-buttons";
-// import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
-// import {ReactFacebookFailureResponse, ReactFacebookLoginInfo} from "react-facebook-login";
+    Typography,
+} from '@mui/material';
 
 const theme = createTheme({});
 
@@ -31,10 +28,9 @@ interface Person {
         street: string;
         postCode: string;
         apartment: string;
-    }
+    };
     password: string;
 }
-
 
 const Register = () => {
     const navigate = useNavigate();
@@ -53,56 +49,57 @@ const Register = () => {
         password: '',
     });
 
-    const [formValid, setFormValid] = useState(false);
+    const [errorMessages, setErrorMessages] = useState<string[]>([]);
 
     const ErrorMessage = () => (
-        <p className="text-rose-600 font-medium">Fill all forms in a correct way</p>
+        <div>
+            {errorMessages.map((errorMessage, index) => (
+                <p key={index} className="text-rose-600 font-medium">
+                    {errorMessage}
+                </p>
+            ))}
+        </div>
     );
-
-    const isFormValid = () => {
-        return (
-            formData.name !== "" &&
-            formData.surname !== "" &&
-            formData.email !== "" &&
-            formData.phoneNumber !== "" &&
-            formData.address.state !== "" &&
-            formData.address.city !== "" &&
-            formData.address.street !== "" &&
-            formData.address.postCode !== "" &&
-            formData.address.apartment !== "" &&
-            formData.password !== ""
-        );
-    };
 
     const onChangeForm = (key: string, value: any) => {
         setFormData((prevFormData) => ({
             ...prevFormData,
             [key]: value,
         }));
-        setFormValid(isFormValid());
     };
 
     const registerNewUser = () => {
-        axios.post("http://localhost:8080/persons", formData)
-            .then(response => {
+        setErrorMessages([]);
+
+        const emptyFields = Object.entries(formData).filter(([key, value]) => {
+            if (typeof value === 'string') {
+                return value.trim() === '';
+            } else if (typeof value === 'object') {
+                return Object.values(value).some(
+                    (addressFieldValue) => String(addressFieldValue).trim() === ''
+                );
+            }
+            return false;
+        });
+
+        if (emptyFields.length > 0) {
+            const emptyFieldNames = emptyFields.map(([key]) => key);
+            setErrorMessages([...emptyFieldNames, 'Wprowadź wartości w powyższych polach']);
+            return;
+        }
+
+        axios
+            .post('http://localhost:8080/persons', formData)
+            .then((response) => {
                 console.log(response.data);
-                localStorage.setItem("user", JSON.stringify(response.data));
+                localStorage.setItem('user', JSON.stringify(response.data));
                 navigate('/loginhome');
             })
-            .catch(error => {
-                console.log(error);
+            .catch((error) => {
+                console.log(error.response.data);
+                setErrorMessages([error.response.data]);
             });
     };
-
-    //     // const responseFacebook = (response: ReactFacebookLoginInfo | ReactFacebookFailureResponse) => {
-    //     //     if ('accessToken' in response) {
-    //     //         console.log(response.accessToken);
-    //     //         navigate('/loginhome');
-    //     //     } else {
-    //     //         console.log('Nie udało się zalogować przez Facebooka');
-    //     //     }
-    //     // }
-
 
     return (
         <ThemeProvider theme={theme}>
@@ -145,8 +142,21 @@ const Register = () => {
                                 fullWidth
                                 label="Adres email"
                                 value={formData.email}
-                                onChange={e => onChangeForm('email', e.target.value)}
+                                onChange={(e) => onChangeForm('email', e.target.value)}
+                                error={
+                                    errorMessages.includes('Email already exists') ||
+                                    errorMessages.includes('email')
+                                }
+                                helperText={
+                                    errorMessages.includes('Email already exists') ?
+                                        'Konto o podanym emailu już istnieje' :
+                                        errorMessages.includes('email') ?
+                                            'Pole nie może być puste' :
+                                            ''
+                                }
                             />
+
+
                             <TextField
                                 margin="normal"
                                 required
@@ -156,7 +166,11 @@ const Register = () => {
                                 name="password"
                                 autoComplete="password"
                                 value={formData.password}
-                                onChange={e => onChangeForm('password', e.target.value)}
+                                onChange={(e) => onChangeForm('password', e.target.value)}
+                                error={errorMessages.includes('password')}
+                                helperText={
+                                    errorMessages.includes('password') ? 'Pole nie może być puste' : ''
+                                }
                             />
                             <TextField
                                 margin="normal"
@@ -167,7 +181,11 @@ const Register = () => {
                                 name="name"
                                 autoComplete="Imie"
                                 value={formData.name}
-                                onChange={e => onChangeForm('name', e.target.value)}
+                                onChange={(e) => onChangeForm('name', e.target.value)}
+                                error={errorMessages.includes('name')}
+                                helperText={
+                                    errorMessages.includes('name') ? 'Pole nie może być puste' : ''
+                                }
                             />
                             <TextField
                                 margin="normal"
@@ -178,7 +196,11 @@ const Register = () => {
                                 name="surname"
                                 autoComplete="Nazwisko"
                                 value={formData.surname}
-                                onChange={e => onChangeForm('surname', e.target.value)}
+                                onChange={(e) => onChangeForm('surname', e.target.value)}
+                                error={errorMessages.includes('surname')}
+                                helperText={
+                                    errorMessages.includes('surname') ? 'Pole nie może być puste' : ''
+                                }
                             />
                             <TextField
                                 margin="normal"
@@ -189,7 +211,11 @@ const Register = () => {
                                 name="phoneNumber"
                                 autoComplete="Nr telefonu"
                                 value={formData.phoneNumber}
-                                onChange={e => onChangeForm('phoneNumber', e.target.value)}
+                                onChange={(e) => onChangeForm('phoneNumber', e.target.value)}
+                                error={errorMessages.includes('phoneNumber')}
+                                helperText={
+                                    errorMessages.includes('phoneNumber') ? 'Pole nie może być puste' : ''
+                                }
                             />
                             <TextField
                                 margin="normal"
@@ -200,7 +226,13 @@ const Register = () => {
                                 name="state"
                                 autoComplete="Województwo"
                                 value={formData.address.state}
-                                onChange={e => onChangeForm('address', { ...formData.address, state: e.target.value })}
+                                onChange={(e) =>
+                                    onChangeForm('address', { ...formData.address, state: e.target.value })
+                                }
+                                error={errorMessages.includes('address.state')}
+                                helperText={
+                                    errorMessages.includes('address.state') ? 'Pole nie może być puste' : ''
+                                }
                             />
                             <TextField
                                 margin="normal"
@@ -211,7 +243,13 @@ const Register = () => {
                                 name="city"
                                 autoComplete="Miasto"
                                 value={formData.address.city}
-                                onChange={e => onChangeForm('address', { ...formData.address, city: e.target.value })}
+                                onChange={(e) =>
+                                    onChangeForm('address', { ...formData.address, city: e.target.value })
+                                }
+                                error={errorMessages.includes('address.city')}
+                                helperText={
+                                    errorMessages.includes('address.city') ? 'Pole nie może być puste' : ''
+                                }
                             />
                             <TextField
                                 margin="normal"
@@ -222,7 +260,13 @@ const Register = () => {
                                 name="street"
                                 autoComplete="Ulica"
                                 value={formData.address.street}
-                                onChange={e => onChangeForm('address', { ...formData.address, street: e.target.value })}
+                                onChange={(e) =>
+                                    onChangeForm('address', { ...formData.address, street: e.target.value })
+                                }
+                                error={errorMessages.includes('address.street')}
+                                helperText={
+                                    errorMessages.includes('address.street') ? 'Pole nie może być puste' : ''
+                                }
                             />
                             <TextField
                                 margin="normal"
@@ -233,7 +277,13 @@ const Register = () => {
                                 name="postCode"
                                 autoComplete="Kod pocztowy"
                                 value={formData.address.postCode}
-                                onChange={e => onChangeForm('address', { ...formData.address, postCode: e.target.value })}
+                                onChange={(e) =>
+                                    onChangeForm('address', { ...formData.address, postCode: e.target.value })
+                                }
+                                error={errorMessages.includes('address.postCode')}
+                                helperText={
+                                    errorMessages.includes('address.postCode') ? 'Pole nie może być puste' : ''
+                                }
                             />
                             <TextField
                                 margin="normal"
@@ -244,33 +294,26 @@ const Register = () => {
                                 name="apartment"
                                 autoComplete="Nr domu"
                                 value={formData.address.apartment}
-                                onChange={e => onChangeForm('address', { ...formData.address, apartment: e.target.value })}
+                                onChange={(e) =>
+                                    onChangeForm('address', { ...formData.address, apartment: e.target.value })
+                                }
+                                error={errorMessages.includes('address.apartment')}
+                                helperText={
+                                    errorMessages.includes('address.apartment') ? 'Pole nie może być puste' : ''
+                                }
                             />
-                            {formValid ? "" : <ErrorMessage />}
-
-                            {/*<FacebookLogin*/}
-                            {/*    appId="3179163212375828"*/}
-                            {/*    autoLoad={false}*/}
-                            {/*    fields="name,email,picture"*/}
-                            {/*    callback={responseFacebook}*/}
-                            {/*    render={(renderProps: { onClick: () => void; }) => (*/}
-                            {/*        <FacebookLoginButton onClick={renderProps.onClick} />*/}
-                            {/*    )}*/}
-                            {/*/>*/}
                             <Button
-                                onClick={registerNewUser}
                                 fullWidth
                                 variant="contained"
                                 sx={{ mt: 3, mb: 2 }}
-                                disabled={!formValid}
+                                onClick={registerNewUser}
                             >
                                 Zarejestruj się
                             </Button>
                             <Grid container>
-
                                 <Grid item>
-                                    <Link to='/login'>
-                                        {"Wróć do logowania"}
+                                    <Link to="/login">
+                                        {'Masz już konto? Zaloguj się'}
                                     </Link>
                                 </Grid>
                             </Grid>
@@ -280,6 +323,6 @@ const Register = () => {
             </Grid>
         </ThemeProvider>
     );
-}
+};
 
 export default Register;

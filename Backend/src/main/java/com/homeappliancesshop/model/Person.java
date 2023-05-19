@@ -15,7 +15,6 @@ import org.springframework.data.mongodb.core.mapping.DocumentReference;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Person {
-
     @Id
     private String personId;
     private String name;

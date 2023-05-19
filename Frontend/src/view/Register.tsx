@@ -1,8 +1,9 @@
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import axios from 'axios';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { FacebookLoginButton } from "react-social-login-buttons";
 
 import {
     Avatar,
@@ -36,6 +37,9 @@ interface Person {
 
 const Register = () => {
     const navigate = useNavigate();
+
+    const [isPasswordShown, setPasswordIsShown] = useState(false);
+
     const [formData, setFormData] = useState<Person>({
         name: '',
         surname: '',
@@ -52,8 +56,6 @@ const Register = () => {
     });
 
     const [errorMessages, setErrorMessages] = useState<string[]>([]);
-
-    const [isPasswordShown, setPasswordIsShown] = useState(false);
 
     const ErrorMessage = () => (
         <div>
@@ -74,39 +76,36 @@ const Register = () => {
 
     const registerNewUser = () => {
         setErrorMessages([]);
-      
+
         const emptyFields = Object.entries(formData).filter(([key, value]) => {
-          if (typeof value === 'string') {
-            return value.trim() === '';
-          } else if (typeof value === 'object') {
-            return Object.values(value).some((addressFieldValue) => String(addressFieldValue).trim() === '');
-          }
-          return false;
+            if (typeof value === 'string') {
+                return value.trim() === '';
+            } else if (typeof value === 'object') {
+                return Object.values(value).some(
+                    (addressFieldValue) => String(addressFieldValue).trim() === ''
+                );
+            }
+            return false;
         });
-      
-        const emptyAddressFields = Object.entries(formData.address).filter(([key, value]) => {
-          return value.trim() === '';
-        });
-      
-        if (emptyFields.length > 0 || emptyAddressFields.length > 0) {
-          const emptyFieldNames = emptyFields.map(([key]) => key);
-          const emptyAddressFieldNames = emptyAddressFields.map(([key]) => `address.${key}`);
-          setErrorMessages([...emptyFieldNames, ...emptyAddressFieldNames, 'Wprowadź wartości w powyższych polach']);
-          return;
+
+        if (emptyFields.length > 0) {
+            const emptyFieldNames = emptyFields.map(([key]) => key);
+            setErrorMessages([...emptyFieldNames, 'Wprowadź wartości w powyższych polach']);
+            return;
         }
-      
+
         axios
-          .post('http://localhost:8080/persons', formData)
-          .then((response) => {
-            console.log(response.data);
-            localStorage.setItem('user', JSON.stringify(response.data));
-            navigate('/loginhome');
-          })
-          .catch((error) => {
-            console.log(error.response.data);
-            setErrorMessages([error.response.data]);
-          });
-      };
+            .post('http://localhost:8080/persons', formData)
+            .then((response) => {
+                console.log(response.data);
+                localStorage.setItem('user', JSON.stringify(response.data));
+                navigate('/loginhome');
+            })
+            .catch((error) => {
+                console.log(error.response.data);
+                setErrorMessages([error.response.data]);
+            });
+    };
 
     return (
         <ThemeProvider theme={theme}>
@@ -166,7 +165,6 @@ const Register = () => {
                                 margin="normal"
                                 required
                                 fullWidth
-                                type={isPasswordShown ? 'text' : 'password'}
                                 id="password"
                                 label="Password"
                                 name="password"

@@ -29,11 +29,15 @@ public class PersonController {
         return service.getPersonById(personId);
     }
 
-    @GetMapping("/login/{email}/{password}")
-    public ResponseEntity<?> getPersonId(@PathVariable String email, @PathVariable String password) {
-        Person person = service.getPersonByLoginDatas(email, password);
-        if (person != null) {
-            return ResponseEntity.ok(person);
+    @PostMapping("/login")
+    public ResponseEntity<?> getPersonId(@RequestBody Person person) {
+        String email = person.getEmail();
+        String password = person.getPassword();
+
+        Person retrievedPerson = service.getPersonByLoginDatas(email, password);
+
+        if (retrievedPerson != null) {
+            return ResponseEntity.ok(retrievedPerson.getPersonId());
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("\n" + "Invalid login details or user does not exist");
         }

@@ -1,10 +1,8 @@
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import * as React from 'react';
-import { Link, NavLink, useNavigate } from "react-router-dom";
-import { FacebookLoginButton } from "react-social-login-buttons";
-
+import axios from 'axios';
+import React, { useState } from 'react';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import {
     Avatar,
     Box,
@@ -20,23 +18,82 @@ import {
     ListItem,
 } from '@mui/material';
 
-
-
 const theme = createTheme();
 
-export default function SignInSide() {
-    const navigate = useNavigate();
+interface Person {
+    email: string;
+    password: string;
+}
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
+interface ErrorMessageProps {
+    message: string;
+}
+
+const Login = () => {
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState<Person>({
+        email: '',
+        password: '',
+    });
+
+    const [serverErrorMessage, setServerErrorMessage] = useState('');
+    const [errorMessages, setErrorMessages] = useState<string[]>([]);
+
+    const [isPasswordShown, setPasswordIsShown] = useState(false);
+
+    const ErrorMessage = () => (
+        <div>
+            {errorMessages.map((errorMessage, index) => (
+                <p key={index} className="text-rose-600 font-medium">
+                    {errorMessage}
+                </p>
+            ))}
+        </div>
+    );
+
+    const ServerErrorMessage: React.FC<ErrorMessageProps> = ({ message }) => (
+        <div>
+            <p className="text-rose-600 font-medium">{message}</p>
+        </div>
+    );
+
+    const onChangeForm = (key: string, value: any) => {
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            [key]: value,
+        }));
+    };
+
+    const loginUser = () => {
+        setErrorMessages([]);
+
+        const emptyFields = Object.entries(formData).filter(([key, value]) => {
+            if (typeof value === 'string') {
+                return value.trim() === '';
+            }
+            return false;
         });
 
-        navigate('/loginhome');
+        if (emptyFields.length > 0) {
+            const emptyFieldNames = emptyFields.map(([key]) => key);
+            setErrorMessages([...emptyFieldNames, 'Wprowadź wartości w powyższych polach']);
+            return;
+        }
 
+        axios
+            .post('http://localhost:8080/persons/login', formData)
+            .then((response) => {
+                if (response.data) {
+                    localStorage.setItem('user', JSON.stringify(response.data));
+                    navigate('/loginhome');
+                } else {
+                    console.log('Empty response data');
+                }
+            })
+            .catch((error) => {
+                setErrorMessages([error.response.data]);
+                setServerErrorMessage(error.response.data);
+            });
     };
 
     return (
@@ -73,92 +130,84 @@ export default function SignInSide() {
                         <Typography component="h1" variant="h5">
                             Zaloguj się
                         </Typography>
-                        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                        <Box component="form" noValidate sx={{ mt: 1 }}>
                             <TextField
                                 margin="normal"
                                 required
                                 fullWidth
-                                id="email"
                                 label="Adres email"
-                                name="email"
-                                autoComplete="email"
-                                autoFocus
+                                value={formData.email}
+                                onChange={(e) => onChangeForm('email', e.target.value)}
+                                error={
+                                    errorMessages.includes('email')
+                                }
+                                helperText={
+                                    errorMessages.includes('email') ?
+                                        'Pole nie może być puste' :
+                                        ''
+                                }
                             />
                             <TextField
                                 margin="normal"
                                 required
                                 fullWidth
-                                name="password"
-                                label="Hasło"
-                                type="password"
+                                type={isPasswordShown ? 'text' : 'password'}
                                 id="password"
-                                autoComplete="current-password"
+                                label="Password"
+                                name="password"
+                                autoComplete="password"
+                                value={formData.password}
+                                onChange={(e) => onChangeForm('password', e.target.value)}
+                                error={errorMessages.includes('password')}
+                                helperText={
+                                    errorMessages.includes('password') ? 'Pole nie może być puste' : ''
+                                }
                             />
                             <FormControlLabel
-                                control={<Checkbox value="remember" color="primary" />}
+                                control={
+                                    <Checkbox
+                                        value={isPasswordShown}
+                                        onChange={() => setPasswordIsShown(!isPasswordShown)}
+                                        color="primary"
+                                    />
+                                }
                                 label="Pokaż hasło"
                             />
-                            <FacebookLoginButton />
+                            {/* <FacebookLoginButton /> */}
+                            {serverErrorMessage && serverErrorMessage.includes('Invalid login details or user does not exist') ? (
+                                <ServerErrorMessage message="Nieprawidłowe dane logowania lub użytkownik nie istnieje" />
+                            ) : null}
                             <Button
-                                type="submit"
                                 fullWidth
                                 variant="contained"
                                 sx={{ mt: 3, mb: 2 }}
+                                onClick={loginUser}
                             >
                                 Zaloguj
                             </Button>
-
                             <List>
                                 <ListItem>
                                     <NavLink to='/register'>
                                         Nie masz konta? Zarejestruj się!
                                     </NavLink>
-
                                 </ListItem>
-
                                 <ListItem>
                                     <Link to='/adminLogin'>
                                         {"Jestem administratorem"}
                                     </Link>
                                 </ListItem>
-
                                 <ListItem>
                                     <Link to='/home'>
                                         {"Wejdź jako niezalogowany"}
                                     </Link>
                                 </ListItem>
                             </List>
-
-                            {/* <Grid container>
-                                <Grid item>
-                                    <Link to='/register'>
-                                        {"Nie masz konta? Zarejestruj się!"}
-                                    </Link>
-                                </Grid>
-                                <Grid item>
-                                    <Link to='/adminLogin'>
-                                        {"Jestem administratorem"}
-                                    </Link>
-                                </Grid>
-                                <Grid item>
-                                    <Link to='/home'>
-                                        {"Wejdź jako niezalogowany"}
-                                    </Link>
-                                </Grid>
-                                <Grid item>
-                                    <Link to='/home'>
-                                        {"Wejdź jako niezalogowany"}
-                                    </Link>
-                                </Grid>
-
-
-
-
-                            </Grid> */}
                         </Box>
                     </Box>
                 </Grid>
             </Grid>
-        </ThemeProvider>
+        </ThemeProvider >
     );
 }
+
+export default Login;

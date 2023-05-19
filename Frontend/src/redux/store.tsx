@@ -1,9 +1,16 @@
-import {configureStore} from '@reduxjs/toolkit'
-import shoppingCartReducer from './ShoppingCartReducer'
-import categoriesReducer from './CategoryReducer'
+import { combineReducers, configureStore } from '@reduxjs/toolkit'
+import {
+    FLUSH,
+    PAUSE,
+    PERSIST,
+    PURGE,
+    REGISTER,
+    REHYDRATE,
+    persistReducer,
+} from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
-import { persistReducer } from 'redux-persist'
-import { combineReducers } from '@reduxjs/toolkit'
+import categoriesReducer from './CategoryReducer'
+import shoppingCartReducer from './ShoppingCartReducer'
 
 const persistConfiguration = {
     key: "root",
@@ -21,9 +28,12 @@ const persistedReducer = persistReducer(persistConfiguration, reducer)
 
 export const store = configureStore({
     reducer: persistedReducer,
-    // reducer:{
-    //     shoppingCart: shoppingCartReducer,
-    // }
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+            serializableCheck: {
+                ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+            },
+        }),
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

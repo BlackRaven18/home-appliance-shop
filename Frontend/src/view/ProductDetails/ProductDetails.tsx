@@ -1,6 +1,6 @@
 import { Box, Divider, Grid, Typography, Button, Snackbar, Alert } from '@mui/material';
 import { useLocation } from 'react-router';
-import Topbar from '../../topbar/Topbar';
+import TopBar from '../../TopBar/TopBar';
 import { StyleSheet } from 'react-native';
 import { useState, MouseEvent } from "react";
 import { useDispatch } from 'react-redux';
@@ -45,7 +45,7 @@ const ProductDetails = () => {
 
     return (
         <>
-            <Topbar />
+            <TopBar />
 
             <Typography
                 variant="h4"

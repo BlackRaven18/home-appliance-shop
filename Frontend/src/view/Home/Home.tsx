@@ -1,7 +1,7 @@
 import { Grid } from '@mui/material';
-import Notloggedintopbar from '../../topbar/Notloggedintopbar';
+import NotLoggedInTopBar from '../../TopBar/NotLoggedInTopBar';
 import Product from '../Product/Products';
-import Categorylist from "./Categorylist";
+import CategoryList from "./CategoryList";
 
 
 
@@ -9,9 +9,9 @@ function Loginhome() {
 
   return (
     <div>
-      <Notloggedintopbar />
+      <NotLoggedInTopBar />
       <Grid container spacing={2} sx={{ height: '100vh' }}>
-        <Categorylist />
+        <CategoryList />
         <Grid item xs={12} md={10} sx={{ marginTop: '5px' }}>
           <Product />
         </Grid>

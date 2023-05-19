@@ -2,13 +2,13 @@ import React from "react";
 import Login from './../view/Login';
 import Register from './../view/Register';
 import Home from '../view/Home/Home';
-import Loginhome from '../view/Home/Loginhome';
-import Adminlogin from './../view/Adminlogin';
-import Adminhome from './../view/Adminhome/Adminhome';
+import LoginHome from '../view/Home/LoginHome';
+import AdminLogin from '../view/AdminLogin';
+import AdminHome from '../view/AdminHome/AdminHome';
 import ShoppingCart from './../view/ShoppingCart/ShoppingCart';
 import History from '../view/History';
 import Profil from '../view/Profil/Profil';
-import Adminprofil from '../view/Profil/Adminprofil';
+import AdminProfil from '../view/Profil/AdminProfil';
 import {
     createBrowserRouter,
 } from "react-router-dom";
@@ -37,19 +37,19 @@ const router = createBrowserRouter([
     },
     {
         path: "/loginhome",
-        element: <Loginhome />,
+        element: <LoginHome />,
     },
     {
         path: "/adminhome",
-        element: <Adminhome />,
+        element: <AdminHome />,
     },
     {
         path: "/adminlogin",
-        element: <Adminlogin />,
+        element: <AdminLogin />,
     },
     {
         path: "/adminlogin",
-        element: <Adminlogin />,
+        element: <AdminLogin />,
     },
     {
         path: "/shoppingcart",
@@ -65,7 +65,7 @@ const router = createBrowserRouter([
     },
     {
         path: "/adminprofil",
-        element: <Adminprofil />,
+        element: <AdminProfil />,
     },
 ]);
 

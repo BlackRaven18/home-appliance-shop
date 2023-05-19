@@ -1,7 +1,7 @@
 import Typography from '@mui/material/Typography';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
-import Productlist from './Productlist';
+import Productlist from './ProductList';
 
 function Products() {
     // const location = useLocation();

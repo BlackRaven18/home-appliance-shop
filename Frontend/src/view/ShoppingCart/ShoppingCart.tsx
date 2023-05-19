@@ -3,7 +3,7 @@ import Typography from '@mui/material/Typography';
 import { useDispatch, useSelector } from 'react-redux';
 import { decrementAmountOfProduct, incrementAmountOfProduct } from '../../redux/ShoppingCartReducer';
 import { RootState } from '../../redux/store';
-import Topbar from '../../topbar/Topbar';
+import TopBar from '../../TopBar/TopBar';
 import ShoppingCartElement from './ShoppingCartElement';
 
 
@@ -30,7 +30,7 @@ function ShoppingCart() {
 
   return (
     <>
-      <Topbar />
+      <TopBar />
 
       <Typography variant="h4" align="center" sx={{ mt: 2 }}>
         Koszyk

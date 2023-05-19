@@ -1,9 +1,9 @@
 
 import { Alert, Box, Button, Grid, Snackbar, Typography } from "@mui/material";
-import { useState, MouseEvent } from "react";
+import { useState } from "react";
 import { useDispatch } from 'react-redux';
-import { addProductToCart } from '../../redux/ShoppingCartReducer';
 import { useNavigate } from "react-router";
+import { addProductToCart } from '../../redux/ShoppingCartReducer';
 
 
 interface Product {
@@ -25,7 +25,7 @@ const ProductListElement = (product: Product) => {
     const [open, setOpen] = useState(false);
     const dispatch = useDispatch();
 
-    const addProductToShoppingCart = (product: Product)=> {
+    const addProductToShoppingCart = (product: Product) => {
         dispatch(addProductToCart(product));
     }
 
@@ -38,7 +38,7 @@ const ProductListElement = (product: Product) => {
     };
 
     const goToProductDetails = () => {
-        navigate('/productdetails', {state: product});
+        navigate('/productdetails', { state: product });
     }
 
     return (

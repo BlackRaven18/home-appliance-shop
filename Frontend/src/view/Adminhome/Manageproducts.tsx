@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Button, TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 
-let url = 'http://localhost:8080';
 
 interface Product {
     productId: string;
@@ -30,7 +29,7 @@ const Manageproducts = () => {
 
     const getProducts = () => {
         axios
-            .get(url + `/products`)
+            .get(process.env.REACT_APP_BACKEND_URL + "/products")
             .then((response) => {
                 setProducts(response.data);
             })

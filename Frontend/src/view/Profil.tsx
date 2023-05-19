@@ -4,8 +4,6 @@ import Topbar from './../topbar/Topbar';
 import axios from 'axios';
 import {useState} from "react";
 
-let url = 'http://localhost:8080';
-
 interface Person {
     name: string;
     surname: string;
@@ -20,7 +18,7 @@ function Profil() {
     }, []);
     const getPerson = () => {
         axios
-            .get(url + `/persons/` + personId)
+            .get(process.env.REACT_APP_BACKEND_URL + "/persons/" + personId)
             .then( (response)=> {
                 setPerson(response.data);
             })

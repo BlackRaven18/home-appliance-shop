@@ -6,7 +6,6 @@ import ProductListElement from './ProductListElement';
 import  ProductInterface  from '../ProductInterface'
 
 
-let url = 'http://localhost:8080';
 
 interface ProductListProps {
     categoryId: string;
@@ -21,7 +20,7 @@ const ProductList = ({ categoryId }: ProductListProps) => {
     }, []);
     const getProducts = () => {
         axios
-            .get(`${url}/products`)
+            .get(process.env.REACT_APP_BACKEND_URL + "/products")
             .then(function (response) {
                 setProducts(response.data);
                 console.log(response.data);

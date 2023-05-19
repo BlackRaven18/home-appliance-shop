@@ -30,7 +30,7 @@ function Summary() {
 
     async function handleToken(token:TokenI) {
         console.log(token);
-        await axios.post("http://localhost:8080/api/payment/charge", "", {
+        await axios.post(process.env.REACT_APP_BACKEND_URL + "/api/payment/charge", "", {
             headers: {
                 token: token.id,
                 amount: 5,//shoppingCart.totalAmount,

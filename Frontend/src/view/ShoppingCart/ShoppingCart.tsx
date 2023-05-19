@@ -6,17 +6,13 @@ import Topbar from '../../topbar/Topbar';
 import ShoppingCartElement from './ShoppingCartElement';
 import { useNavigate } from 'react-router';
 
-
-
-
-
 function ShoppingCart() {
 
   const shoppingCart = useSelector((state: RootState) => state.shoppingCart);
   const navigate = useNavigate();
 
   const payForProducts = () => {
-    //navigate("/sumarry");
+    navigate("/summary");
   }
 
   return (

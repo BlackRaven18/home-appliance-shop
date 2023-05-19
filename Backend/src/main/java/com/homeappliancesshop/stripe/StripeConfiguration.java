@@ -1,4 +1,4 @@
-package com.homeappliancesshop.client;
+package com.homeappliancesshop.stripe;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

@@ -1,20 +1,19 @@
 package com.homeappliancesshop.controller;
 
-import com.homeappliancesshop.client.StripeClient;
-import com.stripe.model.Charge;
+import com.homeappliancesshop.stripe.StripeClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/api/payment")
-public class PaymentGatewayController {
+public class StripePaymentGatewayController {
 
     private StripeClient stripeClient;
 
 
     @Autowired
-    PaymentGatewayController(StripeClient stripeClient) {
+    StripePaymentGatewayController(StripeClient stripeClient) {
         this.stripeClient = stripeClient;
     }
 

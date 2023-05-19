@@ -1,13 +1,9 @@
-package com.homeappliancesshop.client;
+package com.homeappliancesshop.stripe;
 
 import com.stripe.Stripe;
 import com.stripe.model.Charge;
 import com.stripe.model.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package com.homeappliancesshop.client;
+package com.homeappliancesshop.stripe;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,5 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 import ProductInterface from '../view/ProductInterface'
 
 
@@ -99,10 +99,21 @@ export const shoppingCartSlice = createSlice({
         state.totalAmount = updateTotalAmount(state.totalAmount, Operation.Increment, itemInCart.productDetails.price);
       }
     },
+
+    clearShoppingCart: (state) => {
+      state.cart.length = 0;
+      state.totalAmount = 0;
+      state.productsNumber = 0;
+    }
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { addProductToCart, decrementAmountOfProduct, incrementAmountOfProduct } = shoppingCartSlice.actions
+export const {
+  addProductToCart,
+  decrementAmountOfProduct,
+  incrementAmountOfProduct,
+  clearShoppingCart,
+} = shoppingCartSlice.actions
 
 export default shoppingCartSlice.reducer

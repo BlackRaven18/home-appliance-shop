@@ -14,6 +14,8 @@ import {
     Paper,
     TextField,
     Typography,
+    FormControlLabel,
+    Checkbox,
 } from '@mui/material';
 
 const theme = createTheme({});
@@ -35,6 +37,9 @@ interface Person {
 
 const Register = () => {
     const navigate = useNavigate();
+
+    const [isPasswordShown, setPasswordIsShown] = useState(false);
+
     const [formData, setFormData] = useState<Person>({
         name: '',
         surname: '',
@@ -300,6 +305,16 @@ const Register = () => {
                                 helperText={
                                     errorMessages.includes('address.apartment') ? 'Pole nie może być puste' : ''
                                 }
+                            />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        value={isPasswordShown}
+                                        onChange={() => setPasswordIsShown(!isPasswordShown)}
+                                        color="primary"
+                                    />
+                                }
+                                label="Pokaż hasło"
                             />
                             <Button
                                 fullWidth

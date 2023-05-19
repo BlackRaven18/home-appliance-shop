@@ -15,7 +15,7 @@ import shoppingCartReducer from './ShoppingCartReducer'
 const persistConfiguration = {
     key: "root",
     version: 1,
-    blacklist: ['categories'],
+    blacklist:['categories'],
     storage
 };
 

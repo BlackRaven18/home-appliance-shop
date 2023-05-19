@@ -1,7 +1,6 @@
 import * as React from 'react';
 import AdminTopBar from '../../TopBar/AdminTopBar';
 import AdminCategoryList from "./AdminCategoryList";
-
 function AdminHome() {
   return (
     <div>
@@ -10,6 +9,4 @@ function AdminHome() {
     </div>
   );
 }
-
-
 export default AdminHome;

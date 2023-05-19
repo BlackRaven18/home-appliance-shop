@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useState } from "react";
 import { Button, TextField } from "@mui/material";
 import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
 
 let url = 'http://localhost:8080';
 
@@ -23,6 +24,7 @@ interface Product {
 const Manageproducts = () => {
     const [products, setProducts] = useState<Product[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>('');
+    const [productId, setProductId] = useState("");
 
     React.useEffect(() => {
         getProducts();
@@ -92,6 +94,58 @@ const Manageproducts = () => {
         }
     }
 
+    const [isModifyClicked, setIsModifyClicked] = useState(false);
+    const [newName, setNewName] = useState("");
+    const [newBrand, setNewBrand] = useState("");
+    const [newColor, setNewColor] = useState("");
+    const [newSpecification, setNewSpecification] = useState("");
+    const [newPrice, setNewPrice] = useState("");
+    const [newCategoryName, setNewCategoryName] = useState("");
+
+
+    const handleModifyClick = (productId: string) => {
+        setIsModifyClicked(true);
+        setProductId(productId);
+    };
+
+    const handleModifySubmit = async () => {
+        try {
+            await axios.put(url + '/products/' + productId, {
+                name: newName,
+                brand: newBrand,
+                color: newColor,
+                specification: newSpecification,
+                price: newPrice,
+                category: {
+                    name: newCategoryName,
+                }
+            });
+            getProducts(); // załaduj ponownie listę użytkowników po modyfikacji
+            setIsModifyClicked(false); // Zresetuj stan po zatwierdzeniu modyfikacji
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setNewName(event.target.value);
+    };
+    const handleBrandChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setNewBrand(event.target.value);
+    };
+    const handleColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setNewColor(event.target.value);
+    };
+    const handleSpecificationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setNewSpecification(event.target.value);
+    };
+    const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setNewPrice(event.target.value);
+    };
+    const handleCategoryNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setNewCategoryName(event.target.value);
+    };
+
     return (
         <>
             <div>
@@ -111,7 +165,60 @@ const Manageproducts = () => {
                         <p style={{ fontSize: '20px' }}>Cena: {product.price}</p>
                         <p style={{ fontSize: '20px' }}>Kategoria: {product && product.category && product.category.name ? product.category.name : 'unknown'}</p>
                         <Button variant="contained" style={{ margin: '15px' }} onClick={() => handleDeleteProduct(product.productId)}>Usuń</Button>
-                        <Button variant="contained" onClick={() => handleDeleteProduct(product.productId)}>Modyfikuj</Button>
+                        <Button variant="contained" onClick={() => handleModifyClick(product.productId)}>Modyfikuj</Button>
+                        {isModifyClicked && productId === product.productId && (
+                            <Grid container direction="column" spacing={2}>
+                                <Grid item>
+                                    <TextField
+                                        label="Nowa nazwa"
+                                        variant="outlined"
+                                        value={newName}
+                                        onChange={handleNameChange}
+                                        style={{margin: '5px'}}
+                                    />
+                                    <TextField
+                                        label="Nowa marka"
+                                        variant="outlined"
+                                        value={newBrand}
+                                        onChange={handleBrandChange}
+                                        style={{margin: '5px'}}
+                                    />
+                                    <TextField
+                                        label="Nowy kolor"
+                                        variant="outlined"
+                                        value={newColor}
+                                        onChange={handleColorChange}
+                                        style={{margin: '5px'}}
+                                    />
+                                    <TextField
+                                        label="Nowa specyfikacja"
+                                        variant="outlined"
+                                        value={newSpecification}
+                                        onChange={handleSpecificationChange}
+                                        style={{margin: '5px'}}
+                                    />
+                                    <TextField
+                                        label="Nowa cena"
+                                        variant="outlined"
+                                        value={newPrice}
+                                        onChange={handlePriceChange}
+                                        style={{margin: '5px'}}
+                                    />
+                                    <TextField
+                                        label="Nowa kategoria"
+                                        variant="outlined"
+                                        value={newCategoryName}
+                                        onChange={handleCategoryNameChange}
+                                        style={{margin: '5px'}}
+                                    />
+                                </Grid>
+                                <Grid item>
+                                    <Button variant="contained" onClick={handleModifySubmit}>
+                                        Zatwierdź
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                        )}
                     </div>
                 ))}
             </div>

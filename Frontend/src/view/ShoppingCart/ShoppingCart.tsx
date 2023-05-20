@@ -1,18 +1,18 @@
 import { Box, Button } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
+import { clearShoppingCart } from '../../redux/ShoppingCartReducer';
 import { RootState } from '../../redux/store';
 import Topbar from '../../topbar/Topbar';
 import ShoppingCartElement from './ShoppingCartElement';
-import { useNavigate } from 'react-router';
-import { useDispatch } from 'react-redux';
-import { clearShoppingCart } from '../../redux/ShoppingCartReducer';
 
 function ShoppingCart() {
 
   const shoppingCart = useSelector((state: RootState) => state.shoppingCart);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
 
   const payForProducts = () => {
     navigate("/summary");
@@ -21,6 +21,7 @@ function ShoppingCart() {
   const resetCart = () => {
     dispatch(clearShoppingCart());
   }
+
 
   return (
     <>
@@ -68,14 +69,23 @@ function ShoppingCart() {
         Całkowity koszt: {shoppingCart.totalAmount}
       </Typography>
 
-
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={payForProducts}
-      >
-        Zapłać
-      </Button>
+      {shoppingCart.productsNumber > 0 ? (
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={payForProducts}
+        >
+          Zapłać
+        </Button>
+      ) : (
+        <Button
+          disabled
+          variant="contained"
+          color="primary"
+          onClick={payForProducts}
+        >
+          Zapłać
+        </Button>)}
 
 
     </>

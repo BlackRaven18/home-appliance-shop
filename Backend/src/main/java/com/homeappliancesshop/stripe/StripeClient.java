@@ -14,7 +14,6 @@ public class StripeClient {
     @Autowired
     public StripeClient(StripeConfigData customStripeConfigData) {
         Stripe.apiKey = customStripeConfigData.getKey();
-        System.out.println(customStripeConfigData.getKey());
     }
 
     public Customer createCustomer(String token, String email) throws Exception {
@@ -23,24 +22,16 @@ public class StripeClient {
         customerParams.put("source", token);
         return Customer.create(customerParams);
     }
+
     private Customer getCustomer(String id) throws Exception {
         return Customer.retrieve(id);
     }
+
     public Charge chargeNewCard(String token, double amount) throws Exception {
         Map<String, Object> chargeParams = new HashMap<String, Object>();
         chargeParams.put("amount", (int)(amount * 100));
-        chargeParams.put("currency", "USD");
+        chargeParams.put("currency", "PLN");
         chargeParams.put("source", token);
-        Charge charge = Charge.create(chargeParams);
-        return charge;
-    }
-    public Charge chargeCustomerCard(String customerId, int amount) throws Exception {
-        String sourceCard = getCustomer(customerId).getDefaultSource();
-        Map<String, Object> chargeParams = new HashMap<String, Object>();
-        chargeParams.put("amount", amount);
-        chargeParams.put("currency", "USD");
-        chargeParams.put("customer", customerId);
-        chargeParams.put("source", sourceCard);
         Charge charge = Charge.create(chargeParams);
         return charge;
     }

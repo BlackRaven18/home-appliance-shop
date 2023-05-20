@@ -9,7 +9,7 @@ import ShoppingCart from './../view/ShoppingCart/ShoppingCart';
 import History from '../view/History';
 import Profil from '../view/Profil/Profil';
 import Adminprofil from '../view/Profil/Adminprofil';
-import Summary from "../view/ShoppingCart/Summary";
+import Summary from "../view/Summary/Summary";
 import {
     createBrowserRouter,
 } from "react-router-dom";

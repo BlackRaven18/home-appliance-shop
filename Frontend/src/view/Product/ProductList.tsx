@@ -18,6 +18,7 @@ const ProductList = ({ categoryId }: ProductListProps) => {
     useEffect(() => {
         getProducts();
     }, []);
+
     const getProducts = () => {
         axios
             .get(process.env.REACT_APP_BACKEND_URL + "/products")

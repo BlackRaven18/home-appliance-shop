@@ -5,14 +5,21 @@ import { RootState } from '../../redux/store';
 import Topbar from '../../topbar/Topbar';
 import ShoppingCartElement from './ShoppingCartElement';
 import { useNavigate } from 'react-router';
+import { useDispatch } from 'react-redux';
+import { clearShoppingCart } from '../../redux/ShoppingCartReducer';
 
 function ShoppingCart() {
 
   const shoppingCart = useSelector((state: RootState) => state.shoppingCart);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const payForProducts = () => {
     navigate("/summary");
+  }
+
+  const resetCart = () => {
+    dispatch(clearShoppingCart());
   }
 
   return (
@@ -42,9 +49,25 @@ function ShoppingCart() {
         )}
       </Box>
 
+      <Box
+        display='flex'
+        justifyContent="flex-end"
+        alignItems="center"
+        margin='20px'
+      >
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={resetCart}
+        >
+          Usuń zawartość koszyka
+        </Button>
+      </Box>
+
       <Typography variant='h5' padding='10px'>
         Całkowity koszt: {shoppingCart.totalAmount}
       </Typography>
+
 
       <Button
         variant="contained"

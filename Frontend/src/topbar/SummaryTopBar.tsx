@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 export default function SummaryTopBar() {
     const navigate = useNavigate();
     const goToHome = () => {
-        navigate('/home');
+        navigate('/loginhome');
     }
 
     return (

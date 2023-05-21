@@ -1,19 +1,16 @@
-import { Box, Button, Grid, Typography } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 import React from 'react';
-import { useDispatch } from 'react-redux';
 import { useNavigate } from "react-router";
-import { decrementAmountOfProduct, incrementAmountOfProduct } from '../../redux/ShoppingCartReducer';
-import  ProductInterface  from "../ProductInterface";
+import ProductInterface from "../ProductInterface";
 
 interface SummaryProductElementProps {
     quantity: number;
     productDetails: ProductInterface;
 }
 
-const SummaryProductElement: React.FC<SummaryProductElementProps> = ({quantity, productDetails}) => {
+const SummaryProductElement: React.FC<SummaryProductElementProps> = ({ quantity, productDetails }) => {
 
     const navigate = useNavigate();
-    const dispatch = useDispatch();
 
     const goToProductDetails = () => {
         navigate('/productdetails', { state: productDetails });
@@ -43,7 +40,7 @@ const SummaryProductElement: React.FC<SummaryProductElementProps> = ({quantity, 
                     <Typography>Cena: {productDetails.price ?? 'unknown'}</Typography>
                     <Typography>Ilosc: {quantity}</Typography>
 
-                    
+
                 </Grid>
                 <Grid item xs={4} >
                     <Box

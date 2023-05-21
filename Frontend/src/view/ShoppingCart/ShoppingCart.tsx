@@ -6,6 +6,7 @@ import { clearShoppingCart } from '../../redux/ShoppingCartReducer';
 import { RootState } from '../../redux/store';
 import Topbar from '../../topbar/Topbar';
 import ShoppingCartElement from './ShoppingCartElement';
+import PriceFormatter from '../../PriceFormattingUtils/PriceFormatter';
 
 function ShoppingCart() {
 
@@ -66,7 +67,7 @@ function ShoppingCart() {
       </Box>
 
       <Typography variant='h5' padding='10px'>
-        Całkowity koszt: {shoppingCart.totalAmount}
+        Całkowity koszt: {PriceFormatter.getFormattedPrice(shoppingCart.totalAmount)}
       </Typography>
 
       {shoppingCart.productsNumber > 0 ? (

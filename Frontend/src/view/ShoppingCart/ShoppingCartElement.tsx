@@ -3,7 +3,8 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from "react-router";
 import { decrementAmountOfProduct, incrementAmountOfProduct } from '../../redux/ShoppingCartReducer';
-import  ProductInterface  from "../ProductInterface";
+import ProductInterface from "../ProductInterface";
+import PriceFormatter from '../../PriceFormattingUtils/PriceFormatter';
 
 interface ShoppingCartElementProps {
     quantity: number;
@@ -48,7 +49,9 @@ const ShoppingCartElement: React.FC<ShoppingCartElementProps> = ({ quantity, pro
                     <Typography>Marka: {productDetails.brand ?? 'unknown'}</Typography>
                     <Typography>Kolor: {productDetails.color ?? 'unknown'}</Typography>
                     <Typography>Specyfikacja: {productDetails.specification ?? 'unknown'}</Typography>
-                    <Typography>Cena: {productDetails.price ?? 'unknown'}</Typography>
+                    <Typography>
+                        Cena: {PriceFormatter.getFormattedPrice(productDetails.price) ?? 'unknown'}
+                    </Typography>
                     <Typography>Ilosc: {quantity}</Typography>
 
                     <Button

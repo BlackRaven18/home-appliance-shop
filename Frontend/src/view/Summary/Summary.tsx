@@ -31,7 +31,9 @@ function Summary() {
     const shoppingCart = useSelector((state: RootState) => state.shoppingCart);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
     const [shippingMethod, setShippingMethod] = useState<String>('odbior-osobisty');
+    const buyerId = "64314d722094072d790a5e00";
 
     const handleSelectShippingMethod = (shippingMethod: String) => {
         setShippingMethod(shippingMethod)
@@ -52,6 +54,7 @@ function Summary() {
 
         await axios.post(process.env.REACT_APP_BACKEND_URL + "/api/payment/charge",
             {
+                buyerId,
                 productDetailsDTO,
 
             }, {

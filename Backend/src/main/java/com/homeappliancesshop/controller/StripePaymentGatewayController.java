@@ -1,6 +1,6 @@
 package com.homeappliancesshop.controller;
 
-import com.homeappliancesshop.dto.ProductDetailsArrayDTO;
+import com.homeappliancesshop.dto.OrderDetailsDTO;
 import com.homeappliancesshop.dto.ProductDetailsDTO;
 import com.homeappliancesshop.service.StripeClientService;
 import org.springframework.web.bind.annotation.*;
@@ -20,13 +20,15 @@ public class StripePaymentGatewayController {
 
     @PostMapping("/charge")
     public String chargeCard(
-            @RequestBody ProductDetailsArrayDTO productDetailsArrayDTO,
+            @RequestBody OrderDetailsDTO orderDetailsDTO,
             @RequestHeader(value = "token") String token) throws Exception {
 
-        for (ProductDetailsDTO pd : productDetailsArrayDTO.getProductDetailsDTO()) {
+        System.out.println(orderDetailsDTO.getBuyerId());
+        for (ProductDetailsDTO pd : orderDetailsDTO.getProductDetailsDTO()) {
+
             System.out.println(pd.getProductId() + " : " + pd.getQuantity());
         }
 
-        return this.stripeClientService.chargeNewCard(token, productDetailsArrayDTO).toJson();
+        return this.stripeClientService.chargeNewCard(token, orderDetailsDTO).toJson();
     }
 }

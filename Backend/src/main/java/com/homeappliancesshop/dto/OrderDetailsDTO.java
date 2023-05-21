@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class ProductDetailsArrayDTO {
+public class OrderDetailsDTO {
+    private String buyerId;
     private ProductDetailsDTO[] productDetailsDTO;
 }

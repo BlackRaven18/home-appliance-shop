@@ -22,6 +22,7 @@ public class Person {
     private String surname;
     private String email;
     private String phoneNumber;
+
     @DocumentReference
     private Address address;
 

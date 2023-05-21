@@ -7,21 +7,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 
-@Data
-@NoArgsConstructor
-class ProductInTransaction{
-    private String productId;
-    private double price;
-}
-
-@Data
-@NoArgsConstructor
-class Transaction {
-    private String date;
-    private ArrayList<ProductInTransaction> products;
-    private double totalAmount;
-}
-
 @Document(collection = "transactions_history")
 @Data
 @NoArgsConstructor
@@ -30,5 +15,9 @@ public class TransactionsHistory {
     private String id;
     private String personId;
     private ArrayList<Transaction> transactions;
+
+    public void addNewTransaction(Transaction transaction){
+        transactions.add(transaction);
+    }
 
 }

@@ -1,9 +1,14 @@
 package com.homeappliancesshop.service;
 
+import com.homeappliancesshop.model.ProductInTransaction;
+import com.homeappliancesshop.model.Transaction;
 import com.homeappliancesshop.model.TransactionsHistory;
 import com.homeappliancesshop.repository.TransactionsHistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class TransactionsHistoryService {
@@ -17,6 +22,12 @@ public class TransactionsHistoryService {
 
     public TransactionsHistory getTransactionsHistoryByPersonId(String personId){
         return repository.findByPersonId(personId);
+    }
+
+    public void addNewTransactionToTransactionsHistory(
+            TransactionsHistory transactionsHistory, ArrayList<ProductInTransaction> productsInTransactions){
+
+
     }
 
 

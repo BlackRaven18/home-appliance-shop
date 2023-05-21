@@ -1,5 +1,6 @@
 package com.homeappliancesshop.stripe;
 
+import com.homeappliancesshop.dto.ProductDetailsArrayDTO;
 import com.stripe.Stripe;
 import com.stripe.model.Charge;
 import com.stripe.model.Customer;
@@ -27,9 +28,9 @@ public class StripeClient {
         return Customer.retrieve(id);
     }
 
-    public Charge chargeNewCard(String token, double amount) throws Exception {
+    public Charge chargeNewCard(String token, ProductDetailsArrayDTO productDetailsArrayDTO) throws Exception {
         Map<String, Object> chargeParams = new HashMap<String, Object>();
-        chargeParams.put("amount", (int)(amount * 100));
+        chargeParams.put("amount", (int)(5 * 100));
         chargeParams.put("currency", "PLN");
         chargeParams.put("source", token);
         Charge charge = Charge.create(chargeParams);

@@ -49,7 +49,7 @@ function Summary() {
 
     async function handleToken(token: TokenI) {
 
-        const productDetails = shoppingCart.cart.map((item) => ({
+        const productDetailsDTO = shoppingCart.cart.map((item) => ({
             quantity: item.quantity,
             productId: item.productDetails.productId
         }))
@@ -64,7 +64,7 @@ function Summary() {
         console.log(token);
         await axios.post(process.env.REACT_APP_BACKEND_URL + "/api/payment/charge",
             {
-                productDetails,
+                productDetailsDTO,
                 //params
                 // productDetails: {
                 //     quantity: 1,

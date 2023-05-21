@@ -1,5 +1,7 @@
 package com.homeappliancesshop.controller;
 
+import com.homeappliancesshop.dto.ProductDetailsArrayDTO;
+import com.homeappliancesshop.dto.ProductDetailsDTO;
 import com.homeappliancesshop.stripe.StripeClient;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,18 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.tags.Param;
 
-@Data
-@NoArgsConstructor
-class Details{
-    private ProductDetails[] productDetails;
-}
 
-@Data
-@NoArgsConstructor
-class ProductDetails{
-    private int quantity;
-    private String productId;
-}
 
 @RestController
 @CrossOrigin("*")
@@ -35,18 +26,13 @@ public class StripePaymentGatewayController {
 
     @PostMapping("/charge")
     public String chargeCard(
-            @RequestBody Details productDetails,
-            @RequestHeader(value="token") String token,
-            @RequestHeader(value="amount") Double amount) throws Exception {
+            @RequestBody ProductDetailsArrayDTO productDetailsArrayDTO,
+            @RequestHeader(value="token") String token) throws Exception {
 
-        for(ProductDetails pd : productDetails.getProductDetails()){
+        for(ProductDetailsDTO pd : productDetailsArrayDTO.getProductDetailsDTO()){
             System.out.println(pd.getProductId() + " : " +  pd.getQuantity());
         }
-        //System.out.println(productDetails.getProductDetails().getProductId());
 
-//        for(Parameters p : params){
-//            System.out.println(p.productId + " : " + p.quantity);
-//        }
-        return this.stripeClient.chargeNewCard(token, amount).toJson();
+        return this.stripeClient.chargeNewCard(token, productDetailsArrayDTO).toJson();
     }
 }

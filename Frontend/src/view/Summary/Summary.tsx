@@ -54,31 +54,14 @@ function Summary() {
             productId: item.productDetails.productId
         }))
 
-        // const productDetails = {
-        //     quantity: 1,
-        //     productId: '1234',
-        // }
-
-        // console.log(productDetails);
-
         console.log(token);
         await axios.post(process.env.REACT_APP_BACKEND_URL + "/api/payment/charge",
             {
                 productDetailsDTO,
-                //params
-                // productDetails: {
-                //     quantity: 1,
-                //     productId: '123fff4',
-                // }
-                // quantity: 1,
-                // productId: 'abcd',
-
-
 
             }, {
             headers: {
                 token: token.id,
-                amount: 5,//shoppingCart.totalAmount,
             },
 
         }).then((response) => {

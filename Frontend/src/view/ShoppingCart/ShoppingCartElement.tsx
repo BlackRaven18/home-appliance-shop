@@ -70,7 +70,11 @@ const ShoppingCartElement: React.FC<ShoppingCartElementProps> = ({ quantity, pro
                         onClick={(event) => {
                             event.stopPropagation();
                             incrementAmount(productDetails)
-                        }}>+</Button>
+                        }}
+                        sx={{ marginRight: '10px' }}
+                    >
+                        +
+                    </Button>
 
                     <Button
                         variant="contained"
@@ -78,7 +82,11 @@ const ShoppingCartElement: React.FC<ShoppingCartElementProps> = ({ quantity, pro
                         onClick={(event) => {
                             event.stopPropagation();
                             decrementAmount(productDetails)
-                        }}>-</Button>
+                        }}
+                    >
+                        -
+                    </Button>
+
                 </Grid>
                 <Grid item xs={4} >
                     <Box
@@ -86,7 +94,7 @@ const ShoppingCartElement: React.FC<ShoppingCartElementProps> = ({ quantity, pro
                         src={productDetails.imageURL}
                         sx={{
                             height: 173.5,
-                            width: 250,
+                            width: '100%',
                             maxWidth: { xs: 350, md: 250 },
                         }}
                     ></Box>

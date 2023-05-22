@@ -15,8 +15,8 @@ public class TransactionsHistory {
     private String transactionId;
     private ArrayList<Transaction> transactions;
 
-    public void addNewTransaction(Transaction transaction){
-        transactions.add(transaction);
+    public boolean addNewTransaction(Transaction transaction){
+        return transactions.add(transaction);
     }
 
 }

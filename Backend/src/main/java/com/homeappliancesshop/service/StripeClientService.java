@@ -19,6 +19,9 @@ public class StripeClientService {
     private ProductService productService;
 
     @Autowired
+    private PersonService personService;
+
+    @Autowired
     public StripeClientService(StripeConfigData customStripeConfigData) {
         Stripe.apiKey = customStripeConfigData.getKey();
     }
@@ -35,6 +38,9 @@ public class StripeClientService {
         System.out.println(transaction);
 
         Charge charge = Charge.create(chargeParams);
+
+        personService.addTransaction(orderDetailsDTO.getBuyerId(), transaction);
+
         return charge;
     }
 

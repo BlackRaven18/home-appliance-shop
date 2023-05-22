@@ -33,7 +33,7 @@ function Summary() {
     const navigate = useNavigate();
 
     const [shippingMethod, setShippingMethod] = useState<String>('odbior-osobisty');
-    const buyerId = "64314d722094072d790a5e00";
+    const buyerId = "64679522e57752643a41b1dc";
 
     const handleSelectShippingMethod = (shippingMethod: String) => {
         setShippingMethod(shippingMethod)

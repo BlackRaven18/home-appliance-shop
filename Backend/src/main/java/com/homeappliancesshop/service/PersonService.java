@@ -1,6 +1,5 @@
 package com.homeappliancesshop.service;
 
-import com.homeappliancesshop.model.Address;
 import com.homeappliancesshop.model.Person;
 import com.homeappliancesshop.model.Transaction;
 import com.homeappliancesshop.model.TransactionsHistory;
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class PersonService {
@@ -23,20 +21,20 @@ public class PersonService {
     @Autowired
     private TransactionsHistoryService transactionsHistoryService;
 
-    public List<Person> findAllPersons(){
+    public List<Person> findAllPersons() {
         return repository.findAll();
     }
 
-    public Person getPersonById(String personId){
+    public Person getPersonById(String personId) {
         return repository.findById(personId).get();
     }
 
-    public Person addPerson(Person person){
+    public Person addPerson(Person person) {
         addressService.addAddress(person.getAddress());
         return repository.save(person);
     }
 
-    public Person updatePerson(Person personRequest){
+    public Person updatePerson(Person personRequest) {
         Person existingPerson = repository.findById(personRequest.getPersonId()).get();
         existingPerson.setName(personRequest.getName());
         existingPerson.setSurname(personRequest.getSurname());
@@ -45,9 +43,17 @@ public class PersonService {
         return repository.save(existingPerson);
     }
 
-    public String deletePerson(String personId){
+    public String deletePerson(String personId) {
         repository.deleteById(personId);
         return personId + "person deleted from database";
+    }
+
+    public TransactionsHistory addTransaction(String personId, Transaction transaction) {
+        Person person = repository.findById(personId).get();
+
+        return transactionsHistoryService.addTransaction(
+                person.getTransactionsHistory().getTransactionId(), transaction);
+
     }
 
 }

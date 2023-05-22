@@ -20,6 +20,14 @@ public class TransactionsHistoryService {
         this.repository = repository;
     }
 
+    public TransactionsHistory addTransaction(String transactionHistoryId, Transaction transaction){
+        TransactionsHistory transactionsHistory = repository.findById(transactionHistoryId).get();
+
+        transactionsHistory.addNewTransaction(transaction);
+
+        return repository.save(transactionsHistory);
+    }
+
 
 
 }

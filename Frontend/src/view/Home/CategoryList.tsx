@@ -32,14 +32,14 @@ const CategoryList = () => {
 
     return (
         <Grid item xs={12} md={2} sx={{ position: 'sticky', top: 0 }}>
-            <Paper sx={{ backgroundColor: '#f5f5f5', padding: '16px', height: '100%' }}>
-                <Typography variant="h6">Kategorie</Typography>
+            <Paper sx={{ backgroundColor: '#f5f5f5', padding: '17px', height: '100%', width: '200px' }}>
+                <Typography variant="h5" sx={{ textAlign: 'center' }}>Kategorie</Typography>
                 <List sx={{ marginTop: '16px' }}>
                     {categoriesFromEndpoint.map((category) => (
                         <div key={category.name}>
                     
                             <ListItemButton onClick={() => setCategory(category)}>
-                                <ListItemText primary={category.name} />
+                                <ListItemText primary={category.name} sx={{ textAlign: 'center' }} />
                             </ListItemButton>
                         </div>
                     ))}

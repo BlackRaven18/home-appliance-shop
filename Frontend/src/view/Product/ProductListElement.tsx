@@ -87,10 +87,11 @@ const ProductListElement = (product: Product) => {
                         src={product.imageURL}
                         sx={{
                             height: 173.5,
-                            width: 250,
+                            width: '100%', // Użyj '100%' jako szerokość obrazka
                             maxWidth: { xs: 350, md: 250 },
                         }}
-                    ></Box>
+                    />
+
                 </Grid>
             </Grid>
         </Box >

@@ -87,7 +87,7 @@ const ProductListElement = (product: Product) => {
                         src={product.imageURL}
                         sx={{
                             height: 173.5,
-                            width: '100%', // Użyj '100%' jako szerokość obrazka
+                            width: '100%',
                             maxWidth: { xs: 350, md: 250 },
                         }}
                     />

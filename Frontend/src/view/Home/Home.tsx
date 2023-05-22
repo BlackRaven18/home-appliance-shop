@@ -1,5 +1,5 @@
 import { Grid } from '@mui/material';
-import NotLoggedInTopBar from '../../TopBar/NotLoggedInTopBar';
+import NotLoggedInTopBar from '../../TopBar/NotLoggedInTopBar.tsx';
 import Product from '../Product/Products';
 import CategoryList from "./CategoryList";
 

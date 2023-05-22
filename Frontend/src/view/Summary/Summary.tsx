@@ -24,6 +24,11 @@ interface TokenI {
     id: string;
 }
 
+interface PaymentStatusDTO{
+    status: string,
+    message: string,
+}
+
 
 function Summary() {
 
@@ -45,6 +50,10 @@ function Summary() {
         alert("Payment Success");
     }
 
+    const handleFailedTransaction = (status: PaymentStatusDTO) => {
+        alert("Payment failed!. " + status.message);
+    }
+
     async function handleToken(token: TokenI) {
 
         const productDetailsDTO = shoppingCart.cart.map((item) => ({
@@ -64,7 +73,13 @@ function Summary() {
             },
 
         }).then((response) => {
-            handleSuccessfulTransaction();
+            console.log(response);
+
+            if(response.data.status === 'failed'){
+                handleFailedTransaction(response.data)
+            }else{
+                handleSuccessfulTransaction();
+            }
 
         }).catch((error) => {
             alert(error);

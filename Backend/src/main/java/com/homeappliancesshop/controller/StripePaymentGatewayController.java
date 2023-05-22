@@ -1,5 +1,6 @@
 package com.homeappliancesshop.controller;
 
+import com.homeappliancesshop.dto.ChargeStatusDTO;
 import com.homeappliancesshop.dto.OrderDetailsDTO;
 import com.homeappliancesshop.dto.ProductDetailsDTO;
 import com.homeappliancesshop.service.StripeClientService;
@@ -19,9 +20,9 @@ public class StripePaymentGatewayController {
 
 
     @PostMapping("/charge")
-    public String chargeCard(
+    public ChargeStatusDTO chargeCard(
             @RequestBody OrderDetailsDTO orderDetailsDTO,
-            @RequestHeader(value = "token") String token) throws Exception {
+            @RequestHeader(value = "token") String token) {
 
         System.out.println(orderDetailsDTO.getBuyerId());
         for (ProductDetailsDTO pd : orderDetailsDTO.getProductDetailsDTO()) {
@@ -29,6 +30,6 @@ public class StripePaymentGatewayController {
             System.out.println(pd.getProductId() + " : " + pd.getQuantity());
         }
 
-        return this.stripeClientService.chargeNewCard(token, orderDetailsDTO).toJson();
+        return this.stripeClientService.chargeNewCard(token, orderDetailsDTO);
     }
 }

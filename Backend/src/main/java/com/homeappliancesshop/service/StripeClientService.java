@@ -1,10 +1,14 @@
 package com.homeappliancesshop.service;
 
+import com.homeappliancesshop.dto.ChargeStatusDTO;
 import com.homeappliancesshop.dto.OrderDetailsDTO;
 import com.homeappliancesshop.dto.ProductDetailsDTO;
 import com.homeappliancesshop.model.Transaction;
 import com.homeappliancesshop.stripe.StripeConfigData;
 import com.stripe.Stripe;
+import com.stripe.exception.CardException;
+import com.stripe.exception.InvalidRequestException;
+import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,8 +30,9 @@ public class StripeClientService {
         Stripe.apiKey = customStripeConfigData.getKey();
     }
 
-    public Charge chargeNewCard(String token, OrderDetailsDTO orderDetailsDTO) throws Exception {
+    public ChargeStatusDTO chargeNewCard(String token, OrderDetailsDTO orderDetailsDTO) {
         Map<String, Object> chargeParams = new HashMap<>();
+        ChargeStatusDTO chargeStatusDTO = new ChargeStatusDTO();
         int totalAmount = calculateAmountOfProductsInOrder(orderDetailsDTO.getProductDetailsDTO());
 
         chargeParams.put("amount", totalAmount);
@@ -37,11 +42,28 @@ public class StripeClientService {
         Transaction transaction = new Transaction(orderDetailsDTO, (double)totalAmount / 100);
         System.out.println(transaction);
 
-        Charge charge = Charge.create(chargeParams);
+        Charge charge = null;
 
-        personService.addTransaction(orderDetailsDTO.getBuyerId(), transaction);
+        try {
+            charge = Charge.create(chargeParams);
+            transaction.setStatus(charge.getStatus());
 
-        return charge;
+            chargeStatusDTO.setStatus("succeeded");
+            chargeStatusDTO.setMessage("payment succeeded");
+
+        }catch (StripeException e){
+            System.out.println(e.getMessage());
+            System.out.println("Stripe exception!!");
+
+            transaction.setStatus("failed");
+
+            chargeStatusDTO.setStatus("failed");
+            chargeStatusDTO.setMessage("Payment failed due to: " + e.getMessage());
+        }finally {
+            personService.addTransaction(orderDetailsDTO.getBuyerId(), transaction);
+        }
+
+        return chargeStatusDTO;
     }
 
     private  int calculateAmountOfProductsInOrder(ProductDetailsDTO[] productDetails) {

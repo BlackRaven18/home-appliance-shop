@@ -8,4 +8,5 @@ import lombok.NoArgsConstructor;
 public class ProductInTransaction {
     private String productId;
     private double price;
+    private int quantity;
 }

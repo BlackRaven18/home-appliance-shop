@@ -23,4 +23,7 @@ public class Person {
     @DocumentReference
     private Address address;
 
+    @DocumentReference
+    private TransactionsHistory transactionsHistory;
+
 }

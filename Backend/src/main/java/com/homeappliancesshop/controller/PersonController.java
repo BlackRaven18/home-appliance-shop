@@ -1,6 +1,8 @@
 package com.homeappliancesshop.controller;
 
 import com.homeappliancesshop.model.Person;
+import com.homeappliancesshop.model.Transaction;
+import com.homeappliancesshop.model.TransactionsHistory;
 import com.homeappliancesshop.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,6 +42,7 @@ public class PersonController {
     public String deletePerson(@PathVariable String personId){
         return service.deletePerson(personId);
     }
+
 
 
 

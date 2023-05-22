@@ -48,8 +48,9 @@ function Summary() {
     async function handleToken(token: TokenI) {
 
         const productDetailsDTO = shoppingCart.cart.map((item) => ({
+            productId: item.productDetails.productId,
             quantity: item.quantity,
-            productId: item.productDetails.productId
+            price: item.productDetails.price,
         }))
 
         await axios.post(process.env.REACT_APP_BACKEND_URL + "/api/payment/charge",

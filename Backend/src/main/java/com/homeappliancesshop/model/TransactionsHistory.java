@@ -12,8 +12,7 @@ import java.util.ArrayList;
 @NoArgsConstructor
 public class TransactionsHistory {
     @Id
-    private String id;
-    private String personId;
+    private String transactionId;
     private ArrayList<Transaction> transactions;
 
     public void addNewTransaction(Transaction transaction){

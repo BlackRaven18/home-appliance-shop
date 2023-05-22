@@ -11,7 +11,7 @@ export default function NotLoggedInTopbar() {
     return (
         <AppBar position="static">
             <Toolbar>
-            <Box
+                <Box
                     onClick={goToHome}
                     sx={{
                         flexGrow: 1,

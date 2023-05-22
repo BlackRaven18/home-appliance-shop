@@ -20,15 +20,6 @@ public class TransactionsHistoryService {
         this.repository = repository;
     }
 
-    public TransactionsHistory getTransactionsHistoryByPersonId(String personId){
-        return repository.findByPersonId(personId);
-    }
-
-    public void addNewTransactionToTransactionsHistory(
-            TransactionsHistory transactionsHistory, ArrayList<ProductInTransaction> productsInTransactions){
-
-
-    }
 
 
 }

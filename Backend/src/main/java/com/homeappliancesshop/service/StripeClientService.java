@@ -2,6 +2,7 @@ package com.homeappliancesshop.service;
 
 import com.homeappliancesshop.dto.OrderDetailsDTO;
 import com.homeappliancesshop.dto.ProductDetailsDTO;
+import com.homeappliancesshop.model.Transaction;
 import com.homeappliancesshop.stripe.StripeConfigData;
 import com.stripe.Stripe;
 import com.stripe.model.Charge;
@@ -14,20 +15,25 @@ import java.util.Map;
 @Service
 public class StripeClientService {
 
-    private final ProductService productService;
+    @Autowired
+    private ProductService productService;
 
     @Autowired
-    public StripeClientService(StripeConfigData customStripeConfigData, ProductService productService) {
+    public StripeClientService(StripeConfigData customStripeConfigData) {
         Stripe.apiKey = customStripeConfigData.getKey();
-
-        this.productService = productService;
     }
 
     public Charge chargeNewCard(String token, OrderDetailsDTO orderDetailsDTO) throws Exception {
         Map<String, Object> chargeParams = new HashMap<>();
-        chargeParams.put("amount", calculateAmountOfProductsInOrder(orderDetailsDTO.getProductDetailsDTO()));
+        int totalAmount = calculateAmountOfProductsInOrder(orderDetailsDTO.getProductDetailsDTO());
+
+        chargeParams.put("amount", totalAmount);
         chargeParams.put("currency", "PLN");
         chargeParams.put("source", token);
+
+        Transaction transaction = new Transaction(orderDetailsDTO, (double)totalAmount / 100);
+        System.out.println(transaction);
+
         Charge charge = Charge.create(chargeParams);
         return charge;
     }

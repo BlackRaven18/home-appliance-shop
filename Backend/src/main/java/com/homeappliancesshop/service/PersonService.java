@@ -2,6 +2,8 @@ package com.homeappliancesshop.service;
 
 import com.homeappliancesshop.model.Address;
 import com.homeappliancesshop.model.Person;
+import com.homeappliancesshop.model.Transaction;
+import com.homeappliancesshop.model.TransactionsHistory;
 import com.homeappliancesshop.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,9 @@ public class PersonService {
 
     @Autowired
     private AddressService addressService;
+
+    @Autowired
+    private TransactionsHistoryService transactionsHistoryService;
 
     public List<Person> findAllPersons(){
         return repository.findAll();
@@ -44,4 +49,5 @@ public class PersonService {
         repository.deleteById(personId);
         return personId + "person deleted from database";
     }
+
 }

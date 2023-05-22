@@ -1,16 +1,16 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
-import Topbar from '../../topbar/Topbar';
-import Profillist from './Profillist';
+import TopBar from '../../TopBar/TopBar';
+import ProfilList from './ProfilList';
 
 function Profil() {
     return (
         <div>
-            <Topbar />
+            <TopBar />
             <Typography variant="h4" align="center" sx={{ mt: 2 }}>
                 Profil
             </Typography>
-            <Profillist/>
+            <ProfilList/>
         </div>
     );
 }

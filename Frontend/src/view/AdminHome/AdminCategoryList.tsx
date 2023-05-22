@@ -3,13 +3,13 @@ import TextField from '@mui/material/TextField';
 import { Link } from "react-router-dom";
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import Admintopbar from '../../topbar/Admintopbar';
+import AdminTopBar from '../../TopBar/AdminTopBar';
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';
 import { Grid, List, ListItem, ListItemText } from '@mui/material';
-import Manageproducts from "./Manageproducts";
-import Manageusers from "./Manageusers";
-import Managepayments from "./Managepayments";
+import ManageProducts from "./ManageProducts";
+import ManageUsers from "./ManageUsers";
+import ManagePayments from "./ManagePayments";
 
 const categories = ['Zarządzaj produktami', 'Zarządzaj użytkownikami', 'Zarządzaj płatnościami'];
 
@@ -17,7 +17,7 @@ const SearchField = styled(TextField)({
     marginLeft: 'auto',
 });
 
-const Admincategorylist = () => {
+const AdminCategoryList = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
     const handleCategorySelect = (category: string) => {
@@ -43,11 +43,11 @@ const Admincategorylist = () => {
                     </List>
                 </Paper>
             </Grid>
-            {selectedCategory === 'Zarządzaj produktami' && <Manageproducts />}
-            {selectedCategory === 'Zarządzaj użytkownikami' && <Manageusers />}
-            {selectedCategory === 'Zarządzaj płatnościami' && <Managepayments />}
+            {selectedCategory === 'Zarządzaj produktami' && <ManageProducts />}
+            {selectedCategory === 'Zarządzaj użytkownikami' && <ManageUsers />}
+            {selectedCategory === 'Zarządzaj płatnościami' && <ManagePayments />}
         </Grid>
     )
 }
 
-export default Admincategorylist;
+export default AdminCategoryList;

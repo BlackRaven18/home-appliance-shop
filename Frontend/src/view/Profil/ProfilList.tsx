@@ -1,6 +1,6 @@
-import * as React from 'react';
 import axios from 'axios';
-import {useState} from "react";
+import * as React from 'react';
+import { useState } from "react";
 
 let url = 'http://localhost:8080';
 
@@ -16,7 +16,7 @@ interface Person {
         postCode: string;
     };
 }
-const Profillist = () => {
+const ProfilList = () => {
     const [person, setPerson] = useState<Person>();
     // funkcja pobierająca dane z bazy danych
     const personId = '64314d722094072d790a5e00';
@@ -26,14 +26,14 @@ const Profillist = () => {
     const getPerson = () => {
         axios
             .get(url + `/persons/` + personId)
-            .then( (response)=> {
+            .then((response) => {
                 setPerson(response.data);
             })
             .catch(function (error) {
                 console.log(error);
             });
     };
-    return(
+    return (
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <div style={{ marginRight: '32px' }}>
                 <img src={require('../Trybiki.png')} alt='' width='600' />
@@ -51,4 +51,4 @@ const Profillist = () => {
         </div>
     );
 }
-export default Profillist;
+export default ProfilList;

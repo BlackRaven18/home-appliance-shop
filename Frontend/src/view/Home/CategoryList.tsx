@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux';
 import { Category, setActiveCategory } from '../../redux/CategoryReducer';
 
 
-const Categorylist = () => {
+const CategoryList = () => {
     const [categoriesFromEndpoint, setCategoriesFromEndpoint] = useState<Category[]>([]);
 
     const dispatch = useDispatch();
@@ -49,4 +49,4 @@ const Categorylist = () => {
     )
 }
 
-export default Categorylist;
+export default CategoryList;

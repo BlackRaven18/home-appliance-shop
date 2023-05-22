@@ -1,9 +1,9 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
 
-const Managepayments = () => {
+const ManagePayments = () => {
     return(
         <Typography>Zarzadzaj płatnościami</Typography>
     );
 }
-export default Managepayments;
+export default ManagePayments;

@@ -2,28 +2,52 @@ package com.homeappliancesshop.service;
 
 import com.homeappliancesshop.model.Category;
 import com.homeappliancesshop.model.Product;
+import com.homeappliancesshop.repository.CategoryRepository;
 import com.homeappliancesshop.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
 
     @Autowired
-    private ProductRepository repository;
+    private ProductRepository productRepository;
 
-    public List<Product> findAllProducts() { return repository.findAll(); }
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+
+    public List<Product> findAllProducts() { return productRepository.findAll(); }
+
+    public Optional<Product> findProductById(String productId){
+        return productRepository.findById(productId);
+    }
 
     public Product getProductById(String productId){
-        return repository.findById(productId).get();
+        return productRepository.findById(productId).get();
     }
     public Product addProduct(Product product){
-        return repository.save(product);
+        return productRepository.save(product);
     }
     public String deleteProduct(String productId){
-        repository.deleteById(productId);
+        productRepository.deleteById(productId);
         return productId + "product deleted from database";
+    }
+
+    public Product modifyProduct(Product newProduct){
+
+        //Optional<Category> category = categoryRepository.findById(newProduct.getCategory().getCategoryId());
+        Optional<Category> category = categoryRepository.findByName(newProduct.getCategory().getName());
+
+        if(category.isPresent()){
+            newProduct.setCategory(category.get());
+        }
+
+        //System.out.println(newProduct.getCategory().getName());
+        return productRepository.save(newProduct);
     }
 }

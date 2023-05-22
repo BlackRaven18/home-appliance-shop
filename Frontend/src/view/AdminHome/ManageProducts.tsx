@@ -1,9 +1,9 @@
-import * as React from 'react';
-import axios from 'axios';
-import { useState } from "react";
 import { Button, TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import axios from 'axios';
+import * as React from 'react';
+import { useState } from "react";
 
 let url = 'http://localhost:8080';
 
@@ -94,6 +94,8 @@ const ManageProducts = () => {
         }
     }
 
+
+
     const [isModifyClicked, setIsModifyClicked] = useState(false);
     const [newName, setNewName] = useState("");
     const [newBrand, setNewBrand] = useState("");
@@ -101,6 +103,7 @@ const ManageProducts = () => {
     const [newSpecification, setNewSpecification] = useState("");
     const [newPrice, setNewPrice] = useState("");
     const [newCategoryName, setNewCategoryName] = useState("");
+    const [newImageURL, setNewImageURL] = useState("url");
 
 
     const handleModifyClick = (productId: string) => {
@@ -109,22 +112,23 @@ const ManageProducts = () => {
     };
 
     const handleModifySubmit = async () => {
-        try {
-            await axios.put(url + '/products/' + productId, {
-                name: newName,
-                brand: newBrand,
-                color: newColor,
-                specification: newSpecification,
-                price: newPrice,
-                category: {
-                    name: newCategoryName,
-                }
-            });
-            getProducts(); // załaduj ponownie listę użytkowników po modyfikacji
+        await axios.put(url + '/products/' + productId, {
+            productId: productId,
+            name: newName,
+            brand: newBrand,
+            color: newColor,
+            specification: newSpecification,
+            price: newPrice,
+            category: {
+                name: newCategoryName,
+            },
+            imageURL: newImageURL,
+        }).then(() => {
+            getProducts(); // załaduj ponownie listę produktów po modyfikacji
             setIsModifyClicked(false); // Zresetuj stan po zatwierdzeniu modyfikacji
-        } catch (error) {
-            console.error(error);
-        }
+        }).catch((error) => {
+            console.log(error);
+        })
     };
 
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -174,42 +178,42 @@ const ManageProducts = () => {
                                         variant="outlined"
                                         value={newName}
                                         onChange={handleNameChange}
-                                        style={{margin: '5px'}}
+                                        style={{ margin: '5px' }}
                                     />
                                     <TextField
                                         label="Nowa marka"
                                         variant="outlined"
                                         value={newBrand}
                                         onChange={handleBrandChange}
-                                        style={{margin: '5px'}}
+                                        style={{ margin: '5px' }}
                                     />
                                     <TextField
                                         label="Nowy kolor"
                                         variant="outlined"
                                         value={newColor}
                                         onChange={handleColorChange}
-                                        style={{margin: '5px'}}
+                                        style={{ margin: '5px' }}
                                     />
                                     <TextField
                                         label="Nowa specyfikacja"
                                         variant="outlined"
                                         value={newSpecification}
                                         onChange={handleSpecificationChange}
-                                        style={{margin: '5px'}}
+                                        style={{ margin: '5px' }}
                                     />
                                     <TextField
                                         label="Nowa cena"
                                         variant="outlined"
                                         value={newPrice}
                                         onChange={handlePriceChange}
-                                        style={{margin: '5px'}}
+                                        style={{ margin: '5px' }}
                                     />
                                     <TextField
                                         label="Nowa kategoria"
                                         variant="outlined"
                                         value={newCategoryName}
                                         onChange={handleCategoryNameChange}
-                                        style={{margin: '5px'}}
+                                        style={{ margin: '5px' }}
                                     />
                                 </Grid>
                                 <Grid item>

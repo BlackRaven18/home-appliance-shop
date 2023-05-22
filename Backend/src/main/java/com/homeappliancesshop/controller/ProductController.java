@@ -26,13 +26,26 @@ public class ProductController {
     public Product getProduct(@PathVariable String productId){
         return service.getProductById(productId);
     }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Product createProduct(@RequestBody Product product){
         return service.addProduct(product);
     }
+
     @DeleteMapping("/{productId}")
     public String deleteProduct(@PathVariable String productId){
         return service.deleteProduct(productId);
+    }
+
+    @PutMapping(value="/{productId}")
+    public Product updateProduct(@PathVariable String productId, @RequestBody Product newProduct){
+
+        System.out.println(newProduct);
+
+        System.out.println(newProduct.getCategory().getCategoryId());
+
+        //return newProduct;
+        return service.modifyProduct(newProduct);
     }
 }

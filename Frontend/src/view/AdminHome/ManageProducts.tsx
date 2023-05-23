@@ -152,14 +152,22 @@ const ManageProducts = () => {
 
     return (
         <>
+            <Box display="flex" flexDirection={{ xs: 'column', sm: 'row' }} gap={2}>
+                <Box flex="1">
             <div>
-                <TextField
-                    label="Wyszukaj produkt"
-                    variant="outlined"
-                    value={searchTerm}
-                    onChange={handleSearchTermChange}
-                    style={{ margin: '20px' }}
-                />
+                <Grid container justifyContent="center">
+                    <Grid item xs={12} md={6} sx={{ position: 'sticky', top: 0 }}>
+                        <Box sx={{ margin: '0 auto' }}>
+                            <TextField
+                                label="Wyszukaj produkt"
+                                variant="outlined"
+                                value={searchTerm}
+                                onChange={handleSearchTermChange}
+                                style={{ margin: '20px' }}
+                            />
+                        </Box>
+                    </Grid>
+                </Grid>
                 {filteredProducts.map((product, index) => (
                     <div key={product.productId} style={{ border: '1px solid gray', borderRadius: '10px', padding: '10px', width: '500px' }}>
                         <p style={{ fontSize: '20px' }}>Nazwa: {product.name}</p>
@@ -226,16 +234,18 @@ const ManageProducts = () => {
                     </div>
                 ))}
             </div>
-            <Box
-                component="form"
-                noValidate
-                onSubmit={createProduct}
-                sx={{
-                    ml: 1,
-                    width: '400px'
-                }}
-                style={{ margin: '80px' }}
-            >
+            </Box>
+            <Box flex="1">
+                <Box
+                    component="form"
+                    noValidate
+                    onSubmit={createProduct}
+                    sx={{
+                        ml: 1,
+                        width: '80%', // Zmieniona szerokość na 90%
+                    }}
+                    style={{ margin: '80px' }}
+                >
                 <TextField
                     margin="normal"
                     required
@@ -292,6 +302,8 @@ const ManageProducts = () => {
                     Dodaj produkt
                 </Button>
 
+                </Box>
+              </Box>
             </Box>
         </>
     );

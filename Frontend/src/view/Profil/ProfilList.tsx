@@ -17,7 +17,7 @@ interface Person {
 const ProfilList = () => {
     const [person, setPerson] = useState<Person>();
     // funkcja pobierająca dane z bazy danych
-    const personId = '64314d722094072d790a5e00';
+    const personId = localStorage.getItem('user');
     React.useEffect(() => {
         getPerson();
     }, []);

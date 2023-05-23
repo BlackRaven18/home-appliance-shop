@@ -30,6 +30,7 @@ interface ProductsInTransactionI {
 function History() {
 
     const [history, setHistory] = useState<HistoryI>();
+    const userId = localStorage.getItem('user');
 
     useEffect(() => {
         getHistory();
@@ -38,8 +39,8 @@ function History() {
     const getHistory = async () => {
 
         await axios
-            .get(process.env.REACT_APP_BACKEND_URL + "/persons"
-                + "/64679522e57752643a41b1dc" + "/paymenthistory")
+            .get(process.env.REACT_APP_BACKEND_URL + "/persons/"
+                + userId + "/paymenthistory")
             .then((response) => {
                 setHistory(response.data);
             })

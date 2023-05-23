@@ -34,6 +34,8 @@ public class Transaction {
             pit.setPrice(pd.getPrice());
             pit.setProductId(pd.getProductId());
             pit.setQuantity(pd.getQuantity());
+            pit.setName(pd.getName());
+            pit.setImageURL(pd.getImageURL());
 
             this.products.add(pit);
         }

@@ -127,6 +127,8 @@ const ManageUsers = () => {
 
     return (
         <>
+            <Box display="flex" flexDirection={{ xs: 'column', sm: 'row' }} gap={2}>
+                <Box flex="1">
             <div style={{display: 'flex', flexDirection: 'column', flex: 1}}>
                 <TextField
                     label="Wyszukaj osobę"
@@ -229,6 +231,8 @@ const ManageUsers = () => {
                     ))
                 )}
             </div>
+                </Box>
+                <Box flex="1">
             <Box
                 component="form"
                 noValidate
@@ -285,6 +289,8 @@ const ManageUsers = () => {
                     Zarejestruj użytkownika
                 </Button>
 
+            </Box>
+                </Box>
             </Box>
         </>
     );

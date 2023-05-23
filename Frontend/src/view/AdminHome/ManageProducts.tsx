@@ -154,10 +154,8 @@ const ManageProducts = () => {
         <>
             <Box display="flex" flexDirection={{ xs: 'column', sm: 'row' }} gap={2}>
                 <Box flex="1">
-            <div>
-                <Grid container justifyContent="center">
-                    <Grid item xs={12} md={6} sx={{ position: 'sticky', top: 0 }}>
-                        <Box sx={{ margin: '0 auto' }}>
+                    <div style={{display: 'flex', flexDirection: 'column', flex: 1}}>
+
                             <TextField
                                 label="Wyszukaj produkt"
                                 variant="outlined"
@@ -165,11 +163,14 @@ const ManageProducts = () => {
                                 onChange={handleSearchTermChange}
                                 style={{ margin: '20px' }}
                             />
-                        </Box>
-                    </Grid>
-                </Grid>
+
                 {filteredProducts.map((product, index) => (
-                    <div key={product.productId} style={{ border: '1px solid gray', borderRadius: '10px', padding: '10px', width: '500px' }}>
+                        <div key={product.productId} style={{
+                            border: '1px solid #ccc',
+                            borderRadius: '5px',
+                            padding: '10px',
+                            margin: '20px'
+                        }}>
                         <p style={{ fontSize: '20px' }}>Nazwa: {product.name}</p>
                         <p style={{ fontSize: '20px' }}>Marka: {product.brand}</p>
                         <p style={{ fontSize: '20px' }}>Kolor: {product.color}</p>
@@ -242,9 +243,9 @@ const ManageProducts = () => {
                     onSubmit={createProduct}
                     sx={{
                         ml: 1,
-                        width: '80%', // Zmieniona szerokość na 90%
+                        width: '400px',
                     }}
-                    style={{ margin: '80px' }}
+                    style={{ margin: '5px' }}
                 >
                 <TextField
                     margin="normal"

@@ -32,6 +32,11 @@ public class PersonController {
         return service.getPersonById(personId);
     }
 
+    @GetMapping("/{personId}/paymenthistory")
+    public TransactionsHistory getPersonTransactionsHistory(@PathVariable String personId){
+        return service.getPersonById(personId).getTransactionsHistory();
+    }
+
     @PostMapping("/login")
     public ResponseEntity<?> getPersonId(@RequestBody Person person) {
         String email = person.getEmail();

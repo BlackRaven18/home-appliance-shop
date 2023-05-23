@@ -5,6 +5,7 @@ import { StyleSheet } from 'react-native';
 import { useState, MouseEvent } from "react";
 import { useDispatch } from 'react-redux';
 import { addProductToCart } from '../../redux/ShoppingCartReducer';
+import PriceFormatter from '../../PriceFormattingUtils/PriceFormatter';
 
 
 interface Product {
@@ -94,7 +95,7 @@ const ProductDetails = () => {
                         </Typography>
                         <Typography sx={styles.typographyStyle}>
                             <span style={styles.spanStyle}>Cena:</span>
-                            {productDetails.price ?? 'unknown'}
+                            {PriceFormatter.getFormattedPrice(productDetails.price) ?? 'unknown'}
                         </Typography>
 
                         <Button variant="contained" color="primary" onClick={() => {

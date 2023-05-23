@@ -1,27 +1,16 @@
-import { Box, Button, Grid, Typography } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 import React from 'react';
-import { useDispatch } from 'react-redux';
 import { useNavigate } from "react-router";
-import { decrementAmountOfProduct, incrementAmountOfProduct } from '../../redux/ShoppingCartReducer';
 import ProductInterface from "../ProductInterface";
-import PriceFormatter from '../../PriceFormattingUtils/PriceFormatter';
 
-interface ShoppingCartElementProps {
+interface SummaryProductElementProps {
     quantity: number;
     productDetails: ProductInterface;
 }
 
-const ShoppingCartElement: React.FC<ShoppingCartElementProps> = ({ quantity, productDetails }) => {
+const SummaryProductElement: React.FC<SummaryProductElementProps> = ({ quantity, productDetails }) => {
+
     const navigate = useNavigate();
-    const dispatch = useDispatch();
-
-    const incrementAmount = (productDetails: ProductInterface) => {
-        dispatch(incrementAmountOfProduct(productDetails))
-    }
-
-    const decrementAmount = (productDetails: ProductInterface) => {
-        dispatch(decrementAmountOfProduct(productDetails))
-    }
 
     const goToProductDetails = () => {
         navigate('/productdetails', { state: productDetails });
@@ -29,7 +18,6 @@ const ShoppingCartElement: React.FC<ShoppingCartElementProps> = ({ quantity, pro
 
 
     return (
-
         <Box
             onClick={goToProductDetails}
             sx={{
@@ -49,26 +37,10 @@ const ShoppingCartElement: React.FC<ShoppingCartElementProps> = ({ quantity, pro
                     <Typography>Marka: {productDetails.brand ?? 'unknown'}</Typography>
                     <Typography>Kolor: {productDetails.color ?? 'unknown'}</Typography>
                     <Typography>Specyfikacja: {productDetails.specification ?? 'unknown'}</Typography>
-                    <Typography>
-                        Cena: {PriceFormatter.getFormattedPrice(productDetails.price) ?? 'unknown'}
-                    </Typography>
+                    <Typography>Cena: {productDetails.price ?? 'unknown'}</Typography>
                     <Typography>Ilosc: {quantity}</Typography>
 
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={(event) => {
-                            event.stopPropagation();
-                            incrementAmount(productDetails)
-                        }}>+</Button>
 
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={(event) => {
-                            event.stopPropagation();
-                            decrementAmount(productDetails)
-                        }}>-</Button>
                 </Grid>
                 <Grid item xs={4} >
                     <Box
@@ -83,8 +55,7 @@ const ShoppingCartElement: React.FC<ShoppingCartElementProps> = ({ quantity, pro
                 </Grid>
             </Grid>
         </Box>
-    )
-
+    );
 }
 
-export default ShoppingCartElement
+export default SummaryProductElement

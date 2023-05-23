@@ -8,5 +8,7 @@ import lombok.NoArgsConstructor;
 public class ProductDetailsDTO {
     private int quantity;
     private String productId;
+    private String name;
+    private String imageURL;
     private double price;
 }

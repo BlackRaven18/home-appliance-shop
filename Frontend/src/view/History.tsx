@@ -24,6 +24,7 @@ interface ProductsInTransactionI {
     price: number,
     quantity: number,
     name: string,
+    imageURL: string,
 }
 
 function History() {
@@ -87,12 +88,13 @@ function History() {
                                         aria-controls="panel1a-content"
                                         id="panel1a-header"
                                     >
-                                        <Typography>Produkt {product.productId}</Typography>
+                                        <Typography>Produkt {product.name}</Typography>
                                     </AccordionSummary>
                                     <AccordionDetails>
                                         <Typography>Id produktu: {product.productId}</Typography>
                                         <Typography>Cena: {PriceFormatter.getFormattedPrice(product.price)}</Typography>
                                         <Typography>Ilosc: {product.quantity}</Typography>
+                                        <Typography>Obrazek: {product.imageURL}</Typography>
                                     </AccordionDetails>
                                 </Accordion>
                             </Box>

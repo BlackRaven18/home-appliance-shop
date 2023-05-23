@@ -28,6 +28,10 @@ public class TransactionsHistoryService {
         return repository.save(transactionsHistory);
     }
 
+    public TransactionsHistory addTransactionsHistory(TransactionsHistory transactionsHistory){
+        return repository.save(transactionsHistory);
+    }
+
 
 
 }

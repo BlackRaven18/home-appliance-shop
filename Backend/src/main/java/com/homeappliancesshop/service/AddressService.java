@@ -19,7 +19,6 @@ public class AddressService {
     //
 
     public Address addAddress(Address address){
-        //address.setAddressId(UUID.randomUUID().toString().split("-")[0]);
         return repository.save(address);
     }
 }

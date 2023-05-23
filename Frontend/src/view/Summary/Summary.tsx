@@ -38,7 +38,7 @@ function Summary() {
     const navigate = useNavigate();
 
     const [deliveryMethod, setDeliveryMethod] = useState<String>('odbior-osobisty');
-    const buyerId = "64679522e57752643a41b1dc";
+    const buyerId = localStorage.getItem('user');
 
     const handleSelectShippingMethod = (deliveryMethod: String) => {
         setDeliveryMethod(deliveryMethod)
@@ -60,6 +60,8 @@ function Summary() {
             productId: item.productDetails.productId,
             quantity: item.quantity,
             price: item.productDetails.price,
+            name: item.productDetails.name,
+            imageURL: item.productDetails.imageURL,
         }))
 
         await axios.post(process.env.REACT_APP_BACKEND_URL + "/api/payment/charge",
@@ -75,7 +77,7 @@ function Summary() {
 
         }).then((response) => {
             console.log(response);
-
+            console.log(buyerId);
             if(response.data.status === 'failed'){
                 handleFailedTransaction(response.data)
             }else{
@@ -83,6 +85,7 @@ function Summary() {
             }
 
         }).catch((error) => {
+            console.log(buyerId);
             alert(error);
         });
     }

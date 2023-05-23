@@ -12,7 +12,7 @@ interface Person {
 function Profil() {
     const [person, setPerson] = useState<Person>();
     // funkcja pobierająca dane z bazy danych
-    const personId = '64314d722094072d790a5e00';
+    const personId = localStorage.getItem('user');
     React.useEffect(() => {
         getPerson();
     }, []);
@@ -23,7 +23,7 @@ function Profil() {
                 setPerson(response.data);
             })
             .catch(function (error) {
-                setPerson({name: "a", surname: "b"});
+                setPerson({name: "", surname: ""});
                 console.log(error);
             });
     };

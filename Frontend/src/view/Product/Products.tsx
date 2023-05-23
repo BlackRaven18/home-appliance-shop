@@ -1,7 +1,7 @@
 import Typography from '@mui/material/Typography';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
-import ProductList from './ProductList';
+import Productlist from './ProductList';
 
 function Products() {
 
@@ -24,7 +24,7 @@ interface ProductContentProps {
 
 function ProductContent({ categoryId }: ProductContentProps) {
     return (
-        <ProductList key={categoryId} categoryId={categoryId} />
+        <Productlist key={categoryId} categoryId={categoryId} />
     );
 }
 

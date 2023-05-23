@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
-import Topbar from './../topbar/Topbar';
+import TopBar from '../TopBar/TopBar';
 import axios from 'axios';
 import {useState} from "react";
 
@@ -32,7 +32,7 @@ function Profil() {
 
     return (
         <div>
-            <Topbar />
+            <TopBar />
             <Typography variant="h4" align="center" sx={{ mt: 2 }}>
                 Profil
             </Typography>

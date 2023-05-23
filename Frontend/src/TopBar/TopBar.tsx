@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 
 
-export default function Topbar() {
+export default function TopBar() {
 
     const navigate = useNavigate();
 
@@ -14,6 +14,18 @@ export default function Topbar() {
     const goToHome = () => {
         navigate('/loginhome');
     }
+
+    const handleLogout = () => {
+        localStorage.removeItem("user");
+        if(localStorage.getItem("user") === null){
+            navigate('/login');
+            console.log("Logged out");
+        }
+        else{
+            console.error("An error occurred while logging out");
+        }
+    }
+
     return (
         <AppBar position="static">
             <Toolbar>
@@ -41,20 +53,12 @@ export default function Topbar() {
                 <Button color="inherit" component={Link} to="/history">
                     Historia
                 </Button>
-                <Button color="inherit" component={Link} to="/login">
-                    Logowanie
-                </Button>
-                <Button color="inherit" component={Link} to="/register">
-                    Rejestracja
-                </Button>
                 <Button color="inherit" component={Link} to="/profil">
                     Profil
                 </Button>
-                <Grid item>
-                    <Link to='/login'>
-                        {"Wyloguj się"}
-                    </Link>
-                </Grid>
+                <Button color="inherit" onClick={handleLogout}>
+                    Wyloguj
+                </Button>
             </Toolbar>
         </AppBar>
     );

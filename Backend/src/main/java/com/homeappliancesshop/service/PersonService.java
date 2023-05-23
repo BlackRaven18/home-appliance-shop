@@ -39,6 +39,7 @@ public class PersonService {
         existingPerson.setName(personRequest.getName());
         existingPerson.setSurname(personRequest.getSurname());
         existingPerson.setEmail(personRequest.getEmail());
+        existingPerson.setPassword(personRequest.getPassword());
         existingPerson.setPhoneNumber(personRequest.getPhoneNumber());
         return repository.save(existingPerson);
     }
@@ -53,7 +54,21 @@ public class PersonService {
 
         return transactionsHistoryService.addTransaction(
                 person.getTransactionsHistory().getTransactionId(), transaction);
+    }
 
+    public boolean existsByEmail(String email) {
+        return repository.findByEmail(email) != null;
+    }
+
+    public Person getPersonByLoginDatas(String email, String password) {
+        if(repository.findByEmail(email) != null){
+            Person person = repository.findByEmail(email);
+            if (person.getPassword().equals(password)) {
+                return person;
+            }
+            return null;
+        }
+        return null;
     }
 
 }

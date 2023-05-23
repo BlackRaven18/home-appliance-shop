@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { clearShoppingCart } from '../../redux/ShoppingCartReducer';
 import { RootState } from '../../redux/store';
-import Topbar from '../../topbar/Topbar';
+import TopBar from '../../TopBar/TopBar';
 import ShoppingCartElement from './ShoppingCartElement';
 import PriceFormatter from '../../PriceFormattingUtils/PriceFormatter';
 
@@ -26,7 +26,7 @@ function ShoppingCart() {
 
   return (
     <>
-      <Topbar />
+      <TopBar />
 
       <Typography variant="h4" align="center" sx={{ mt: 2 }}>
         Koszyk

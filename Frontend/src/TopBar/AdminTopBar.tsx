@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 
-export default function Admintopbar() {
+export default function AdminTopBar() {
     return (
         <AppBar position="static">
             <Toolbar>
@@ -14,7 +14,7 @@ export default function Admintopbar() {
                     <span style={{background: 'yellow', borderRadius: '40px', padding: '20px 15px', color: 'black'}}>Lodóweczka admin</span>
                 </Typography>
 
-                <Button color="inherit" component={Link} to="/Adminhome">
+                <Button color="inherit" component={Link} to="/AdminHome">
                     Strona główna
                 </Button>
                 <Button color="inherit" component={Link} to="/login">

@@ -9,38 +9,38 @@ interface CartState {
     productDetails: ProductInterface
   }[]
 
-  totalAmount: number,
-  productsNumber: number,
+    totalAmount: number,
+    productsNumber: number,
 }
 
 
 enum Operation {
-  Increment,
-  Decrement,
+    Increment,
+    Decrement,
 }
 
 function updateTotalAmount(totalAmount: number, operation: Operation, price: number) {
 
-  switch (operation) {
-    case Operation.Increment:
-      totalAmount += price;
-      break;
-    case Operation.Decrement:
-      totalAmount -= price;
-      break;
-  }
+    switch (operation) {
+        case Operation.Increment:
+            totalAmount += price;
+            break;
+        case Operation.Decrement:
+            totalAmount -= price;
+            break;
+    }
 
-  totalAmount = Number(totalAmount.toFixed(2));
+    totalAmount = Number(totalAmount.toFixed(2));
 
-  return totalAmount;
+    return totalAmount;
 }
 
 
 
 const initialState: CartState = {
-  cart: [],
-  totalAmount: 0.00,
-  productsNumber: 0,
+    cart: [],
+    totalAmount: 0.00,
+    productsNumber: 0,
 }
 
 export const shoppingCartSlice = createSlice({

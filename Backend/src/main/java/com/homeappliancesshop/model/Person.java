@@ -12,12 +12,12 @@ import org.springframework.data.mongodb.core.mapping.DocumentReference;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Person {
-
     @Id
     private String personId;
     private String name;
     private String surname;
     private String email;
+    private String password;
     private String phoneNumber;
 
     @DocumentReference

@@ -1,20 +1,20 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
-import Admintopbar from '../../topbar/Admintopbar';
-import Profillist from './Profillist';
+import AdminTopBar from '../../TopBar/AdminTopBar';
+import ProfilList from './ProfilList';
 
-function Adminprofil() {
+function AdminProfil() {
   return (
     <div>
-      <Admintopbar />
+      <AdminTopBar />
       <Typography variant="h4" align="center" sx={{ mt: 2 }}>
         Profil
       </Typography>
-      <Profillist/>
+      <ProfilList/>
     </div>
   );
 }
 
-export default Adminprofil;
+export default AdminProfil;
 
 

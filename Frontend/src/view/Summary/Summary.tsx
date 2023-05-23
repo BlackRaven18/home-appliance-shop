@@ -16,7 +16,7 @@ import { useNavigate } from "react-router";
 import Stripe from "react-stripe-checkout";
 import { clearShoppingCart } from '../../redux/ShoppingCartReducer';
 import { RootState } from "../../redux/store";
-import SummaryTopBar from "../../topbar/SummaryTopBar";
+import SummaryTopBar from "../../TopBar/SummaryTopBar";
 import SummaryProductElement from './SummaryProductElement';
 import PriceFormatter from "../../PriceFormattingUtils/PriceFormatter";
 

@@ -7,11 +7,16 @@ import com.homeappliancesshop.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 @CrossOrigin
 @RestController
 @RequestMapping("/persons")
+
 public class PersonController {
 
     @Autowired
@@ -27,10 +32,28 @@ public class PersonController {
         return service.getPersonById(personId);
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<?> getPersonId(@RequestBody Person person) {
+        String email = person.getEmail();
+        String password = person.getPassword();
+
+        Person retrievedPerson = service.getPersonByLoginDatas(email, password);
+
+        if (retrievedPerson != null) {
+            return ResponseEntity.ok(retrievedPerson.getPersonId());
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("\n" + "Invalid login details or user does not exist");
+        }
+    }
+
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Person createPerson(@RequestBody Person person){
-        return service.addPerson(person);
+    public ResponseEntity<?> createPerson(@RequestBody Person person) {
+        if (service.existsByEmail(person.getEmail())) {
+            return ResponseEntity.badRequest().body("Email already exists");
+        }
+
+        service.addPerson(person);
+        return ResponseEntity.ok(person.getPersonId());
     }
 
     @PutMapping
@@ -42,9 +65,4 @@ public class PersonController {
     public String deletePerson(@PathVariable String personId){
         return service.deletePerson(personId);
     }
-
-
-
-
-
 }

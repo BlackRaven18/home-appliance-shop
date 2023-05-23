@@ -31,6 +31,8 @@ public class PersonService {
 
     public Person addPerson(Person person) {
         addressService.addAddress(person.getAddress());
+        TransactionsHistory transactionsHistory = transactionsHistoryService.addTransactionsHistory(new TransactionsHistory());
+        person.setTransactionsHistory(transactionsHistory);
         return repository.save(person);
     }
 

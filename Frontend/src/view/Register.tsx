@@ -98,7 +98,7 @@ const Register = () => {
             .post('http://localhost:8080/persons', formData)
             .then((response) => {
                 console.log(response.data);
-                localStorage.setItem('user', JSON.stringify(response.data));
+                localStorage.setItem('user', response.data);
                 navigate('/loginhome');
             })
             .catch((error) => {

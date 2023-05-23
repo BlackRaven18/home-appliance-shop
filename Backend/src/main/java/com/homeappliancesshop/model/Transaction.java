@@ -13,16 +13,21 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 public class Transaction {
+
+    private static final String DATE_FORMAT = "dd.MM.yyyy HH:mm";
+
     private String date;
     private String status;
     private ArrayList<ProductInTransaction> products;
     private double totalAmount;
+    private String deliveryMethod;
 
     public Transaction(OrderDetailsDTO orderDetailsDTO, double totalAmount){
         this.date = getCurrentDate();
         this.status = "processed";
         this.products = new ArrayList<>();
         this.totalAmount = totalAmount;
+        this.deliveryMethod = orderDetailsDTO.getDeliveryMethod();
 
         for(ProductDetailsDTO pd : orderDetailsDTO.getProductDetailsDTO()){
             ProductInTransaction pit = new ProductInTransaction();
@@ -35,7 +40,7 @@ public class Transaction {
     }
 
     private String getCurrentDate(){
-        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+        SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
         Date date = new Date();
         return formatter.format(date);
     }

@@ -7,5 +7,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class OrderDetailsDTO {
     private String buyerId;
+    private String deliveryMethod;
     private ProductDetailsDTO[] productDetailsDTO;
 }

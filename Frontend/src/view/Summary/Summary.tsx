@@ -37,11 +37,11 @@ function Summary() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const [shippingMethod, setShippingMethod] = useState<String>('odbior-osobisty');
+    const [deliveryMethod, setDeliveryMethod] = useState<String>('odbior-osobisty');
     const buyerId = "64679522e57752643a41b1dc";
 
-    const handleSelectShippingMethod = (shippingMethod: String) => {
-        setShippingMethod(shippingMethod)
+    const handleSelectShippingMethod = (deliveryMethod: String) => {
+        setDeliveryMethod(deliveryMethod)
     }
 
     const handleSuccessfulTransaction = () => {
@@ -65,6 +65,7 @@ function Summary() {
         await axios.post(process.env.REACT_APP_BACKEND_URL + "/api/payment/charge",
             {
                 buyerId,
+                deliveryMethod,
                 productDetailsDTO,
 
             }, {
@@ -136,7 +137,7 @@ function Summary() {
                     <RadioGroup
                         aria-labelledby="demo-controlled-radio-buttons-group"
                         name="controlled-radio-buttons-group"
-                        value={shippingMethod}
+                        value={deliveryMethod}
                         onChange={(event) => handleSelectShippingMethod(event.target.value)}
                     >
                         <FormControlLabel value="odbior-osobisty" control={<Radio />} label="Odbiór osobisty" />
@@ -171,6 +172,9 @@ function Summary() {
                             label={'Płatność kartą'}
                             amount={shoppingCart.totalAmount * 100}
                             currency="PLN"
+                            panelLabel="Zapłać"
+                            image={require('../logo.jpg')}
+                            
                         />
                     </Box>
                 ) : (

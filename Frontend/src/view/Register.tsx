@@ -3,13 +3,18 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import axios from 'axios';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FacebookLoginButton } from "react-social-login-buttons";
+import FacebookLogin, { ReactFacebookLoginInfo } from 'react-facebook-login';
 
 import {
     Avatar,
     Box,
     Button,
     CssBaseline,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
     Grid,
     Paper,
     TextField,
@@ -37,10 +42,34 @@ interface Person {
 
 const Register = () => {
     const navigate = useNavigate();
+    const [openDialog, setOpenDialog] = useState(false);
 
+    const handleOpenDialog = () => {
+        setOpenDialog(true);
+    };
+
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    };
+    const [isFacebookLogging, setFacebookLogging] = useState(false);
     const [isPasswordShown, setPasswordIsShown] = useState(false);
 
     const [formData, setFormData] = useState<Person>({
+        name: '',
+        surname: '',
+        email: '',
+        phoneNumber: '',
+        address: {
+            state: '',
+            city: '',
+            street: '',
+            postCode: '',
+            apartment: '',
+        },
+        password: '',
+    });
+
+    const [facebookFormData, setFacebookFormData] = useState<Person>({
         name: '',
         surname: '',
         email: '',
@@ -68,10 +97,57 @@ const Register = () => {
     );
 
     const onChangeForm = (key: string, value: any) => {
-        setFormData((prevFormData) => ({
-            ...prevFormData,
-            [key]: value,
-        }));
+        if (isFacebookLogging === true) {
+            setFacebookFormData((prevFacebookData) => ({
+                ...prevFacebookData,
+                [key]: value,
+            }));
+        } else {
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                [key]: value,
+            }));
+        }
+    };
+
+
+    const postUser = () => {
+        if(isFacebookLogging === true){
+            console.log("true");
+        }
+        else{
+            console.log("false");
+        }
+        // const postData = isFacebookLogging ? facebookFormData : formData;
+        // axios
+        //     .post('http://localhost:8080/persons', postData)
+        //     .then((response) => {
+        //         console.log(response.data);
+        //         localStorage.setItem('user', JSON.stringify(response.data));
+        //         navigate('/loginhome');
+        //     })
+        //     .catch((error) => {
+        //         console.log(error.response.data);
+        //         setErrorMessages([error.response.data]);
+        //     });
+    }
+
+    const responseFacebook = (response: ReactFacebookLoginInfo) => {
+        console.log(response);
+        if (response.accessToken) {
+            facebookFormData.name = response.name?.split(' ')[0] ?? '';
+            facebookFormData.surname = response.name?.split(' ')[1] ?? '';
+            facebookFormData.email = response.email ?? '';
+            facebookFormData.password = response.id ?? '';
+            
+            console.log(facebookFormData)
+
+            handleOpenDialog();
+        } else {
+            console.error("Błąd rejestracja użytkownika!");
+            handleCloseDialog();
+        }
+        setFacebookLogging(false);
     };
 
     const registerNewUser = () => {
@@ -94,22 +170,102 @@ const Register = () => {
             return;
         }
 
-        axios
-            .post('http://localhost:8080/persons', formData)
-            .then((response) => {
-                console.log(response.data);
-                localStorage.setItem('user', response.data);
-                navigate('/loginhome');
-            })
-            .catch((error) => {
-                console.log(error.response.data);
-                setErrorMessages([error.response.data]);
-            });
+        postUser();
     };
 
     return (
         <ThemeProvider theme={theme}>
             <Grid container component="main" sx={{ height: '100vh' }}>
+                <Dialog open={openDialog} onClose={handleCloseDialog}>
+                    <DialogTitle>Register</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Uzupełnij swoje dane
+                        </DialogContentText>
+                        <Box component="form" noValidate sx={{ mt: 1 }}>
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="phoneNumber"
+                                label="phoneNumber"
+                                name="phoneNumber"
+                                autoComplete="Nr telefonu"
+                                value={facebookFormData.phoneNumber}
+                                onChange={(e) => onChangeForm('phoneNumber', e.target.value)}
+                            />
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="state"
+                                label="state"
+                                name="state"
+                                autoComplete="Województwo"
+                                value={facebookFormData.address.state}
+                                onChange={(e) =>
+                                    onChangeForm('address', { ...facebookFormData.address, state: e.target.value })
+                                }
+                            />
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="city"
+                                label="city"
+                                name="city"
+                                autoComplete="Miasto"
+                                value={facebookFormData.address.city}
+                                onChange={(e) =>
+                                    onChangeForm('address', { ...facebookFormData.address, city: e.target.value })
+                                }
+                            />
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="street"
+                                label="street"
+                                name="street"
+                                autoComplete="Ulica"
+                                value={facebookFormData.address.street}
+                                onChange={(e) =>
+                                    onChangeForm('address', { ...facebookFormData.address, street: e.target.value })
+                                }
+                            />
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="postCode"
+                                label="postCode"
+                                name="postCode"
+                                autoComplete="Kod pocztowy"
+                                value={facebookFormData.address.postCode}
+                                onChange={(e) =>
+                                    onChangeForm('address', { ...facebookFormData.address, postCode: e.target.value })
+                                }
+                            />
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="apartment"
+                                label="apartment"
+                                name="apartment"
+                                autoComplete="Nr domu"
+                                value={facebookFormData.address.apartment}
+                                onChange={(e) =>
+                                    onChangeForm('address', { ...facebookFormData.address, apartment: e.target.value })
+                                }
+                            />
+                        </Box>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleCloseDialog}>Cancel</Button>
+                        <Button onClick={postUser}>Utwórz konto</Button>
+                    </DialogActions>
+                </Dialog>
                 <CssBaseline />
                 <Grid
                     item
@@ -324,6 +480,12 @@ const Register = () => {
                             >
                                 Zarejestruj się
                             </Button>
+                            <FacebookLogin
+                                appId="3179163212375828"
+                                autoLoad={false}
+                                fields="name,email"
+                                callback={responseFacebook}
+                            />
                             <Grid container>
                                 <Grid item>
                                     <Link to="/login">

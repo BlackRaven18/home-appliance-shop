@@ -1,20 +1,23 @@
 import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import { Link, useNavigate } from "react-router-dom";
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
+import { NavLink, useNavigate } from "react-router-dom";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useState } from 'react';
 import axios from 'axios';
-
+import {
+    Avatar,
+    Button,
+    CssBaseline,
+    TextField,
+    FormControlLabel,
+    Checkbox,
+    Paper,
+    Box,
+    Grid,
+    Typography,
+    List,
+    ListItem,
+} from '@mui/material';
 
 
 const theme = createTheme();
@@ -30,7 +33,6 @@ interface ErrorMessageProps {
 
 export default function AdminLogin() {
     const navigate = useNavigate();
-
     const [formData, setFormData] = useState<Admin>({
         email: '',
         password: '',
@@ -66,7 +68,7 @@ export default function AdminLogin() {
 
     const loginAdmin = () => {
         setErrorMessages([]);
-        
+
         const emptyFields = Object.entries(formData).filter(([key, value]) => {
             if (typeof value === 'string') {
                 return value.trim() === '';
@@ -79,23 +81,22 @@ export default function AdminLogin() {
             setErrorMessages([...emptyFieldNames, 'Wprowadź wartości w powyższych polach']);
             return;
         }
-        
-        axios
-        .post('http://localhost:8080/admin/login', formData)
-        .then((response) => {
-            if (response.data) {
-                localStorage.setItem('admin', response.data);
-                navigate('/adminhome');
-            } else {
-                console.log('Empty response data');
-            }
-        })
-        .catch((error) => {
-            setErrorMessages([error.response.data]);
-            setServerErrorMessage(error.response.data);
-        });
-    };
 
+        axios
+            .post('http://localhost:8080/admin/login', formData)
+            .then((response) => {
+                if (response.data) {
+                    localStorage.setItem('admin', response.data);
+                    navigate('/adminhome');
+                } else {
+                    console.log('Empty response data');
+                }
+            })
+            .catch((error) => {
+                setErrorMessages([error.response.data]);
+                setServerErrorMessage(error.response.data);
+            });
+    };
 
     return (
         <ThemeProvider theme={theme}>
@@ -174,6 +175,9 @@ export default function AdminLogin() {
                                 }
                                 label="Pokaż hasło"
                             />
+                            {serverErrorMessage && serverErrorMessage.includes('Invalid login details or admin does not exist') ? (
+                                <ServerErrorMessage message="Nieprawidłowe dane logowania lub administrator nie istnieje" />
+                            ) : null}
                             <Button
                                 fullWidth
                                 variant="contained"
@@ -182,6 +186,13 @@ export default function AdminLogin() {
                             >
                                 Zaloguj się
                             </Button>
+                            <List>
+                                <ListItem>
+                                    <NavLink to='/home'>
+                                        Powrót do strony głównej
+                                    </NavLink>
+                                </ListItem>
+                            </List>
                         </Box>
                     </Box>
                 </Grid>

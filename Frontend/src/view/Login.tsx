@@ -192,11 +192,6 @@ const Login = () => {
                                     </NavLink>
                                 </ListItem>
                                 <ListItem>
-                                    <Link to='/adminLogin'>
-                                        {"Jestem administratorem"}
-                                    </Link>
-                                </ListItem>
-                                <ListItem>
                                     <Link to='/home'>
                                         {"Wejdź jako niezalogowany"}
                                     </Link>

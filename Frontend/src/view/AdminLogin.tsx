@@ -12,23 +12,88 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useState } from 'react';
+import axios from 'axios';
 
 
 
 const theme = createTheme();
 
+interface Admin {
+    email: string;
+    password: string;
+}
+
+interface ErrorMessageProps {
+    message: string;
+}
+
 export default function AdminLogin() {
     const navigate = useNavigate();
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
+
+    const [formData, setFormData] = useState<Admin>({
+        email: '',
+        password: '',
+    });
+
+    const [serverErrorMessage, setServerErrorMessage] = useState('');
+    const [errorMessages, setErrorMessages] = useState<string[]>([]);
+
+    const [isPasswordShown, setPasswordIsShown] = useState(false);
+
+    const ErrorMessage = () => (
+        <div>
+            {errorMessages.map((errorMessage, index) => (
+                <p key={index} className="text-rose-600 font-medium">
+                    {errorMessage}
+                </p>
+            ))}
+        </div>
+    );
+
+    const ServerErrorMessage: React.FC<ErrorMessageProps> = ({ message }) => (
+        <div>
+            <p className="text-rose-600 font-medium">{message}</p>
+        </div>
+    );
+
+    const onChangeForm = (key: string, value: any) => {
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            [key]: value,
+        }));
+    };
+
+    const loginAdmin = () => {
+        setErrorMessages([]);
+        
+        const emptyFields = Object.entries(formData).filter(([key, value]) => {
+            if (typeof value === 'string') {
+                return value.trim() === '';
+            }
+            return false;
         });
 
-        navigate('/adminhome');
-
+        if (emptyFields.length > 0) {
+            const emptyFieldNames = emptyFields.map(([key]) => key);
+            setErrorMessages([...emptyFieldNames, 'Wprowadź wartości w powyższych polach']);
+            return;
+        }
+        
+        axios
+        .post('http://localhost:8080/admin/login', formData)
+        .then((response) => {
+            if (response.data) {
+                localStorage.setItem('admin', response.data);
+                navigate('/adminhome');
+            } else {
+                console.log('Empty response data');
+            }
+        })
+        .catch((error) => {
+            setErrorMessages([error.response.data]);
+            setServerErrorMessage(error.response.data);
+        });
     };
 
 
@@ -66,51 +131,57 @@ export default function AdminLogin() {
                         <Typography component="h1" variant="h5">
                             Zaloguj się jako administrator
                         </Typography>
-                        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                        <Box component="form" noValidate sx={{ mt: 1 }}>
                             <TextField
                                 margin="normal"
                                 required
                                 fullWidth
-                                id="email"
                                 label="Adres email"
-                                name="email"
-                                autoComplete="email"
-                                autoFocus
+                                value={formData.email}
+                                onChange={(e) => onChangeForm('email', e.target.value)}
+                                error={
+                                    errorMessages.includes('email')
+                                }
+                                helperText={
+                                    errorMessages.includes('email') ?
+                                        'Pole nie może być puste' :
+                                        ''
+                                }
                             />
                             <TextField
                                 margin="normal"
                                 required
                                 fullWidth
-                                name="password"
-                                label="Hasło"
-                                type="password"
+                                type={isPasswordShown ? 'text' : 'password'}
                                 id="password"
-                                autoComplete="current-password"
+                                label="Password"
+                                name="password"
+                                autoComplete="password"
+                                value={formData.password}
+                                onChange={(e) => onChangeForm('password', e.target.value)}
+                                error={errorMessages.includes('password')}
+                                helperText={
+                                    errorMessages.includes('password') ? 'Pole nie może być puste' : ''
+                                }
                             />
                             <FormControlLabel
-                                control={<Checkbox value="remember" color="primary" />}
-                                label="Zapamiętaj mnie"
+                                control={
+                                    <Checkbox
+                                        value={isPasswordShown}
+                                        onChange={() => setPasswordIsShown(!isPasswordShown)}
+                                        color="primary"
+                                    />
+                                }
+                                label="Pokaż hasło"
                             />
                             <Button
-                                type="submit"
                                 fullWidth
                                 variant="contained"
                                 sx={{ mt: 3, mb: 2 }}
+                                onClick={loginAdmin}
                             >
                                 Zaloguj się
                             </Button>
-                            <Grid container>
-                                <Grid item xs>
-                                    <Link to='/login'>
-                                        {"Wróć do zwykłego logowania"}
-                                    </Link>
-                                </Grid>
-                                <Grid item>
-                                    <Link to='/register'>
-                                        {"Nie masz konta? Zarejestruj się!"}
-                                    </Link>
-                                </Grid>
-                            </Grid>
                         </Box>
                     </Box>
                 </Grid>

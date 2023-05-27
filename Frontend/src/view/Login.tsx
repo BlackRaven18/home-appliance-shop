@@ -3,6 +3,8 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import axios from 'axios';
 import React, { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { LoginSocialFacebook, IResolveParams } from 'reactjs-social-login';
+import { FacebookLoginButton } from 'react-social-login-buttons';
 import {
     Avatar,
     Box,
@@ -36,9 +38,24 @@ const Login = () => {
         password: '',
     });
 
+    const [facebookData, setFacebookData] = useState<Person>({
+        email: '',
+        password: '',
+    });
+
+    const handleFacebookLogin = () => {
+        setFacebookLogging(true);
+        loginUser();
+    };
+
+    const handleOnRejectFacebookLogin = () => {
+        setFacebookLogging(false);
+    }
+
     const [serverErrorMessage, setServerErrorMessage] = useState('');
     const [errorMessages, setErrorMessages] = useState<string[]>([]);
-
+    const [isFacebookLogging, setFacebookLogging] = useState(false);
+    const [facebookLoginData, setFacebookLoginData] = useState<any>();
     const [isPasswordShown, setPasswordIsShown] = useState(false);
 
     const ErrorMessage = () => (
@@ -63,37 +80,50 @@ const Login = () => {
             [key]: value,
         }));
     };
-
-    const loginUser = () => {
-        setErrorMessages([]);
-
-        const emptyFields = Object.entries(formData).filter(([key, value]) => {
-            if (typeof value === 'string') {
-                return value.trim() === '';
-            }
-            return false;
-        });
-
-        if (emptyFields.length > 0) {
-            const emptyFieldNames = emptyFields.map(([key]) => key);
-            setErrorMessages([...emptyFieldNames, 'Wprowadź wartości w powyższych polach']);
-            return;
-        }
+    const postUser = () => {
+        const postData = isFacebookLogging ? facebookData : formData;
 
         axios
-            .post('http://localhost:8080/persons/login', formData)
+            .post('http://localhost:8080/persons/login', postData)
             .then((response) => {
-                if (response.data) {
-                    localStorage.setItem('user', response.data);
-                    navigate('/loginhome');
-                } else {
-                    console.log('Empty response data');
-                }
+                localStorage.setItem('user', JSON.stringify(response.data));
+                navigate('/loginhome');
             })
             .catch((error) => {
                 setErrorMessages([error.response.data]);
                 setServerErrorMessage(error.response.data);
             });
+    }
+
+    const loginFacebookUser = () => {
+        facebookData.email = facebookLoginData.email;
+        facebookData.password = facebookLoginData.id;
+        console.log(facebookData);
+    }
+
+    const loginUser = () => {
+
+        if (isFacebookLogging === false) {
+            loginFacebookUser();
+        }
+        else {
+            setErrorMessages([]);
+
+            const emptyFields = Object.entries(formData).filter(([key, value]) => {
+                if (typeof value === 'string') {
+                    return value.trim() === '';
+                }
+                return false;
+            });
+
+            if (emptyFields.length > 0) {
+                const emptyFieldNames = emptyFields.map(([key]) => key);
+                setErrorMessages([...emptyFieldNames, 'Wprowadź wartości w powyższych polach']);
+                return;
+            }
+        }
+
+        postUser();
     };
 
     return (
@@ -173,7 +203,6 @@ const Login = () => {
                                 }
                                 label="Pokaż hasło"
                             />
-                            {/* <FacebookLoginButton /> */}
                             {serverErrorMessage && serverErrorMessage.includes('Invalid login details or user does not exist') ? (
                                 <ServerErrorMessage message="Nieprawidłowe dane logowania lub użytkownik nie istnieje" />
                             ) : null}
@@ -185,16 +214,25 @@ const Login = () => {
                             >
                                 Zaloguj
                             </Button>
+                            <LoginSocialFacebook
+                                appId={'3179163212375828'}
+                                onResolve={({ provider, data }: IResolveParams) => {
+                                    setFacebookLoginData(data);
+                                    handleFacebookLogin();
+                                    console.log(facebookLoginData);
+                                }}
+                                onReject={(err) => {
+                                    handleOnRejectFacebookLogin();
+                                    console.log(err);
+                                }}
+                            >
+                                <FacebookLoginButton />
+                            </LoginSocialFacebook>
                             <List>
                                 <ListItem>
                                     <NavLink to='/register'>
                                         Nie masz konta? Zarejestruj się!
                                     </NavLink>
-                                </ListItem>
-                                <ListItem>
-                                    <Link to='/adminLogin'>
-                                        {"Jestem administratorem"}
-                                    </Link>
                                 </ListItem>
                                 <ListItem>
                                     <Link to='/home'>

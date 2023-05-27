@@ -3,12 +3,8 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import axios from 'axios';
 import { useCallback, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import {
-    LoginSocialFacebook,
-    IResolveParams
-} from 'reactjs-social-login';
+import { LoginSocialFacebook, IResolveParams } from 'reactjs-social-login';
 import { FacebookLoginButton } from 'react-social-login-buttons';
-
 import {
     Avatar,
     Box,
@@ -142,14 +138,13 @@ const Register = () => {
     }
 
     const registerNewUser = () => {
-        const form = isFacebookLogging ? facebookFormData : formData;
         if (isFacebookLogging === true) {
             registerFacebookUser();
             handleCloseDialog();
         }
         else{
             setErrorMessages([]);
-            const emptyFields = Object.entries(form).filter(([key, value]) => {
+            const emptyFields = Object.entries(formData).filter(([key, value]) => {
                 if (typeof value === 'string') {
                     return value.trim() === '';
                 } else if (typeof value === 'object') {
@@ -314,8 +309,9 @@ const Register = () => {
                                 margin="normal"
                                 required
                                 fullWidth
+                                type={isPasswordShown ? 'text' : 'password'}
                                 id="password"
-                                label="Password"
+                                label="Hasło"
                                 name="password"
                                 autoComplete="password"
                                 value={formData.password}
@@ -345,7 +341,7 @@ const Register = () => {
                                 required
                                 fullWidth
                                 id="surname"
-                                label="Surname"
+                                label="Nazwisko"
                                 name="surname"
                                 autoComplete="Nazwisko"
                                 value={formData.surname}
@@ -360,9 +356,9 @@ const Register = () => {
                                 required
                                 fullWidth
                                 id="phoneNumber"
-                                label="phoneNumber"
+                                label="Numer telefonu"
                                 name="phoneNumber"
-                                autoComplete="Nr telefonu"
+                                autoComplete="Numer telefonu"
                                 value={formData.phoneNumber}
                                 onChange={(e) => onChangeForm('phoneNumber', e.target.value)}
                                 error={errorMessages.includes('phoneNumber')}
@@ -375,7 +371,7 @@ const Register = () => {
                                 required
                                 fullWidth
                                 id="state"
-                                label="state"
+                                label="Wojewójdztwo"
                                 name="state"
                                 autoComplete="Województwo"
                                 value={formData.address.state}
@@ -392,7 +388,7 @@ const Register = () => {
                                 required
                                 fullWidth
                                 id="city"
-                                label="city"
+                                label="Miasto"
                                 name="city"
                                 autoComplete="Miasto"
                                 value={formData.address.city}
@@ -409,7 +405,7 @@ const Register = () => {
                                 required
                                 fullWidth
                                 id="street"
-                                label="street"
+                                label="Ulica"
                                 name="street"
                                 autoComplete="Ulica"
                                 value={formData.address.street}
@@ -426,7 +422,7 @@ const Register = () => {
                                 required
                                 fullWidth
                                 id="postCode"
-                                label="postCode"
+                                label="Kod pocztowy"
                                 name="postCode"
                                 autoComplete="Kod pocztowy"
                                 value={formData.address.postCode}
@@ -443,9 +439,9 @@ const Register = () => {
                                 required
                                 fullWidth
                                 id="apartment"
-                                label="apartment"
+                                label="Numer domu"
                                 name="apartment"
-                                autoComplete="Nr domu"
+                                autoComplete="Numer domu"
                                 value={formData.address.apartment}
                                 onChange={(e) =>
                                     onChangeForm('address', { ...formData.address, apartment: e.target.value })

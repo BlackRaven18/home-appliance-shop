@@ -102,8 +102,7 @@ const Login = () => {
     }
 
     const loginUser = () => {
-
-        if (isFacebookLogging === false) {
+        if (isFacebookLogging === true) {
             loginFacebookUser();
         }
         else {

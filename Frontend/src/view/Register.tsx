@@ -1,7 +1,7 @@
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import axios from 'axios';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { LoginSocialFacebook, IResolveParams } from 'reactjs-social-login';
 import { FacebookLoginButton } from 'react-social-login-buttons';
@@ -52,11 +52,13 @@ const Register = () => {
     const handleCloseDialog = () => {
         setOpenDialog(false);
         setFacebookLogging(false);
+        setEmptyFieldsDialog([]);
     };
 
     const [isFacebookLogging, setFacebookLogging] = useState(false);
     const [facebookLoginData, setFacebookLoginData] = useState<any>();
     const [isPasswordShown, setPasswordIsShown] = useState(false);
+    const [emptyFieldsDialog, setEmptyFieldsDialog] = useState<string[]>([]);
 
     const [formData, setFormData] = useState<Person>({
         name: '',
@@ -100,6 +102,23 @@ const Register = () => {
         </div>
     );
 
+    const validateFieldsDialog = (): boolean => {
+        const emptyFields = Object.entries(facebookFormData).filter(([key, value]) => {
+            if (typeof value === 'string') {
+                return value.trim() === '';
+            } else if (typeof value === 'object') {
+                return Object.values(value).some((addressFieldValue) => String(addressFieldValue).trim() === '');
+            }
+            return false;
+        });
+
+        const emptyFieldNames = emptyFields.map(([key]) => key);
+        setEmptyFieldsDialog(emptyFieldNames);
+
+        return emptyFields.length === 0;
+    };
+
+
     const onChangeForm = (key: string, value: any) => {
         if (isFacebookLogging === true) {
             setFacebookFormData((prevFacebookData) => ({
@@ -140,28 +159,29 @@ const Register = () => {
     const registerNewUser = () => {
         if (isFacebookLogging === true) {
             registerFacebookUser();
+            if (!validateFieldsDialog()) {
+                return;
+            }
             handleCloseDialog();
-        }
-        else{
+        } else {
             setErrorMessages([]);
             const emptyFields = Object.entries(formData).filter(([key, value]) => {
                 if (typeof value === 'string') {
                     return value.trim() === '';
                 } else if (typeof value === 'object') {
-                    return Object.values(value).some(
-                        (addressFieldValue) => String(addressFieldValue).trim() === ''
-                    );
+                    return Object.values(value).some((addressFieldValue) => String(addressFieldValue).trim() === '');
                 }
                 return false;
             });
 
+            const emptyFieldNames = emptyFields.map(([key]) => key);
+            setErrorMessages([...emptyFieldNames, 'Wprowadź wartości w powyższych polach']);
+
             if (emptyFields.length > 0) {
-                const emptyFieldNames = emptyFields.map(([key]) => key);
-                setErrorMessages([...emptyFieldNames, 'Wprowadź wartości w powyższych polach']);
                 return;
             }
         }
- 
+
         postUser();
     };
 
@@ -215,6 +235,10 @@ const Register = () => {
                                         autoComplete="Nr telefonu"
                                         value={facebookFormData.phoneNumber}
                                         onChange={(e) => onChangeForm('phoneNumber', e.target.value)}
+                                        error={emptyFieldsDialog.includes('phoneNumber')}
+                                        helperText={
+                                            emptyFieldsDialog.includes('phoneNumber') ? 'Pole nie może być puste' : ''
+                                        }
                                     />
                                     <TextField
                                         margin="normal"
@@ -227,18 +251,25 @@ const Register = () => {
                                         onChange={(e) =>
                                             onChangeForm('address', { ...facebookFormData.address, state: e.target.value })
                                         }
+                                        error={emptyFieldsDialog.includes('address.state')}
+                                        helperText={
+                                            emptyFieldsDialog.includes('address.state') ? 'Pole nie może być puste' : ''
+                                        }
                                     />
                                     <TextField
                                         margin="normal"
                                         required
                                         fullWidth
-                                        id="city"
                                         label="Miasto"
                                         name="city"
                                         autoComplete="Miasto"
                                         value={facebookFormData.address.city}
                                         onChange={(e) =>
                                             onChangeForm('address', { ...facebookFormData.address, city: e.target.value })
+                                        }
+                                        error={emptyFieldsDialog.includes('address.city')}
+                                        helperText={
+                                            emptyFieldsDialog.includes('address.city') ? 'Pole nie może być puste' : ''
                                         }
                                     />
                                     <TextField
@@ -253,18 +284,25 @@ const Register = () => {
                                         onChange={(e) =>
                                             onChangeForm('address', { ...facebookFormData.address, street: e.target.value })
                                         }
+                                        error={emptyFieldsDialog.includes('address.street')}
+                                        helperText={
+                                            emptyFieldsDialog.includes('address.street') ? 'Pole nie może być puste' : ''
+                                        }
                                     />
                                     <TextField
                                         margin="normal"
                                         required
                                         fullWidth
-                                        id="postCode"
                                         label="Kod pocztowy"
                                         name="postCode"
                                         autoComplete="Kod pocztowy"
                                         value={facebookFormData.address.postCode}
                                         onChange={(e) =>
-                                            onChangeForm('address', { ...facebookFormData.address, postCode: e.target.value })
+                                            onChangeForm('address', { ...facebookFormData.address, postalCode: e.target.value })
+                                        }
+                                        error={emptyFieldsDialog.includes('address.postCode')}
+                                        helperText={
+                                            emptyFieldsDialog.includes('address.postCode') ? 'Pole nie może być puste' : ''
                                         }
                                     />
                                     <TextField
@@ -278,6 +316,10 @@ const Register = () => {
                                         value={facebookFormData.address.apartment}
                                         onChange={(e) =>
                                             onChangeForm('address', { ...facebookFormData.address, apartment: e.target.value })
+                                        }
+                                        error={emptyFieldsDialog.includes('address.apartment')}
+                                        helperText={
+                                            emptyFieldsDialog.includes('address.apartment') ? 'Pole nie może być puste' : ''
                                         }
                                     />
                                 </DialogContent>

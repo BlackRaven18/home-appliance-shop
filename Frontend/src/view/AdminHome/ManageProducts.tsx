@@ -171,12 +171,12 @@ const ManageProducts = () => {
                             padding: '10px',
                             margin: '20px'
                         }}>
-                        <p style={{ fontSize: '20px' }}>Nazwa: {product.name}</p>
-                        <p style={{ fontSize: '20px' }}>Marka: {product.brand}</p>
-                        <p style={{ fontSize: '20px' }}>Kolor: {product.color}</p>
-                        <p style={{ fontSize: '20px' }}>Specyfikacja: {product.specification}</p>
-                        <p style={{ fontSize: '20px' }}>Cena: {product.price}</p>
-                        <p style={{ fontSize: '20px' }}>Kategoria: {product && product.category && product.category.name ? product.category.name : 'unknown'}</p>
+                        <p style={{ fontSize: '20px' }}><strong>Nazwa:</strong> {product.name}</p>
+                        <p style={{ fontSize: '20px' }}><strong>Marka:</strong> {product.brand}</p>
+                        <p style={{ fontSize: '20px' }}><strong>Kolor:</strong> {product.color}</p>
+                        <p style={{ fontSize: '20px' }}><strong>Specyfikacja:</strong> {product.specification}</p>
+                        <p style={{ fontSize: '20px' }}><strong>Cena:</strong> {product.price}</p>
+                        <p style={{ fontSize: '20px' }}><strong>Kategoria:</strong> {product && product.category && product.category.name ? product.category.name : 'unknown'}</p>
                         <Button variant="contained" style={{ margin: '15px' }} onClick={() => handleDeleteProduct(product.productId)}>Usuń</Button>
                         <Button variant="contained" onClick={() => handleModifyClick(product.productId)}>Modyfikuj</Button>
                         {isModifyClicked && productId === product.productId && (

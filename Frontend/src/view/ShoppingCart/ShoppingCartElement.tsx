@@ -57,12 +57,12 @@ const ShoppingCartElement: React.FC<ShoppingCartElementProps> = ({ quantity, pro
             }}>
             <Grid container spacing='2'>
                 <Grid item xs={8}>
-                    <Typography>Nazwa: {productDetails.name ?? 'unknown'}</Typography>
-                    <Typography>Marka: {productDetails.brand ?? 'unknown'}</Typography>
-                    <Typography>Kolor: {productDetails.color ?? 'unknown'}</Typography>
-                    <Typography>Specyfikacja: {productDetails.specification ?? 'unknown'}</Typography>
-                    <Typography>Cena: {productDetails.price ?? 'unknown'}</Typography>
-                    <Typography>Ilosc: {quantity}</Typography>
+                    <Typography><strong>Nazwa:</strong> {productDetails.name ?? 'unknown'}</Typography>
+                    <Typography><strong>Marka:</strong> {productDetails.brand ?? 'unknown'}</Typography>
+                    <Typography><strong>Kolor:</strong> {productDetails.color ?? 'unknown'}</Typography>
+                    <Typography><strong>Specyfikacja:</strong> {productDetails.specification ?? 'unknown'}</Typography>
+                    <Typography><strong>Cena:</strong> {productDetails.price ?? 'unknown'}</Typography>
+                    <Typography><strong>Ilosc:</strong> {quantity}</Typography>
 
                     <Button
                         variant="contained"

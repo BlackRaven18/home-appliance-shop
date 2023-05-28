@@ -58,11 +58,11 @@ const ProductListElement = (product: Product) => {
             }}>
             <Grid container spacing='2'>
                 <Grid item xs={8}>
-                    <Typography>Nazwa: {product.name ?? 'unknown'}</Typography>
-                    <Typography>Marka: {product.brand ?? 'unknown'}</Typography>
-                    <Typography>Kolor: {product.color ?? 'unknown'}</Typography>
-                    <Typography>Specyfikacja: {product.specification ?? 'unknown'}</Typography>
-                    <Typography>Cena: {product.price ?? 'unknown'}</Typography>
+                    <Typography><strong>Nazwa:</strong> {product.name ?? 'unknown'}</Typography>
+                    <Typography><strong>Marka:</strong> {product.brand ?? 'unknown'}</Typography>
+                    <Typography><strong>Kolor:</strong> {product.color ?? 'unknown'}</Typography>
+                    <Typography><strong>Specyfikacja:</strong> {product.specification ?? 'unknown'}</Typography>
+                    <Typography><strong>Cena:</strong> {product.price ?? 'unknown'}</Typography>
 
                     <Button variant="contained" color="primary" onClick={(event) => {
                         // zatrzymanie propagacji zdarzenia, czyli nastąpi tylko obsługa kliknięcia

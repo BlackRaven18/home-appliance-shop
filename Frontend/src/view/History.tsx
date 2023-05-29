@@ -74,7 +74,7 @@ function History() {
                         <Typography>Data: {transaction.date}</Typography>
                         <Typography>Status: {transaction.status}</Typography>
                         <Typography>Metoda dostawy: {transaction.deliveryMethod}</Typography>
-                        <Typography>Kwota zamówienia: {transaction.totalAmount}</Typography>
+                        <Typography>Kwota zamówienia: {PriceFormatter.getFormattedPrice(transaction.totalAmount)}</Typography>
                         <Typography
                             variant='h5'
                             margin="10px"

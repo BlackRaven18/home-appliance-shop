@@ -6,8 +6,6 @@ import com.homeappliancesshop.dto.ProductDetailsDTO;
 import com.homeappliancesshop.model.Transaction;
 import com.homeappliancesshop.stripe.StripeConfigData;
 import com.stripe.Stripe;
-import com.stripe.exception.CardException;
-import com.stripe.exception.InvalidRequestException;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
 import org.springframework.beans.factory.annotation.Autowired;

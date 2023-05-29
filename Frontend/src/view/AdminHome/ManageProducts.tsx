@@ -152,22 +152,31 @@ const ManageProducts = () => {
 
     return (
         <>
-            <div>
-                <TextField
-                    label="Wyszukaj produkt"
-                    variant="outlined"
-                    value={searchTerm}
-                    onChange={handleSearchTermChange}
-                    style={{ margin: '20px' }}
-                />
+            <Box display="flex" flexDirection={{ xs: 'column', sm: 'row' }} gap={2}>
+                <Box flex="1">
+                    <div style={{display: 'flex', flexDirection: 'column', flex: 1}}>
+
+                            <TextField
+                                label="Wyszukaj produkt"
+                                variant="outlined"
+                                value={searchTerm}
+                                onChange={handleSearchTermChange}
+                                style={{ margin: '20px' }}
+                            />
+
                 {filteredProducts.map((product, index) => (
-                    <div key={product.productId} style={{ border: '1px solid gray', borderRadius: '10px', padding: '10px', width: '500px' }}>
-                        <p style={{ fontSize: '20px' }}>Nazwa: {product.name}</p>
-                        <p style={{ fontSize: '20px' }}>Marka: {product.brand}</p>
-                        <p style={{ fontSize: '20px' }}>Kolor: {product.color}</p>
-                        <p style={{ fontSize: '20px' }}>Specyfikacja: {product.specification}</p>
-                        <p style={{ fontSize: '20px' }}>Cena: {product.price}</p>
-                        <p style={{ fontSize: '20px' }}>Kategoria: {product && product.category && product.category.name ? product.category.name : 'unknown'}</p>
+                        <div key={product.productId} style={{
+                            border: '1px solid #ccc',
+                            borderRadius: '5px',
+                            padding: '10px',
+                            margin: '20px'
+                        }}>
+                        <p style={{ fontSize: '20px' }}><strong>Nazwa:</strong> {product.name}</p>
+                        <p style={{ fontSize: '20px' }}><strong>Marka:</strong> {product.brand}</p>
+                        <p style={{ fontSize: '20px' }}><strong>Kolor:</strong> {product.color}</p>
+                        <p style={{ fontSize: '20px' }}><strong>Specyfikacja:</strong> {product.specification}</p>
+                        <p style={{ fontSize: '20px' }}><strong>Cena:</strong> {product.price}</p>
+                        <p style={{ fontSize: '20px' }}><strong>Kategoria:</strong> {product && product.category && product.category.name ? product.category.name : 'unknown'}</p>
                         <Button variant="contained" style={{ margin: '15px' }} onClick={() => handleDeleteProduct(product.productId)}>Usuń</Button>
                         <Button variant="contained" onClick={() => handleModifyClick(product.productId)}>Modyfikuj</Button>
                         {isModifyClicked && productId === product.productId && (
@@ -226,16 +235,18 @@ const ManageProducts = () => {
                     </div>
                 ))}
             </div>
-            <Box
-                component="form"
-                noValidate
-                onSubmit={createProduct}
-                sx={{
-                    ml: 1,
-                    width: '400px'
-                }}
-                style={{ margin: '80px' }}
-            >
+            </Box>
+            <Box flex="1">
+                <Box
+                    component="form"
+                    noValidate
+                    onSubmit={createProduct}
+                    sx={{
+                        ml: 1,
+                        width: '400px',
+                    }}
+                    style={{ margin: '5px' }}
+                >
                 <TextField
                     margin="normal"
                     required
@@ -292,6 +303,8 @@ const ManageProducts = () => {
                     Dodaj produkt
                 </Button>
 
+                </Box>
+              </Box>
             </Box>
         </>
     );

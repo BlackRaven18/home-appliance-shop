@@ -37,14 +37,14 @@ const ProfilList = () => {
                 <img src={require('../Trybiki.png')} alt='' width='600' />
             </div>
             <div>
-                <p style={{ fontSize: '20px' }}>Imię: {person ? person.name : "unknown"}</p>
-                <p style={{ fontSize: '20px' }}>Nazwisko: {person ? person.surname : "unknown"}</p>
-                <p style={{ fontSize: '20px' }}>Email: {person ? person.email : "unknown"}</p>
-                <p style={{ fontSize: '20px' }}>Numer telefonu: {person ? person.phoneNumber : "unknown"}</p>
-                <p style={{ fontSize: '20px' }}>Województwo: {person && person.address && person.address.state ? person.address.state : 'unknown'}</p>
-                <p style={{ fontSize: '20px' }}>Miasto: {person && person.address && person.address.city ? person.address.city : 'unknown'}</p>
-                <p style={{ fontSize: '20px' }}>Ulica: {person && person.address && person.address.street ? person.address.street : 'unknown'}</p>
-                <p style={{ fontSize: '20px' }}>Kod pocztowy: {person && person.address && person.address.postCode ? person.address.postCode : 'unknown'}</p>
+                <p style={{ fontSize: '20px' }}><strong>Imię:</strong> {person ? person.name : "unknown"}</p>
+                <p style={{ fontSize: '20px' }}><strong>Nazwisko:</strong> {person ? person.surname : "unknown"}</p>
+                <p style={{ fontSize: '20px' }}><strong>Email:</strong> {person ? person.email : "unknown"}</p>
+                <p style={{ fontSize: '20px' }}><strong>Numer telefonu:</strong> {person ? person.phoneNumber : "unknown"}</p>
+                <p style={{ fontSize: '20px' }}><strong>Województwo:</strong> {person && person.address && person.address.state ? person.address.state : 'unknown'}</p>
+                <p style={{ fontSize: '20px' }}><strong>Miasto:</strong> {person && person.address && person.address.city ? person.address.city : 'unknown'}</p>
+                <p style={{ fontSize: '20px' }}><strong>Ulica:</strong> {person && person.address && person.address.street ? person.address.street : 'unknown'}</p>
+                <p style={{ fontSize: '20px' }}><strong>Kod pocztowy:</strong> {person && person.address && person.address.postCode ? person.address.postCode : 'unknown'}</p>
             </div>
         </div>
     );

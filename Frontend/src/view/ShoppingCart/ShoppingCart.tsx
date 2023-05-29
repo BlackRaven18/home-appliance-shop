@@ -1,32 +1,28 @@
-import { Box } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { useDispatch, useSelector } from 'react-redux';
-import { decrementAmountOfProduct, incrementAmountOfProduct } from '../../redux/ShoppingCartReducer';
+import { useNavigate } from 'react-router';
+import { clearShoppingCart } from '../../redux/ShoppingCartReducer';
 import { RootState } from '../../redux/store';
 import TopBar from '../../TopBar/TopBar';
 import ShoppingCartElement from './ShoppingCartElement';
-
-
-
-
-interface Product {
-  productId: string;
-  name: string;
-  brand: string;
-  color: string;
-  specification: string;
-  price: number;
-  imageURL: string;
-  category: {
-    categoryId: string;
-    name: string;
-  };
-}
+import PriceFormatter from '../../PriceFormattingUtils/PriceFormatter';
 
 function ShoppingCart() {
 
   const shoppingCart = useSelector((state: RootState) => state.shoppingCart);
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+
+
+  const payForProducts = () => {
+    navigate("/summary");
+  }
+
+  const resetCart = () => {
+    dispatch(clearShoppingCart());
+  }
+
 
   return (
     <>
@@ -55,9 +51,42 @@ function ShoppingCart() {
         )}
       </Box>
 
+      <Box
+        display='flex'
+        justifyContent="flex-end"
+        alignItems="center"
+        margin='20px'
+      >
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={resetCart}
+        >
+          Usuń zawartość koszyka
+        </Button>
+      </Box>
+
       <Typography variant='h5' padding='10px'>
-        Całkowity koszt: {shoppingCart.totalAmount}
+        Całkowity koszt: {PriceFormatter.getFormattedPrice(shoppingCart.totalAmount)}
       </Typography>
+
+      {shoppingCart.productsNumber > 0 ? (
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={payForProducts}
+        >
+          Zapłać
+        </Button>
+      ) : (
+        <Button
+          disabled
+          variant="contained"
+          color="primary"
+          onClick={payForProducts}
+        >
+          Zapłać
+        </Button>)}
 
 
     </>

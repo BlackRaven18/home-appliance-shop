@@ -21,7 +21,7 @@ const CategoryList = () => {
     }, [])
 
     const getCategories = () => {
-        axios.get("http://localhost:8080/categories")
+        axios.get(process.env.REACT_APP_BACKEND_URL + "/categories")
             .then((response) => {
                 setCategoriesFromEndpoint(response.data);
             })

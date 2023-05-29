@@ -84,7 +84,7 @@ const Login = () => {
             .post('http://localhost:8080/persons/login', formData)
             .then((response) => {
                 if (response.data) {
-                    localStorage.setItem('user', JSON.stringify(response.data));
+                    localStorage.setItem('user', response.data);
                     navigate('/loginhome');
                 } else {
                     console.log('Empty response data');
@@ -190,11 +190,6 @@ const Login = () => {
                                     <NavLink to='/register'>
                                         Nie masz konta? Zarejestruj się!
                                     </NavLink>
-                                </ListItem>
-                                <ListItem>
-                                    <Link to='/adminLogin'>
-                                        {"Jestem administratorem"}
-                                    </Link>
                                 </ListItem>
                                 <ListItem>
                                     <Link to='/home'>

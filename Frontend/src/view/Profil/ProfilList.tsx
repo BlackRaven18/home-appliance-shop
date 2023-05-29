@@ -2,8 +2,6 @@ import axios from 'axios';
 import * as React from 'react';
 import { useState } from "react";
 
-let url = 'http://localhost:8080';
-
 interface Person {
     name: string;
     surname: string;
@@ -19,14 +17,14 @@ interface Person {
 const ProfilList = () => {
     const [person, setPerson] = useState<Person>();
     // funkcja pobierająca dane z bazy danych
-    const personId = '64314d722094072d790a5e00';
+    const personId = localStorage.getItem('user');
     React.useEffect(() => {
         getPerson();
     }, []);
     const getPerson = () => {
         axios
-            .get(url + `/persons/` + personId)
-            .then((response) => {
+            .get(process.env.REACT_APP_BACKEND_URL + "/persons/" + personId)
+            .then( (response)=> {
                 setPerson(response.data);
             })
             .catch(function (error) {

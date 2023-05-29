@@ -3,37 +3,25 @@ import TextField from '@mui/material/TextField';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import ProductListElement from './ProductListElement';
+import  ProductInterface  from '../ProductInterface'
 
-interface Product {
-    productId: string;
-    name: string;
-    brand: string;
-    color: string;
-    specification: string;
-    price: number;
-    imageURL: string;
-    category: {
-        categoryId: string;
-        name: string;
-    };
-}
 
-let url = 'http://localhost:8080';
 
 interface ProductListProps {
     categoryId: string;
 }
 
 const ProductList = ({ categoryId }: ProductListProps) => {
-    const [products, setProducts] = useState<Product[]>([]);
+    const [products, setProducts] = useState<ProductInterface[]>([]);
     const [searchText, setSearchText] = useState('');
 
     useEffect(() => {
         getProducts();
     }, []);
+
     const getProducts = () => {
         axios
-            .get(`${url}/products`)
+            .get(process.env.REACT_APP_BACKEND_URL + "/products")
             .then(function (response) {
                 setProducts(response.data);
                 console.log(response.data);

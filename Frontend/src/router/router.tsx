@@ -8,6 +8,7 @@ import AdminHome from '../view/AdminHome/AdminHome';
 import ShoppingCart from './../view/ShoppingCart/ShoppingCart';
 import History from '../view/History';
 import Profil from '../view/Profil/Profil';
+import Summary from "../view/Summary/Summary";
 import AdminProfil from '../view/Profil/AdminProfil';
 import {
     createBrowserRouter,
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
     {
         path: "/shoppingcart",
         element: <ShoppingCart />,
+    },
+    {
+        path: "/summary",
+        element: <Summary />,
     },
     {
         path: "/history",

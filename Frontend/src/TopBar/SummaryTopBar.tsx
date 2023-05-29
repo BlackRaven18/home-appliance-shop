@@ -2,16 +2,16 @@ import { AppBar, Button, Grid, Toolbar, Typography, Box } from '@mui/material'
 import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 
-export default function NotLoggedInTopBar() {
+export default function SummaryTopBar() {
     const navigate = useNavigate();
     const goToHome = () => {
-        navigate('/home');
+        navigate('/loginhome');
     }
 
     return (
         <AppBar position="static">
             <Toolbar>
-                <Box
+            <Box
                     onClick={goToHome}
                     sx={{
                         flexGrow: 1,
@@ -23,14 +23,11 @@ export default function NotLoggedInTopBar() {
                     </Typography>
                 </Box>
 
-                <Button color="inherit" component={Link} to="/home">
+                <Button color="inherit" component={Link} to="/loginhome">
                     Strona główna
                 </Button>
-                <Button color="inherit" component={Link} to="/login">
-                    Logowanie
-                </Button>
-                <Button color="inherit" component={Link} to="/register">
-                    Rejestracja
+                <Button color="inherit" component={Link} to="/shoppingcart">
+                    Powrót do koszyka
                 </Button>
             </Toolbar>
         </AppBar>

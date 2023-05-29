@@ -6,21 +6,20 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 
 export default function AdminTopBar() {
+
     const navigate = useNavigate();
 
-    const goToHome = () => {
-        navigate('/loginhome');
-    }
     const handleLogout = () => {
         localStorage.removeItem("user");
-        if(localStorage.getItem("user") === null){
+        if (localStorage.getItem("user") === null) {
             navigate('/login');
             console.log("Logged out");
         }
-        else{
+        else {
             console.error("An error occurred while logging out");
         }
     }
+
     return (
         <AppBar position="static">
             <Toolbar>

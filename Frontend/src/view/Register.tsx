@@ -1,27 +1,27 @@
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import axios from 'axios';
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { LoginSocialFacebook, IResolveParams } from 'reactjs-social-login';
-import { FacebookLoginButton } from 'react-social-login-buttons';
 import {
     Avatar,
     Box,
     Button,
+    Checkbox,
     CssBaseline,
     Dialog,
     DialogActions,
     DialogContent,
     DialogContentText,
     DialogTitle,
+    FormControlLabel,
     Grid,
     Paper,
     TextField,
     Typography,
-    FormControlLabel,
-    Checkbox,
 } from '@mui/material';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import axios from 'axios';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { FacebookLoginButton } from 'react-social-login-buttons';
+import { IResolveParams, LoginSocialFacebook } from 'reactjs-social-login';
 
 const theme = createTheme({});
 
@@ -298,7 +298,7 @@ const Register = () => {
                                         autoComplete="Kod pocztowy"
                                         value={facebookFormData.address.postCode}
                                         onChange={(e) =>
-                                            onChangeForm('address', { ...facebookFormData.address, postalCode: e.target.value })
+                                            onChangeForm('address', { ...facebookFormData.address, postCode: e.target.value })
                                         }
                                         error={emptyFieldsDialog.includes('address.postCode')}
                                         helperText={
@@ -512,7 +512,7 @@ const Register = () => {
                                 Zarejestruj się
                             </Button>
                             <LoginSocialFacebook
-                                appId={'3179163212375828'}
+                                appId={'191073690551245'}
                                 fieldsProfile='email, first_name, last_name'
                                 onResolve={({ provider, data }: IResolveParams) => {
                                     setFacebookLoginData(data);

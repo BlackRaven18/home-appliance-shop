@@ -19,6 +19,7 @@ import { RootState } from "../../redux/store";
 import SummaryTopBar from "../../TopBar/SummaryTopBar";
 import SummaryProductElement from './SummaryProductElement';
 import PriceFormatter from "../../PriceFormattingUtils/PriceFormatter";
+import ShoppingCartElement from "../ShoppingCart/ShoppingCartElement";
 
 interface TokenI {
     id: string;
@@ -109,7 +110,7 @@ function Summary() {
                 >
                     {shoppingCart.cart.length > 0 ? (
                         shoppingCart.cart.map((cartElement) => (
-                            <SummaryProductElement
+                            <ShoppingCartElement
                                 key={cartElement.productDetails.productId}
                                 quantity={cartElement.quantity}
                                 productDetails={cartElement.productDetails} />

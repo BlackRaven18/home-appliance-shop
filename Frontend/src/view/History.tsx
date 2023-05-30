@@ -3,6 +3,7 @@ import { Typography, Box, Divider, Accordion, AccordionSummary, AccordionDetails
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import TopBar from '../TopBar/TopBar';
 import { useEffect, useState } from 'react';
+import { Grid } from '@mui/material';
 import axios from 'axios';
 import PriceFormatter from '../PriceFormattingUtils/PriceFormatter';
 
@@ -71,10 +72,10 @@ function History() {
                             width: '90%',
                         }}
                     >
-                        <Typography>Data: {transaction.date}</Typography>
-                        <Typography>Status: {transaction.status}</Typography>
-                        <Typography>Metoda dostawy: {transaction.deliveryMethod}</Typography>
-                        <Typography>Kwota zamówienia: {PriceFormatter.getFormattedPrice(transaction.totalAmount)}</Typography>
+                        <Typography><strong>Data:</strong> {transaction.date}</Typography>
+                        <Typography><strong>Status:</strong> {transaction.status}</Typography>
+                        <Typography><strong>Metoda dostawy:</strong> {transaction.deliveryMethod}</Typography>
+                        <Typography><strong>Kwota zamówienia:</strong> {PriceFormatter.getFormattedPrice(transaction.totalAmount)}</Typography>
                         <Typography
                             variant='h5'
                             margin="10px"
@@ -89,14 +90,30 @@ function History() {
                                         aria-controls="panel1a-content"
                                         id="panel1a-header"
                                     >
-                                        <Typography>Produkt {product.name}</Typography>
+                                        <Typography><strong>Produkt {product.name}</strong></Typography>
                                     </AccordionSummary>
                                     <AccordionDetails>
-                                        <Typography>Id produktu: {product.productId}</Typography>
-                                        <Typography>Cena: {PriceFormatter.getFormattedPrice(product.price)}</Typography>
-                                        <Typography>Ilosc: {product.quantity}</Typography>
-                                        <Typography>Obrazek: {product.imageURL}</Typography>
+                                        <Grid container spacing={2}>
+                                            <Grid item xs={12} md={4}>
+                                                <Box
+                                                    component="img"
+                                                    src={product.imageURL}
+                                                    sx={{
+                                                        height: 173.5,
+                                                        width: '80%',
+                                                        maxWidth: { xs: 350, md: '100%' },
+                                                    }}
+                                                />
+                                            </Grid>
+                                            <Grid item xs={12} md={8} sx={{ textAlign: { xs: 'left', md: 'initial' } }}>
+                                                <Typography><strong>Id produktu:</strong> {product.productId}</Typography>
+                                                <Typography><strong>Cena:</strong> {PriceFormatter.getFormattedPrice(product.price)}</Typography>
+                                                <Typography><strong>Ilosc:</strong> {product.quantity}</Typography>
+                                            </Grid>
+                                        </Grid>
                                     </AccordionDetails>
+
+
                                 </Accordion>
                             </Box>
                         ))}

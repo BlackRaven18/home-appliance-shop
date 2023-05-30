@@ -1,10 +1,4 @@
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import axios from 'axios';
-import React, { useState } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { LoginSocialFacebook, IResolveParams } from 'reactjs-social-login';
-import { FacebookLoginButton } from 'react-social-login-buttons';
 import {
     Avatar,
     Box,
@@ -13,12 +7,18 @@ import {
     CssBaseline,
     FormControlLabel,
     Grid,
+    List,
+    ListItem,
     Paper,
     TextField,
     Typography,
-    List,
-    ListItem,
 } from '@mui/material';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import axios from 'axios';
+import React, { useState } from 'react';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { FacebookLoginButton } from 'react-social-login-buttons';
+import { IResolveParams, LoginSocialFacebook } from 'reactjs-social-login';
 
 const theme = createTheme();
 
@@ -31,7 +31,19 @@ interface ErrorMessageProps {
     message: string;
 }
 
+interface FacebookResponseI {
+    id: string,
+    firstName: string,
+    lastName: string
+    email: string,
+}
+
 const Login = () => {
+    const [serverErrorMessage, setServerErrorMessage] = useState('');
+    const [errorMessages, setErrorMessages] = useState<string[]>([]);
+    const [isFacebookLogging, setFacebookLogging] = useState(false);
+    const [facebookLoginData, setFacebookLoginData] = useState<any>();
+    const [isPasswordShown, setPasswordIsShown] = useState(false);
     const navigate = useNavigate();
     const [formData, setFormData] = useState<Person>({
         email: '',
@@ -43,30 +55,28 @@ const Login = () => {
         password: '',
     });
 
-    const handleFacebookLogin = () => {
-        setFacebookLogging(true);
-        loginUser();
+    const handleFacebookLogin = (facebookResponse: FacebookResponseI) => {
+        axios
+            .post('http://localhost:8080/persons/login',
+                {
+                    email: facebookResponse.email,
+                    password: facebookResponse.id,
+                })
+            .then((response) => {
+                localStorage.setItem('user', JSON.stringify(response.data));
+                navigate('/loginhome');
+            })
+            .catch((error) => {
+                setErrorMessages([error.response.data]);
+                setServerErrorMessage(error.response.data);
+            });
     };
+
 
     const handleOnRejectFacebookLogin = () => {
         setFacebookLogging(false);
     }
 
-    const [serverErrorMessage, setServerErrorMessage] = useState('');
-    const [errorMessages, setErrorMessages] = useState<string[]>([]);
-    const [isFacebookLogging, setFacebookLogging] = useState(false);
-    const [facebookLoginData, setFacebookLoginData] = useState<any>();
-    const [isPasswordShown, setPasswordIsShown] = useState(false);
-
-    const ErrorMessage = () => (
-        <div>
-            {errorMessages.map((errorMessage, index) => (
-                <p key={index} className="text-rose-600 font-medium">
-                    {errorMessage}
-                </p>
-            ))}
-        </div>
-    );
 
     const ServerErrorMessage: React.FC<ErrorMessageProps> = ({ message }) => (
         <div>
@@ -214,11 +224,20 @@ const Login = () => {
                                 Zaloguj
                             </Button>
                             <LoginSocialFacebook
-                                appId={'3179163212375828'}
+                                appId={'191073690551245'}
                                 onResolve={({ provider, data }: IResolveParams) => {
                                     setFacebookLoginData(data);
-                                    handleFacebookLogin();
-                                    console.log(facebookLoginData);
+                                    console.log(data);
+
+                                    if (data) {
+                                        handleFacebookLogin({
+                                            id: data.id,
+                                            firstName: data.first_name,
+                                            lastName: data.last_name,
+                                            email: data.email,
+                                        })
+
+                                    }
                                 }}
                                 onReject={(err) => {
                                     handleOnRejectFacebookLogin();

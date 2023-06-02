@@ -42,15 +42,9 @@ const Login = () => {
     const [serverErrorMessage, setServerErrorMessage] = useState('');
     const [errorMessages, setErrorMessages] = useState<string[]>([]);
     const [isFacebookLogging, setFacebookLogging] = useState(false);
-    const [facebookLoginData, setFacebookLoginData] = useState<any>();
     const [isPasswordShown, setPasswordIsShown] = useState(false);
     const navigate = useNavigate();
     const [formData, setFormData] = useState<Person>({
-        email: '',
-        password: '',
-    });
-
-    const [facebookData, setFacebookData] = useState<Person>({
         email: '',
         password: '',
     });
@@ -91,7 +85,7 @@ const Login = () => {
         }));
     };
     const postUser = () => {
-        const postData = isFacebookLogging ? facebookData : formData;
+        const postData = formData;
 
         axios
             .post('http://localhost:8080/persons/login', postData)
@@ -105,32 +99,23 @@ const Login = () => {
             });
     }
 
-    const loginFacebookUser = () => {
-        facebookData.email = facebookLoginData.email;
-        facebookData.password = facebookLoginData.id;
-        console.log(facebookData);
-    }
-
     const loginUser = () => {
-        if (isFacebookLogging === true) {
-            loginFacebookUser();
-        }
-        else {
-            setErrorMessages([]);
 
-            const emptyFields = Object.entries(formData).filter(([key, value]) => {
-                if (typeof value === 'string') {
-                    return value.trim() === '';
-                }
-                return false;
-            });
+        setErrorMessages([]);
 
-            if (emptyFields.length > 0) {
-                const emptyFieldNames = emptyFields.map(([key]) => key);
-                setErrorMessages([...emptyFieldNames, 'Wprowadź wartości w powyższych polach']);
-                return;
+        const emptyFields = Object.entries(formData).filter(([key, value]) => {
+            if (typeof value === 'string') {
+                return value.trim() === '';
             }
+            return false;
+        });
+
+        if (emptyFields.length > 0) {
+            const emptyFieldNames = emptyFields.map(([key]) => key);
+            setErrorMessages([...emptyFieldNames, 'Wprowadź wartości w powyższych polach']);
+            return;
         }
+
 
         postUser();
     };
@@ -226,9 +211,6 @@ const Login = () => {
                             <LoginSocialFacebook
                                 appId={'191073690551245'}
                                 onResolve={({ provider, data }: IResolveParams) => {
-                                    setFacebookLoginData(data);
-                                    console.log(data);
-
                                     if (data) {
                                         handleFacebookLogin({
                                             id: data.id,

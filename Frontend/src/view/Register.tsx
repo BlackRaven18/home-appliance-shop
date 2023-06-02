@@ -22,6 +22,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FacebookLoginButton } from 'react-social-login-buttons';
 import { IResolveParams, LoginSocialFacebook } from 'reactjs-social-login';
+import FormTextField from './FormTextField';
 
 const theme = createTheme({});
 
@@ -120,6 +121,7 @@ const Register = () => {
 
 
     const onChangeForm = (key: string, value: any) => {
+        console.log("kijek")
         if (isFacebookLogging === true) {
             setFacebookFormData((prevFacebookData) => ({
                 ...prevFacebookData,
@@ -127,6 +129,10 @@ const Register = () => {
             }));
         }
         else {
+            console.log('---prev form data')
+            console.log(formData)
+            console.log(key)
+            console.log('-------------------')
             setFormData((prevFormData) => ({
                 ...prevFormData,
                 [key]: value,
@@ -305,6 +311,7 @@ const Register = () => {
                                             emptyFieldsDialog.includes('address.postCode') ? 'Pole nie może być puste' : ''
                                         }
                                     />
+
                                     <TextField
                                         margin="normal"
                                         required
@@ -328,7 +335,15 @@ const Register = () => {
                                     <Button onClick={registerNewUser}>Utwórz konto</Button>
                                 </DialogActions>
                             </Dialog>
-                            <TextField
+
+                            <FormTextField
+                                label="Adres email"
+                                value={formData.email}
+                                formFieldName="email"
+                                helperText=''
+                                onChangeForm={onChangeForm} />
+
+                            {/* <TextField
                                 margin="normal"
                                 required
                                 fullWidth
@@ -346,7 +361,7 @@ const Register = () => {
                                             'Pole nie może być puste' :
                                             ''
                                 }
-                            />
+                            /> */}
                             <TextField
                                 margin="normal"
                                 required

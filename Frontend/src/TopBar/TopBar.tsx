@@ -1,7 +1,6 @@
-import { AppBar, Button, Grid, Toolbar, Typography, Box } from '@mui/material'
-import { Link } from "react-router-dom";
-import { useNavigate } from 'react-router-dom';
+import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
+import { Link, useNavigate } from "react-router-dom";
 import { RootState } from '../redux/store';
 
 
@@ -17,11 +16,11 @@ export default function TopBar() {
 
     const handleLogout = () => {
         localStorage.removeItem("user");
-        if(localStorage.getItem("user") === null){
+        if (localStorage.getItem("user") === null) {
             navigate('/login');
             console.log("Logged out");
         }
-        else{
+        else {
             console.error("An error occurred while logging out");
         }
     }

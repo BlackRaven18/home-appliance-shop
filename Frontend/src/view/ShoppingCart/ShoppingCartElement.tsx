@@ -3,7 +3,7 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from "react-router";
 import { decrementAmountOfProduct, incrementAmountOfProduct } from '../../redux/ShoppingCartReducer';
-import ProductInterface from "../ProductInterface";
+import ProductInterface from "../shared/ProductInterface";
 import PriceFormatter from '../../PriceFormattingUtils/PriceFormatter';
 
 interface ShoppingCartElementProps {

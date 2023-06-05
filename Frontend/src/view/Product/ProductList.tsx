@@ -3,7 +3,7 @@ import TextField from '@mui/material/TextField';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import ProductListElement from './ProductListElement';
-import  ProductInterface  from '../ProductInterface'
+import  ProductInterface  from '../shared/ProductInterface'
 
 
 

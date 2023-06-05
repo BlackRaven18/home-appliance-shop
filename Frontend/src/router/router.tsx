@@ -1,6 +1,6 @@
 import React from "react";
 import Login from './../view/Login';
-import Register from './../view/Register';
+import Register from '../view/Register/Register';
 import Home from '../view/Home/Home';
 import LoginHome from '../view/Home/LoginHome';
 import AdminLogin from '../view/AdminLogin';

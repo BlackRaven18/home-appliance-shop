@@ -1,6 +1,6 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
-import ProductInterface from '../view/ProductInterface'
+import ProductInterface from '../view/shared/ProductInterface'
 
 
 interface CartState {

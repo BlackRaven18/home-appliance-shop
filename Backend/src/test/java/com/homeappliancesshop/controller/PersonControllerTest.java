@@ -3,6 +3,7 @@ package com.homeappliancesshop.controller;
 import com.homeappliancesshop.model.Person;
 import com.homeappliancesshop.model.TransactionsHistory;
 import com.homeappliancesshop.service.PersonService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -30,6 +31,9 @@ class PersonControllerTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
+
+    @AfterEach
+    void clear() { reset(personService); }
 
     @Test
     void getPersons() {

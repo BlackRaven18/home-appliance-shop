@@ -1,4 +1,3 @@
-import * as React from 'react';
 import AdminTopBar from '../../TopBar/AdminTopBar';
 import AdminCategoryList from "./AdminCategoryList";
 import {Box} from "@mui/system";

@@ -9,29 +9,16 @@ import {
     TextField
 } from "@mui/material";
 import { useState } from "react";
+import PersonInterface from "../shared/PersonInterface";
 
 
-interface Person {
-    name: string;
-    surname: string;
-    email: string;
-    phoneNumber: string;
-    address: {
-        state: string;
-        city: string;
-        street: string;
-        postCode: string;
-        apartment: string;
-    };
-    password: string;
-}
 
 interface FacebookRegisterDialogProps {
     openDialog: boolean;
     handleCloseDialog: () => void;
     registerNewUser: () => void;
     onChangeForm: (key: string, value: any) => void;
-    facebookFormData: Person;
+    facebookFormData: PersonInterface;
 }
 
 

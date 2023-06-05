@@ -1,21 +1,10 @@
 import axios from 'axios';
 import * as React from 'react';
 import { useState } from "react";
+import PersonInterface from '../shared/PersonInterface';
 
-interface Person {
-    name: string;
-    surname: string;
-    email: string;
-    phoneNumber: string;
-    address: {
-        state: string;
-        city: string;
-        street: string;
-        postCode: string;
-    };
-}
 const ProfilList = () => {
-    const [person, setPerson] = useState<Person>();
+    const [person, setPerson] = useState<PersonInterface>();
 
     // funkcja pobierająca dane z bazy danych
     const personId = localStorage.getItem('user');

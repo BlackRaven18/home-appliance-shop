@@ -1,9 +1,7 @@
-import * as React from 'react';
-import {Link, useNavigate} from "react-router-dom";
+import { Toolbar, Typography } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import { Link, useNavigate } from "react-router-dom";
 
 export default function AdminTopBar() {
 
@@ -24,7 +22,7 @@ export default function AdminTopBar() {
         <AppBar position="static">
             <Toolbar>
                 <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                    <span style={{background: 'yellow', borderRadius: '40px', padding: '20px 15px', color: 'black', width:'100%'}}>Lodóweczka</span>
+                    <span style={{ background: 'yellow', borderRadius: '40px', padding: '20px 15px', color: 'black', width: '100%' }}>Lodóweczka</span>
                 </Typography>
 
                 <Button color="inherit" component={Link} to="/AdminHome">

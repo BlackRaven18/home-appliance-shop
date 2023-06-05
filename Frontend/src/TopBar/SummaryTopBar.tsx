@@ -1,6 +1,5 @@
-import { AppBar, Button, Grid, Toolbar, Typography, Box } from '@mui/material'
-import { Link } from "react-router-dom";
-import { useNavigate } from 'react-router-dom';
+import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material';
+import { Link, useNavigate } from "react-router-dom";
 
 export default function SummaryTopBar() {
     const navigate = useNavigate();
@@ -11,7 +10,7 @@ export default function SummaryTopBar() {
     return (
         <AppBar position="static">
             <Toolbar>
-            <Box
+                <Box
                     onClick={goToHome}
                     sx={{
                         flexGrow: 1,

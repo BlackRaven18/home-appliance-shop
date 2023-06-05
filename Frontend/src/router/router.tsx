@@ -1,19 +1,18 @@
-import React from "react";
-import Login from './../view/Login';
-import Register from '../view/Register/Register';
-import Home from '../view/Home/Home';
-import LoginHome from '../view/Home/LoginHome';
-import AdminLogin from '../view/AdminLogin';
-import AdminHome from '../view/AdminHome/AdminHome';
-import ShoppingCart from './../view/ShoppingCart/ShoppingCart';
-import History from '../view/History';
-import Profil from '../view/Profil/Profil';
-import Summary from "../view/Summary/Summary";
-import AdminProfil from '../view/Profil/AdminProfil';
 import {
     createBrowserRouter,
 } from "react-router-dom";
+import AdminHome from '../view/AdminHome/AdminHome';
+import AdminLogin from '../view/AdminLogin';
+import History from '../view/History';
+import Home from '../view/Home/Home';
+import LoginHome from '../view/Home/LoginHome';
 import ProductDetails from "../view/ProductDetails/ProductDetails";
+import AdminProfil from '../view/Profil/AdminProfil';
+import Profil from '../view/Profil/Profil';
+import Register from '../view/Register/Register';
+import Summary from "../view/Summary/Summary";
+import Login from './../view/Login';
+import ShoppingCart from './../view/ShoppingCart/ShoppingCart';
 
 const router = createBrowserRouter([
     {

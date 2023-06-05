@@ -4,29 +4,18 @@ import { useState } from "react";
 import { useDispatch } from 'react-redux';
 import { useNavigate } from "react-router";
 import PriceFormatter from "../../PriceFormattingUtils/PriceFormatter";
+import ProductInterface from "../shared/ProductInterface";
+
 import { addProductToCart } from '../../redux/ShoppingCartReducer';
 
 
-interface Product {
-    productId: string;
-    name: string;
-    brand: string;
-    color: string;
-    specification: string;
-    price: number;
-    imageURL: string;
-    category: {
-        categoryId: string;
-        name: string;
-    };
-}
 
-const ProductListElement = (product: Product) => {
+const ProductListElement = (product: ProductInterface) => {
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
     const dispatch = useDispatch();
 
-    const addProductToShoppingCart = (product: Product) => {
+    const addProductToShoppingCart = (product: ProductInterface) => {
         dispatch(addProductToCart(product));
     }
 

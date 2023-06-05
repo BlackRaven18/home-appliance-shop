@@ -112,7 +112,9 @@ const ManageUsers = () => {
 
     return (
         <>
-            <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+            <Box display="flex" flexDirection={{ xs: 'column', sm: 'row' }} gap={2}>
+                <Box flex="1">
+            <div style={{display: 'flex', flexDirection: 'column', flex: 1}}>
                 <TextField
                     label="Wyszukaj osobę"
                     variant="outlined"
@@ -130,14 +132,14 @@ const ManageUsers = () => {
                             padding: '10px',
                             margin: '20px'
                         }}>
-                            <p style={{ fontSize: '20px' }}>Imię: {person ? person.name : 'unknown'}</p>
-                            <p style={{ fontSize: '20px' }}>Nazwisko: {person ? person.surname : 'unknown'}</p>
-                            <p style={{ fontSize: '20px' }}>Email: {person ? person.email : 'unknown'}</p>
-                            <p style={{ fontSize: '20px' }}>Numer telefonu: {person ? person.phoneNumber : 'unknown'}</p>
-                            <p style={{ fontSize: '20px' }}>Województwo: {person && person.address && person.address.state ? person.address.state : 'unknown'}</p>
-                            <p style={{ fontSize: '20px' }}>Miasto: {person && person.address && person.address.city ? person.address.city : 'unknown'}</p>
-                            <p style={{ fontSize: '20px' }}>Ulica: {person && person.address && person.address.street ? person.address.street : 'unknown'}</p>
-                            <p style={{ fontSize: '20px' }}>Kod pocztowy: {person && person.address && person.address.postCode ? person.address.postCode : 'unknown'}</p>
+                            <p style={{fontSize: '20px'}}><strong>Imię:</strong> {person ? person.name : 'unknown'}</p>
+                            <p style={{fontSize: '20px'}}><strong>Nazwisko:</strong> {person ? person.surname : 'unknown'}</p>
+                            <p style={{fontSize: '20px'}}><strong>Email:</strong> {person ? person.email : 'unknown'}</p>
+                            <p style={{fontSize: '20px'}}><strong>Numer telefonu:</strong> {person ? person.phoneNumber : 'unknown'}</p>
+                            <p style={{fontSize: '20px'}}><strong>Województwo:</strong> {person && person.address && person.address.state ? person.address.state : 'unknown'}</p>
+                            <p style={{fontSize: '20px'}}><strong>Miasto:</strong> {person && person.address && person.address.city ? person.address.city : 'unknown'}</p>
+                            <p style={{fontSize: '20px'}}><strong>Ulica:</strong> {person && person.address && person.address.street ? person.address.street : 'unknown'}</p>
+                            <p style={{fontSize: '20px'}}><strong>Kod pocztowy:</strong> {person && person.address && person.address.postCode ? person.address.postCode : 'unknown'}</p>
                             <Button variant="contained" style={{ margin: '15px' }} onClick={() => handleDeleteUser(person.personId)}>Usuń</Button>
                             <Button variant="contained" onClick={() => handleModifyClick(person.personId)}>Modyfikuj</Button>
 
@@ -214,6 +216,8 @@ const ManageUsers = () => {
                     ))
                 )}
             </div>
+                </Box>
+                <Box flex="1">
             <Box
                 component="form"
                 noValidate
@@ -270,6 +274,8 @@ const ManageUsers = () => {
                     Zarejestruj użytkownika
                 </Button>
 
+            </Box>
+                </Box>
             </Box>
         </>
     );

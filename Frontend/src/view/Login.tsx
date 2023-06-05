@@ -57,7 +57,7 @@ const Login = () => {
                     password: facebookResponse.id,
                 })
             .then((response) => {
-                localStorage.setItem('user', JSON.stringify(response.data));
+                localStorage.setItem('user', response.data);
                 navigate('/loginhome');
             })
             .catch((error) => {

@@ -58,10 +58,17 @@ const ProductDetails = () => {
                             src={state.imageURL}
                             sx={{
                                 height: 400,
-                                width: 600,
-                                maxWidth: { xs: 600, md: 800 },
+                                width: '100%',
+                                maxWidth: '100%',
+                                '@media (min-width: 600px)': {
+                                    maxWidth: '600px',
+                                },
+                                '@media (min-width: 800px)': {
+                                    maxWidth: '800px',
+                                },
                             }}
                         ></Box>
+
                     </Grid>
                     <Grid item xs={6}>
 

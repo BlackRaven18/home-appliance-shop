@@ -1,25 +1,23 @@
-import { Grid } from '@mui/material';
 import NotLoggedInTopBar from '../../TopBar/NotLoggedInTopBar';
 import Product from '../Product/Products';
 import CategoryList from "./CategoryList";
+import {Box} from "@mui/system";
 
-
-
-function Loginhome() {
+function Home() {
 
   return (
-    <div>
-      <NotLoggedInTopBar />
-      <Grid container spacing={2} sx={{ height: '100vh' }}>
-        <CategoryList />
-        <Grid item xs={12} md={10} sx={{ marginTop: '5px' }}>
-          <Product />
-        </Grid>
-      </Grid>
-    </div>
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+        <NotLoggedInTopBar />
+        <Box sx={{ flex: 1, display: 'flex', overflow: 'auto' }}>
+            <CategoryList />
+            <div style={{ flexGrow: 1, marginTop: '5px' }}>
+                <Product />
+            </div>
+        </Box>
+    </Box>
   );
 }
 
-export default Loginhome;
+export default Home;
 
 

@@ -3,10 +3,10 @@ import { Alert, Box, Button, Grid, Snackbar, Typography } from "@mui/material";
 import { useState } from "react";
 import { useDispatch } from 'react-redux';
 import { useNavigate } from "react-router";
-import { addProductToCart } from '../../redux/ShoppingCartReducer';
 import PriceFormatter from "../../PriceFormattingUtils/PriceFormatter";
 import ProductInterface from "../shared/ProductInterface";
 
+import { addProductToCart } from '../../redux/ShoppingCartReducer';
 
 
 
@@ -48,13 +48,11 @@ const ProductListElement = (product: ProductInterface) => {
             }}>
             <Grid container spacing='2'>
                 <Grid item xs={8}>
-                    <Typography>Nazwa: {product.name ?? 'unknown'}</Typography>
-                    <Typography>Marka: {product.brand ?? 'unknown'}</Typography>
-                    <Typography>Kolor: {product.color ?? 'unknown'}</Typography>
-                    <Typography>Specyfikacja: {product.specification ?? 'unknown'}</Typography>
-                    <Typography>
-                        Cena: {PriceFormatter.getFormattedPrice(product.price) ?? 'unknown'}
-                    </Typography>
+                    <Typography><strong>Nazwa:</strong> {product.name ?? 'unknown'}</Typography>
+                    <Typography><strong>Marka:</strong> {product.brand ?? 'unknown'}</Typography>
+                    <Typography><strong>Kolor:</strong> {product.color ?? 'unknown'}</Typography>
+                    <Typography><strong>Specyfikacja:</strong> {product.specification ?? 'unknown'}</Typography>
+                    <Typography><strong>Cena:</strong> {PriceFormatter.getFormattedPrice(product.price) ?? 'unknown'}</Typography>
 
                     <Button variant="contained" color="primary" onClick={(event) => {
                         // zatrzymanie propagacji zdarzenia, czyli nastąpi tylko obsługa kliknięcia
@@ -79,10 +77,11 @@ const ProductListElement = (product: ProductInterface) => {
                         src={product.imageURL}
                         sx={{
                             height: 173.5,
-                            width: 250,
+                            width: '100%',
                             maxWidth: { xs: 350, md: 250 },
                         }}
-                    ></Box>
+                    />
+
                 </Grid>
             </Grid>
         </Box >

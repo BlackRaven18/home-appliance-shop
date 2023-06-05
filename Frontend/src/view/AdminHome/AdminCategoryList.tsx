@@ -26,24 +26,26 @@ const AdminCategoryList = () => {
         console.log(`Szukaj: ${searchQuery}`);
     };
 
-    return (
-        <Grid container spacing={2} sx={{ height: '100vh' }}>
-            <Grid item xs={12} md={2} sx={{ position: 'sticky', top: 0 }}>
-                <Paper sx={{ backgroundColor: '#f5f5f5', padding: '16px', height: '100%' }}>
-                    <Typography variant="h6">Wybierz</Typography>
-                    <List sx={{ marginTop: '16px' }}>
+    return(
+        <>
+            <Grid item xs={12} md={3} sx={{ position: 'sticky', top: 0 }}>
+                <Paper sx={{ backgroundColor: '#f5f5f5', padding: '16px', height: '100%', width: '200px' }}>
+                    <Typography variant="h5" sx={{ textAlign: 'center' }}>Wybierz</Typography>
+                    <List sx={{ marginTop: '16px', maxHeight: '100%', overflowY: 'auto' }}>
                         {categories.map((category) => (
                             <ListItem button key={category} onClick={() => handleCategorySelect(category)}>
-                                <ListItemText primary={category} />
+                                <ListItemText primary={category} sx={{ textAlign: 'center' }}/>
                             </ListItem>
                         ))}
                     </List>
                 </Paper>
             </Grid>
-            {selectedCategory === 'Zarządzaj produktami' && <ManageProducts />}
-            {selectedCategory === 'Zarządzaj użytkownikami' && <ManageUsers />}
-            {selectedCategory === 'Zarządzaj płatnościami' && <ManagePayments />}
-        </Grid>
+            <div style={{ flexGrow: 1, marginTop: '5px' }}>
+                {selectedCategory === 'Zarządzaj produktami' && <ManageProducts />}
+                {selectedCategory === 'Zarządzaj użytkownikami' && <ManageUsers />}
+                {selectedCategory === 'Zarządzaj płatnościami' && <ManagePayments />}
+            </div>
+        </>
     )
 }
 

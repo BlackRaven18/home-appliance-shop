@@ -2,7 +2,6 @@ package com.homeappliancesshop.controller;
 
 import com.homeappliancesshop.model.Category;
 import com.homeappliancesshop.service.CategoryService;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

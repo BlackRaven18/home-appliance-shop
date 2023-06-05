@@ -16,12 +16,15 @@ interface Person {
 }
 const ProfilList = () => {
     const [person, setPerson] = useState<Person>();
+
     // funkcja pobierająca dane z bazy danych
     const personId = localStorage.getItem('user');
     React.useEffect(() => {
         getPerson();
     }, []);
+
     const getPerson = () => {
+        console.log("PersonId =" + personId)
         axios
             .get(process.env.REACT_APP_BACKEND_URL + "/persons/" + personId)
             .then( (response)=> {

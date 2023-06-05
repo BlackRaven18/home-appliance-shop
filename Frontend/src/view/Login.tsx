@@ -90,7 +90,7 @@ const Login = () => {
         axios
             .post('http://localhost:8080/persons/login', postData)
             .then((response) => {
-                localStorage.setItem('user', JSON.stringify(response.data));
+                localStorage.setItem('user', response.data);
                 navigate('/loginhome');
             })
             .catch((error) => {
@@ -209,7 +209,7 @@ const Login = () => {
                                 Zaloguj
                             </Button>
                             <LoginSocialFacebook
-                                appId={'191073690551245'}
+                                appId={process.env.REACT_APP_FACEBOOK_ID?? ""}
                                 onResolve={({ provider, data }: IResolveParams) => {
                                     if (data) {
                                         handleFacebookLogin({

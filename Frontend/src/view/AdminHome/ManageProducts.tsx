@@ -4,25 +4,13 @@ import Grid from "@mui/material/Grid";
 import axios from 'axios';
 import * as React from 'react';
 import { useState } from "react";
+import ProductInterface from "../shared/ProductInterface";
 
-let url = 'http://localhost:8080';
 
-interface Product {
-    productId: string;
-    name: string;
-    brand: string;
-    color: string;
-    specification: string;
-    price: number;
-    imageURL: string;
-    category: {
-        categoryId: string;
-        name: string;
-    };
-}
+
 
 const ManageProducts = () => {
-    const [products, setProducts] = useState<Product[]>([]);
+    const [products, setProducts] = useState<ProductInterface[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [productId, setProductId] = useState("");
 
@@ -32,7 +20,7 @@ const ManageProducts = () => {
 
     const getProducts = () => {
         axios
-            .get(url + `/products`)
+            .get(process.env.REACT_APP_BACKEND_URL + `/products`)
             .then((response) => {
                 setProducts(response.data);
             })
@@ -75,7 +63,7 @@ const ManageProducts = () => {
         };
 
         axios
-            .post(url + '/products', newProduct)
+            .post(process.env.REACT_APP_BACKEND_URL + '/products', newProduct)
             .then((response) => {
                 setProducts([...products, response.data]);
                 event.currentTarget.reset();
@@ -87,7 +75,7 @@ const ManageProducts = () => {
 
     const handleDeleteProduct = async (productId: string) => {
         try {
-            await axios.delete(url + '/products/' + productId);
+            await axios.delete(process.env.REACT_APP_BACKEND_URL + '/products/' + productId);
             getProducts(); // reload the user list after deleting the user
         } catch (error) {
             console.error(error);
@@ -112,7 +100,7 @@ const ManageProducts = () => {
     };
 
     const handleModifySubmit = async () => {
-        await axios.put(url + '/products/' + productId, {
+        await axios.put(process.env.REACT_APP_BACKEND_URL + '/products/' + productId, {
             productId: productId,
             name: newName,
             brand: newBrand,

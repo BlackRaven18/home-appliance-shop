@@ -18,23 +18,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FacebookLoginButton } from 'react-social-login-buttons';
 import { IResolveParams, LoginSocialFacebook } from 'reactjs-social-login';
 import FacebookRegisterDialog from './FacebookRegisterDialog';
+import PersonInterface from '../shared/PersonInterface';
 
 const theme = createTheme({});
 
-interface Person {
-    name: string;
-    surname: string;
-    email: string;
-    phoneNumber: string;
-    address: {
-        state: string;
-        city: string;
-        street: string;
-        postCode: string;
-        apartment: string;
-    };
-    password: string;
-}
 
 const Register = () => {
     const navigate = useNavigate();
@@ -54,7 +41,7 @@ const Register = () => {
     const [facebookLoginData, setFacebookLoginData] = useState<any>();
     const [isPasswordShown, setPasswordIsShown] = useState(false);
 
-    const [formData, setFormData] = useState<Person>({
+    const [formData, setFormData] = useState<PersonInterface>({
         name: '',
         surname: '',
         email: '',
@@ -69,7 +56,7 @@ const Register = () => {
         password: '',
     });
 
-    const [facebookFormData, setFacebookFormData] = useState<Person>({
+    const [facebookFormData, setFacebookFormData] = useState<PersonInterface>({
         name: '',
         surname: '',
         email: '',

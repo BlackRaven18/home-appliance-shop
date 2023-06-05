@@ -6,33 +6,21 @@ import { useState, MouseEvent } from "react";
 import { useDispatch } from 'react-redux';
 import { addProductToCart } from '../../redux/ShoppingCartReducer';
 import PriceFormatter from '../../PriceFormattingUtils/PriceFormatter';
+import ProductInterface from '../shared/ProductInterface'
 
 
-interface Product {
-    productId: string;
-    name: string;
-    brand: string;
-    color: string;
-    specification: string;
-    price: number;
-    imageURL: string;
-    category: {
-        categoryId: string;
-        name: string;
-    };
-}
 
 const ProductDetails = () => {
 
     const location = useLocation();
     const { state } = location;
 
-    const [productDetails, setProductDetails] = useState<Product>(state);
+    const [productDetails, setProductDetails] = useState<ProductInterface>(state);
 
     const [open, setOpen] = useState(false);
     const dispatch = useDispatch();
 
-    const addProductToShoppingCart = (product: Product)=> {
+    const addProductToShoppingCart = (product: ProductInterface)=> {
         dispatch(addProductToCart(product));
     }
 

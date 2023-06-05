@@ -1,33 +1,18 @@
-import * as React from 'react';
+import { Button, TextField } from "@mui/material";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
-import {useState} from "react";
-import {Button, TextField} from "@mui/material";
-import {FacebookLoginButton} from "react-social-login-buttons";
-import Grid from "@mui/material/Grid";
-import LinkMaterial from "@mui/material/Link";
-import {Link} from "react-router-dom";
-import Box from "@mui/material/Box";
-import { useEffect } from "react";
+import * as React from 'react';
+import { useState } from "react";
+import PersonInterface from '../shared/PersonInterface';
 
-let url = 'http://localhost:8080';
-
-interface Person {
-    personId: string;
-    name: string;
-    surname: string;
-    email: string;
-    phoneNumber: string;
-    address: {
-        state: string;
-        city: string;
-        street: string;
-        postCode: string;
-    };
+interface ExtendedPersonInterface extends PersonInterface {
+    personId: string,
 }
 
 const ManageUsers = () => {
-    const [people, setPeople] = useState<Person[]>([]);
+    const [people, setPeople] = useState<ExtendedPersonInterface[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [personId, setPersonId] = useState("");
 
@@ -37,7 +22,7 @@ const ManageUsers = () => {
 
     const getUsers = () => {
         axios
-            .get(url + '/persons')
+            .get(process.env.REACT_APP_BACKEND_URL + '/persons')
             .then((response) => {
                 setPeople(response.data);
             })
@@ -52,7 +37,7 @@ const ManageUsers = () => {
 
     const handleDeleteUser = async (personId: string) => {
         try {
-            await axios.delete(url + '/persons/' + personId);
+            await axios.delete(process.env.REACT_APP_BACKEND_URL + '/persons/' + personId);
             getUsers(); // reload the user list after deleting the user
         } catch (error) {
             console.error(error);
@@ -80,7 +65,7 @@ const ManageUsers = () => {
 
     const handleModifySubmit = async () => {
         try {
-            await axios.put(url + '/persons/' + personId, {
+            await axios.put(process.env.REACT_APP_BACKEND_URL + '/persons/' + personId, {
                 name: newFirstName,
                 surname: newLastName,
                 email: newEmail,
@@ -127,13 +112,13 @@ const ManageUsers = () => {
 
     return (
         <>
-            <div style={{display: 'flex', flexDirection: 'column', flex: 1}}>
+            <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
                 <TextField
                     label="Wyszukaj osobę"
                     variant="outlined"
                     value={searchTerm}
                     onChange={handleSearchTermChange}
-                    style={{marginTop: '20px'}}
+                    style={{ marginTop: '20px' }}
                 />
                 {filteredPeople.length === 0 ? (
                     <Typography>Nie znaleziono osób spełniających kryteria wyszukiwania</Typography>
@@ -145,14 +130,14 @@ const ManageUsers = () => {
                             padding: '10px',
                             margin: '20px'
                         }}>
-                            <p style={{fontSize: '20px'}}>Imię: {person ? person.name : 'unknown'}</p>
-                            <p style={{fontSize: '20px'}}>Nazwisko: {person ? person.surname : 'unknown'}</p>
-                            <p style={{fontSize: '20px'}}>Email: {person ? person.email : 'unknown'}</p>
-                            <p style={{fontSize: '20px'}}>Numer telefonu: {person ? person.phoneNumber : 'unknown'}</p>
-                            <p style={{fontSize: '20px'}}>Województwo: {person && person.address && person.address.state ? person.address.state : 'unknown'}</p>
-                            <p style={{fontSize: '20px'}}>Miasto: {person && person.address && person.address.city ? person.address.city : 'unknown'}</p>
-                            <p style={{fontSize: '20px'}}>Ulica: {person && person.address && person.address.street ? person.address.street : 'unknown'}</p>
-                            <p style={{fontSize: '20px'}}>Kod pocztowy: {person && person.address && person.address.postCode ? person.address.postCode : 'unknown'}</p>
+                            <p style={{ fontSize: '20px' }}>Imię: {person ? person.name : 'unknown'}</p>
+                            <p style={{ fontSize: '20px' }}>Nazwisko: {person ? person.surname : 'unknown'}</p>
+                            <p style={{ fontSize: '20px' }}>Email: {person ? person.email : 'unknown'}</p>
+                            <p style={{ fontSize: '20px' }}>Numer telefonu: {person ? person.phoneNumber : 'unknown'}</p>
+                            <p style={{ fontSize: '20px' }}>Województwo: {person && person.address && person.address.state ? person.address.state : 'unknown'}</p>
+                            <p style={{ fontSize: '20px' }}>Miasto: {person && person.address && person.address.city ? person.address.city : 'unknown'}</p>
+                            <p style={{ fontSize: '20px' }}>Ulica: {person && person.address && person.address.street ? person.address.street : 'unknown'}</p>
+                            <p style={{ fontSize: '20px' }}>Kod pocztowy: {person && person.address && person.address.postCode ? person.address.postCode : 'unknown'}</p>
                             <Button variant="contained" style={{ margin: '15px' }} onClick={() => handleDeleteUser(person.personId)}>Usuń</Button>
                             <Button variant="contained" onClick={() => handleModifyClick(person.personId)}>Modyfikuj</Button>
 
@@ -164,56 +149,56 @@ const ManageUsers = () => {
                                             variant="outlined"
                                             value={newFirstName}
                                             onChange={handleFirstNameChange}
-                                            style={{margin: '5px'}}
+                                            style={{ margin: '5px' }}
                                         />
                                         <TextField
                                             label="Nowe nazwisko"
                                             variant="outlined"
                                             value={newLastName}
                                             onChange={handleLastNameChange}
-                                            style={{margin: '5px'}}
+                                            style={{ margin: '5px' }}
                                         />
                                         <TextField
                                             label="Nowy email"
                                             variant="outlined"
                                             value={newEmail}
                                             onChange={handleEmailChange}
-                                            style={{margin: '5px'}}
+                                            style={{ margin: '5px' }}
                                         />
                                         <TextField
                                             label="Nowy numer telefonu"
                                             variant="outlined"
                                             value={newNumber}
                                             onChange={handleNumberChange}
-                                            style={{margin: '5px'}}
+                                            style={{ margin: '5px' }}
                                         />
                                         <TextField
                                             label="Nowe województwo"
                                             variant="outlined"
                                             value={newState}
                                             onChange={handleStateChange}
-                                            style={{margin: '5px'}}
+                                            style={{ margin: '5px' }}
                                         />
                                         <TextField
                                             label="Nowe miasto"
                                             variant="outlined"
                                             value={newCity}
                                             onChange={handleCityChange}
-                                            style={{margin: '5px'}}
+                                            style={{ margin: '5px' }}
                                         />
                                         <TextField
                                             label="Nowa ulica"
                                             variant="outlined"
                                             value={newStreet}
                                             onChange={handleStreetChange}
-                                            style={{margin: '5px'}}
+                                            style={{ margin: '5px' }}
                                         />
                                         <TextField
                                             label="Nowy kod pocztowy"
                                             variant="outlined"
                                             value={newPostCode}
                                             onChange={handlePostCodeChange}
-                                            style={{margin: '5px'}}
+                                            style={{ margin: '5px' }}
                                         />
                                     </Grid>
                                     <Grid item>

@@ -87,8 +87,15 @@ const Login = () => {
     const postUser = () => {
         const postData = formData;
 
+        console.log("ujajajajajaj")
+
         axios
-            .post('http://localhost:8080/persons/login', postData)
+            .post('http://localhost:8080/persons/login', postData,{
+                auth:{
+                    username: "admin",
+                    password: "admin"
+                }
+            })
             .then((response) => {
                 localStorage.setItem('user', response.data);
                 navigate('/loginhome');
@@ -96,6 +103,7 @@ const Login = () => {
             .catch((error) => {
                 setErrorMessages([error.response.data]);
                 setServerErrorMessage(error.response.data);
+                console.log("nie pyklo");
             });
     }
 

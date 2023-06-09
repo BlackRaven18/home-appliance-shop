@@ -1,8 +1,10 @@
 package com.homeappliancesshop.service;
 
+import com.homeappliancesshop.model.Person;
 import com.homeappliancesshop.model.ProductInTransaction;
 import com.homeappliancesshop.model.Transaction;
 import com.homeappliancesshop.model.TransactionsHistory;
+import com.homeappliancesshop.repository.PersonRepository;
 import com.homeappliancesshop.repository.TransactionsHistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,18 +22,36 @@ public class TransactionsHistoryService {
         this.repository = repository;
     }
 
-    public TransactionsHistory addTransaction(String transactionHistoryId, Transaction transaction){
-        TransactionsHistory transactionsHistory = repository.findById(transactionHistoryId).get();
-
-        transactionsHistory.addNewTransaction(transaction);
-
-        return repository.save(transactionsHistory);
+    public List<TransactionsHistory> findAllTransactionsHistory() {
+        return repository.findAll();
     }
 
-    public TransactionsHistory addTransactionsHistory(TransactionsHistory transactionsHistory){
-        return repository.save(transactionsHistory);
+    public TransactionsHistory getTransactionsHistoryById(String transactionId) {
+        return repository.findById(transactionId).orElse(null);
     }
 
+    public TransactionsHistory updateTransactionsHistoryStatus(String transactionId, String newStatus) {
+        TransactionsHistory existingTransactionsHistory = repository.findById(transactionId).orElse(null);
+        if (existingTransactionsHistory != null) {
+            existingTransactionsHistory.setStatus(newStatus);
+            return repository.save(existingTransactionsHistory);
+        }
+        return null;
+    }
 
+    public TransactionsHistory addTransaction(String transactionHistoryId, Transaction transaction) {
+        TransactionsHistory transactionsHistory = repository.findById(transactionHistoryId).orElse(null);
 
+        if (transactionsHistory != null) {
+            transactionsHistory.addNewTransaction(transaction);
+            return repository.save(transactionsHistory);
+        }
+
+        return null;
+    }
+
+    public TransactionsHistory addTransactionsHistory(TransactionsHistory transactionsHistory) {
+        return repository.save(transactionsHistory);
+    }
 }
+

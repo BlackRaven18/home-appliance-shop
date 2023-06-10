@@ -40,7 +40,12 @@ function History() {
 
         await axios
             .get(process.env.REACT_APP_BACKEND_URL + "/persons/"
-                + userId + "/paymenthistory")
+                + userId + "/paymenthistory", {
+                    auth:{
+                        username: "admin",
+                        password: "admin"
+                    }
+                })
             .then((response) => {
                 setHistory(response.data);
             })

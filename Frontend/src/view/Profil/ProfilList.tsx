@@ -15,8 +15,14 @@ const ProfilList = () => {
     const getPerson = () => {
         console.log("PersonId =" + personId)
         axios
-            .get(process.env.REACT_APP_BACKEND_URL + "/persons/" + personId)
+            .get(process.env.REACT_APP_BACKEND_URL + "/persons/" + personId, {
+                auth:{
+                    username: "admin",
+                    password: "admin"
+                }
+            })
             .then( (response)=> {
+                console.log(response.data)
                 setPerson(response.data);
             })
             .catch(function (error) {

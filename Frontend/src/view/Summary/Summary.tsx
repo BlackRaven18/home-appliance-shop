@@ -24,7 +24,7 @@ interface TokenI {
     id: string;
 }
 
-interface PaymentStatusDTO{
+interface PaymentStatusDTO {
     status: string,
     message: string,
 }
@@ -70,24 +70,29 @@ function Summary() {
                 deliveryMethod,
                 productDetailsDTO,
 
-            }, {
-            headers: {
-                token: token.id,
             },
+            {
+                auth: {
+                    username: "admin",
+                    password: "admin"
+                },
 
-        }).then((response) => {
-            console.log(response);
-            console.log(buyerId);
-            if(response.data.status === 'failed'){
-                handleFailedTransaction(response.data)
-            }else{
-                handleSuccessfulTransaction();
-            }
+                headers: {
+                    token: token.id,
+                },
 
-        }).catch((error) => {
-            console.log(buyerId);
-            alert(error);
-        });
+            }).then((response) => {
+                console.log(response.data);
+                if (response.data.status === 'failed') {
+                    handleFailedTransaction(response.data)
+                } else {
+                    handleSuccessfulTransaction();
+                }
+
+            }).catch((error) => {
+                console.log(buyerId);
+                alert(error);
+            });
     }
 
 
@@ -177,7 +182,7 @@ function Summary() {
                             currency="PLN"
                             panelLabel="Zapłać"
                             image={require('../logo.jpg')}
-                            
+
                         />
                     </Box>
                 ) : (

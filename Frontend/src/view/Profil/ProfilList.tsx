@@ -2,12 +2,13 @@ import axios from 'axios';
 import * as React from 'react';
 import { useState } from "react";
 import PersonInterface from '../shared/PersonInterface';
+import UserDataManager from '../../UserDataManager/UserDataManager';
 
 const ProfilList = () => {
     const [person, setPerson] = useState<PersonInterface>();
 
     // funkcja pobierająca dane z bazy danych
-    const personId = localStorage.getItem('user');
+    const personId = UserDataManager.getUserId();
     React.useEffect(() => {
         getPerson();
     }, []);
@@ -17,8 +18,8 @@ const ProfilList = () => {
         axios
             .get(process.env.REACT_APP_BACKEND_URL + "/persons/" + personId, {
                 auth:{
-                    username: "admin",
-                    password: "admin"
+                    username: UserDataManager.getUsername(),
+                    password: UserDataManager.getPassword()
                 }
             })
             .then( (response)=> {

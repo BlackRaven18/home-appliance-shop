@@ -5,6 +5,8 @@ import TopBar from '../TopBar/TopBar';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import PriceFormatter from '../PriceFormattingUtils/PriceFormatter';
+import { validateLocaleAndSetLanguage } from 'typescript';
+import UserDataManager from '../UserDataManager/UserDataManager';
 
 interface HistoryI {
     transactionId: string,
@@ -30,7 +32,7 @@ interface ProductsInTransactionI {
 function History() {
 
     const [history, setHistory] = useState<HistoryI>();
-    const userId = localStorage.getItem('user');
+    const userId = UserDataManager.getUserId();
 
     useEffect(() => {
         getHistory();
@@ -41,12 +43,13 @@ function History() {
         await axios
             .get(process.env.REACT_APP_BACKEND_URL + "/persons/"
                 + userId + "/paymenthistory", {
-                    auth:{
-                        username: "admin",
-                        password: "admin"
-                    }
-                })
+                auth: {
+                    username: UserDataManager.getUsername(),
+                    password: UserDataManager.getPassword()
+                }
+            })
             .then((response) => {
+                console.log("response in history:" + response.data)
                 setHistory(response.data);
             })
             .catch((error) => {

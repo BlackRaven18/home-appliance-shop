@@ -19,6 +19,7 @@ import { RootState } from "../../redux/store";
 import SummaryTopBar from "../../TopBar/SummaryTopBar";
 import SummaryProductElement from './SummaryProductElement';
 import PriceFormatter from "../../PriceFormattingUtils/PriceFormatter";
+import UserDataManager from "../../UserDataManager/UserDataManager";
 
 interface TokenI {
     id: string;
@@ -38,7 +39,7 @@ function Summary() {
     const navigate = useNavigate();
 
     const [deliveryMethod, setDeliveryMethod] = useState<String>('odbior-osobisty');
-    const buyerId = localStorage.getItem('user');
+    const buyerId = UserDataManager.getUserId();
 
     const handleSelectShippingMethod = (deliveryMethod: String) => {
         setDeliveryMethod(deliveryMethod)
@@ -73,8 +74,8 @@ function Summary() {
             },
             {
                 auth: {
-                    username: "admin",
-                    password: "admin"
+                    username: UserDataManager.getUsername(),
+                    password: UserDataManager.getPassword()
                 },
 
                 headers: {

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PersonService {
@@ -52,10 +53,14 @@ public class PersonService {
     }
 
     public TransactionsHistory addTransaction(String personId, Transaction transaction) {
-        Person person = repository.findById(personId).get();
+        Optional<Person> person = repository.findById(personId);
+
+        if(person.isEmpty()){
+            return null;
+        }
 
         return transactionsHistoryService.addTransaction(
-                person.getTransactionsHistory().getTransactionId(), transaction);
+                person.get().getTransactionsHistory().getTransactionId(), transaction);
     }
 
     public boolean existsByEmail(String email) {

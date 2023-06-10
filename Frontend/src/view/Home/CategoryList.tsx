@@ -6,38 +6,39 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Category, setActiveCategory } from '../../redux/CategoryReducer';
 
-
 const CategoryList = () => {
     const [categoriesFromEndpoint, setCategoriesFromEndpoint] = useState<Category[]>([]);
 
     const dispatch = useDispatch();
 
     const setCategory = (category: Category) => {
-        dispatch(setActiveCategory(category))
-    }
+        dispatch(setActiveCategory(category));
+    };
 
     useEffect(() => {
         getCategories();
-    }, [])
+    }, []);
 
     const getCategories = () => {
-        axios.get(process.env.REACT_APP_BACKEND_URL + "/categories")
+        axios
+            .get(process.env.REACT_APP_BACKEND_URL + '/categories')
             .then((response) => {
                 setCategoriesFromEndpoint(response.data);
             })
             .catch((error) => {
                 setCategoriesFromEndpoint([]);
-            })
-    }
+            });
+    };
 
     return (
         <Grid item xs={12} md={2} sx={{ position: 'sticky', top: 0 }}>
-            <Paper sx={{ backgroundColor: '#f5f5f5', padding: '17px', height: '100%', width: '200px' }}>
-                <Typography variant="h5" sx={{ textAlign: 'center' }}>Kategorie</Typography>
+            <Paper sx={{ backgroundColor: '#f5f5f5', padding: '17px', height: '100%', width: '200px', overflow: 'auto' }}>
+                <Typography variant="h5" sx={{ textAlign: 'center' }}>
+                    Kategorie
+                </Typography>
                 <List sx={{ marginTop: '16px' }}>
                     {categoriesFromEndpoint.map((category) => (
                         <div key={category.name}>
-                    
                             <ListItemButton onClick={() => setCategory(category)}>
                                 <ListItemText primary={category.name} sx={{ textAlign: 'center' }} />
                             </ListItemButton>
@@ -46,7 +47,7 @@ const CategoryList = () => {
                 </List>
             </Paper>
         </Grid>
-    )
-}
+    );
+};
 
 export default CategoryList;

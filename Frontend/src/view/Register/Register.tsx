@@ -19,6 +19,7 @@ import { FacebookLoginButton } from 'react-social-login-buttons';
 import { IResolveParams, LoginSocialFacebook } from 'reactjs-social-login';
 import FacebookRegisterDialog from './FacebookRegisterDialog';
 import PersonInterface from '../shared/PersonInterface';
+import UserDataManager from '../../UserDataManager/UserDataManager';
 
 const theme = createTheme({});
 
@@ -110,7 +111,11 @@ const Register = () => {
             .post('http://localhost:8080/persons', postData)
             .then((response) => {
                 console.log(response.data);
-                localStorage.setItem('user', JSON.stringify(response.data));
+
+                UserDataManager.setId(response.data);
+                UserDataManager.setUsername(postData.email);
+                UserDataManager.setPassword(postData.password);
+                
                 navigate('/loginhome');
             })
             .catch((error) => {

@@ -16,9 +16,11 @@ import {
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import axios from 'axios';
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { FacebookLoginButton } from 'react-social-login-buttons';
 import { IResolveParams, LoginSocialFacebook } from 'reactjs-social-login';
+import UserDataManager from '../UserDataManager/UserDataManager';
 
 const theme = createTheme();
 
@@ -49,6 +51,8 @@ const Login = () => {
         password: '',
     });
 
+    const dispatch = useDispatch();
+
     const handleFacebookLogin = (facebookResponse: FacebookResponseI) => {
         axios
             .post('http://localhost:8080/persons/login',
@@ -57,7 +61,13 @@ const Login = () => {
                     password: facebookResponse.id,
                 })
             .then((response) => {
-                localStorage.setItem('user', response.data);
+
+                UserDataManager.setId(response.data);
+                UserDataManager.setUsername(facebookResponse.email);
+                UserDataManager.setPassword(facebookResponse.id);
+
+                UserDataManager.TEST_printData();
+
                 navigate('/loginhome');
             })
             .catch((error) => {
@@ -87,17 +97,20 @@ const Login = () => {
     const postUser = () => {
         const postData = formData;
 
-        console.log("ujajajajajaj")
-
         axios
-            .post('http://localhost:8080/persons/login', postData,{
-                auth:{
-                    username: "admin",
-                    password: "admin"
+            .post('http://localhost:8080/persons/login', postData, {
+                auth: {
+                    username: postData.email,
+                    password: postData.password
                 }
             })
             .then((response) => {
-                localStorage.setItem('user', response.data);
+                UserDataManager.setId(response.data);
+                UserDataManager.setUsername(postData.email);
+                UserDataManager.setPassword(postData.password);
+
+                UserDataManager.TEST_printData();
+
                 navigate('/loginhome');
             })
             .catch((error) => {
@@ -217,7 +230,7 @@ const Login = () => {
                                 Zaloguj
                             </Button>
                             <LoginSocialFacebook
-                                appId={process.env.REACT_APP_FACEBOOK_ID?? ""}
+                                appId={process.env.REACT_APP_FACEBOOK_ID ?? ""}
                                 onResolve={({ provider, data }: IResolveParams) => {
                                     if (data) {
                                         handleFacebookLogin({

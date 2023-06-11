@@ -11,13 +11,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.aop.scope.ScopedProxyUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.zip.CheckedOutputStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -36,9 +34,7 @@ class PersonServiceTest {
     private TransactionsHistoryService transactionsHistoryService;
 
     @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
+    public void setUp() { MockitoAnnotations.openMocks(this); }
 
     @AfterEach
     void clear() {
@@ -159,20 +155,22 @@ class PersonServiceTest {
 
     @Test
     void addTransaction() {
-        String personId = "123";
+        String personId = "personId";
         Transaction transaction = new Transaction();
 
         Person person = new Person();
-        TransactionsHistory transactionsHistory = new TransactionsHistory();
+        person.setTransactionsHistory(new TransactionsHistory());
 
-        when(personRepository.findById(personId)).thenReturn(Optional.of(person));
-        when(transactionsHistoryService.addTransaction(anyString(), any(Transaction.class))).thenReturn(transactionsHistory);
+        TransactionsHistory updatedTransactionsHistory = new TransactionsHistory();
+
+        when(personRepository.findById(personId)).thenReturn(java.util.Optional.of(person));
+        when(transactionsHistoryService.addTransaction(any(), any())).thenReturn(updatedTransactionsHistory);
 
         TransactionsHistory result = personService.addTransaction(personId, transaction);
 
-        assertEquals(transactionsHistory, result);
+        assertEquals(updatedTransactionsHistory, result);
         verify(personRepository, times(1)).findById(personId);
-        verify(transactionsHistoryService, times(1)).addTransaction(anyString(), any(Transaction.class));
+        verify(transactionsHistoryService, times(1)).addTransaction(any(), any());
     }
 
     @Test

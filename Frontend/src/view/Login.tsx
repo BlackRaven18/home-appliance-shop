@@ -94,24 +94,27 @@ const Login = () => {
             [key]: value,
         }));
     };
-    const postUser = () => {
+    const postUser = async () => {
         const postData = formData;
 
-        axios
+        await axios
             .post('http://localhost:8080/persons/login', postData, {
                 auth: {
+
+                    // username: "admin",
+                    // password: "admin"
                     username: postData.email,
                     password: postData.password
                 }
             })
             .then((response) => {
+                console.log("ujajajajjaja")
                 UserDataManager.setId(response.data);
                 UserDataManager.setUsername(postData.email);
                 UserDataManager.setPassword(postData.password);
 
                 UserDataManager.TEST_printData();
 
-                navigate('/loginhome');
             })
             .catch((error) => {
                 setErrorMessages([error.response.data]);

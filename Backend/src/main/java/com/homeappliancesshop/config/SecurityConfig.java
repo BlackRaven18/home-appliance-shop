@@ -1,6 +1,7 @@
 package com.homeappliancesshop.config;
 
 import com.homeappliancesshop.service.MongoAuthSafeUserDetailService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +11,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 
 
@@ -41,7 +43,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests((requests) ->
                         requests
                                 .requestMatchers("/", "/persons", "/categories").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/persons/login").permitAll()
+                                //.requestMatchers(HttpMethod.POST, "/persons/login").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/products").permitAll()
                                 .anyRequest().authenticated()
                 //.anyRequest().permitAll()
@@ -51,6 +53,9 @@ public class SecurityConfig {
                 .csrf().disable()
                 .cors()
                 .and()
+                .exceptionHandling()
+                .authenticationEntryPoint(unauthorizedEntryPoint())
+                .and()
                 .formLogin()
                 .and()
                 .httpBasic();
@@ -58,7 +63,12 @@ public class SecurityConfig {
         return http.build();
     }
 
-
+    @Bean
+    public AuthenticationEntryPoint unauthorizedEntryPoint() {
+        return (request, response, authException) -> {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid credentials");
+        };
+    }
 
 
 }

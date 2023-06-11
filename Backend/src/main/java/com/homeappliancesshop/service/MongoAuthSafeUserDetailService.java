@@ -17,16 +17,18 @@ import java.util.Set;
 
 @Service
 public class MongoAuthSafeUserDetailService  implements UserDetailsService {
-//
+
     @Autowired
     private SafeUserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         SafeUser user = userRepository.findByUsername(username);
+
         if (user == null) {
             throw new UsernameNotFoundException("Invalid username or password.");
         }
+
         return new User(user.getUsername(), user.getPassword(), new ArrayList<>());
     }
 

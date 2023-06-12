@@ -1,4 +1,4 @@
-package com.homeappliancesshop.config;
+package com.homeappliancesshop.securityconfig;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

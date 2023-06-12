@@ -18,6 +18,7 @@ import {
     List,
     ListItem,
 } from '@mui/material';
+import UserDataManager from '../UserDataManager/UserDataManager';
 
 
 const theme = createTheme();
@@ -73,7 +74,10 @@ export default function AdminLogin() {
             .then((response) => {
 
                 if (response.data) {
-                    localStorage.setItem('admin', response.data);
+                    UserDataManager.setId(response.data);
+                    UserDataManager.setUsername(formData.email);
+                    UserDataManager.setPassword(formData.password);
+
                     navigate('/adminhome');
                 } else {
                     console.log('Empty response data');

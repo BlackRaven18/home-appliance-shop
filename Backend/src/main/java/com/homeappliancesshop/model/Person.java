@@ -7,6 +7,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
+import java.util.ArrayList;
+
 @Document(collection = "persons")
 @Data
 @AllArgsConstructor
@@ -19,6 +21,7 @@ public class Person {
     private String email;
     private String password;
     private String phoneNumber;
+    private ArrayList<String> roles;
 
     @DocumentReference
     private Address address;

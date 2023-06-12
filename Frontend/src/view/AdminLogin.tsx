@@ -27,10 +27,6 @@ interface Admin {
     password: string;
 }
 
-interface ErrorMessageProps {
-    message: string;
-}
-
 export default function AdminLogin() {
     const navigate = useNavigate();
     const [formData, setFormData] = useState<Admin>({
@@ -41,23 +37,8 @@ export default function AdminLogin() {
     const [serverErrorMessage, setServerErrorMessage] = useState('');
     const [errorMessages, setErrorMessages] = useState<string[]>([]);
 
-    const [isPasswordShown, setPasswordIsShown] = useState(false);
+    const [isPasswordShown, setPasswordIsShown] = useState(false)
 
-    const ErrorMessage = () => (
-        <div>
-            {errorMessages.map((errorMessage, index) => (
-                <p key={index} className="text-rose-600 font-medium">
-                    {errorMessage}
-                </p>
-            ))}
-        </div>
-    );
-
-    const ServerErrorMessage: React.FC<ErrorMessageProps> = ({ message }) => (
-        <div>
-            <p className="text-rose-600 font-medium">{message}</p>
-        </div>
-    );
 
     const onChangeForm = (key: string, value: any) => {
         setFormData((prevFormData) => ({
@@ -66,7 +47,7 @@ export default function AdminLogin() {
         }));
     };
 
-    const loginAdmin = () => {
+    const loginAdmin = async () => {
         setErrorMessages([]);
 
         const emptyFields = Object.entries(formData).filter(([key, value]) => {
@@ -82,9 +63,15 @@ export default function AdminLogin() {
             return;
         }
 
-        axios
-            .post('http://localhost:8080/admin/login', formData)
+        await axios
+            .post('http://localhost:8080/admin/login', formData, {
+                auth: {
+                    username: formData.email,
+                    password: formData.password
+                }
+            })
             .then((response) => {
+
                 if (response.data) {
                     localStorage.setItem('admin', response.data);
                     navigate('/adminhome');
@@ -93,8 +80,12 @@ export default function AdminLogin() {
                 }
             })
             .catch((error) => {
-                setErrorMessages([error.response.data]);
-                setServerErrorMessage(error.response.data);
+                switch(error.response.status){
+                    case 401: setServerErrorMessage("Nie znaleziono użytkownika: Error 401"); break;
+                    case 403: setServerErrorMessage("Brak dostępu: Error 403"); break;
+                    case 404: setServerErrorMessage("Nie znaleziono: Error 404"); break;
+                }
+               
             });
     };
 
@@ -175,9 +166,9 @@ export default function AdminLogin() {
                                 }
                                 label="Pokaż hasło"
                             />
-                            {serverErrorMessage && serverErrorMessage.includes('Invalid login details or admin does not exist') ? (
-                                <ServerErrorMessage message="Nieprawidłowe dane logowania lub administrator nie istnieje" />
-                            ) : null}
+                            {serverErrorMessage ? (
+                                <p>{serverErrorMessage}</p>
+                            ) : (<p></p>)}
                             <Button
                                 fullWidth
                                 variant="contained"

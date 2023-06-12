@@ -71,23 +71,35 @@ const Register = () => {
         password: '',
     });
 
-    const [errorMessages, setErrorMessages] = useState<string[]>([]);
+    const [errors, setErrors] = useState<PersonInterface>({
+        name: '',
+        surname: '',
+        email: '',
+        phoneNumber: '',
+        address: {
+            state: '',
+            city: '',
+            street: '',
+            postCode: '',
+            apartment: '',
+        },
+        password: '',
+    })
 
-    const validateFieldsDialog = (): boolean => {
-        const emptyFields = Object.entries(facebookFormData).filter(([key, value]) => {
-            if (typeof value === 'string') {
-                return value.trim() === '';
-            } else if (typeof value === 'object') {
-                return Object.values(value).some((addressFieldValue) => String(addressFieldValue).trim() === '');
-            }
-            return false;
-        });
+    const validateEmail = (value: string) => {
+        const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+        return emailRegex.test(value);
+    }
 
-        const emptyFieldNames = emptyFields.map(([key]) => key);
-
-        return emptyFields.length === 0;
+    const validatePassword = (value: string) => {
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+        return passwordRegex.test(value);
     };
 
+    const validatePhoneNumber = (value: string) => {
+        const phoneNumberRegex = /^\d{9}$/;
+        return phoneNumberRegex.test(value);
+    };
 
     const onChangeForm = (key: string, value: any) => {
         if (isFacebookLogging === true) {
@@ -104,18 +116,110 @@ const Register = () => {
         }
     };
 
+    const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+    
+        setFormData((prevState) => ({
+          ...prevState,
+          address: {
+            ...prevState.address,
+            [name]: value,
+          },
+        }));
+      };
+
+    const handleErrors = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        let hasErrors = false;
+        const newErrors: any = {};
+
+        if (!formData.email) {
+            newErrors.email = 'Pole Email nie może być puste';
+            hasErrors = true;
+        } else if (!validateEmail(formData.email)) {
+            newErrors.email = 'Podaj prawidłowy adres email';
+            hasErrors = true;
+        }
+
+        if (!formData.password) {
+            newErrors.password = 'Pole Hasło nie może być puste';
+            hasErrors = true;
+        } else if (!validatePassword(formData.password)) {
+            newErrors.password =
+                'Hasło powinno zawierać minimum 6 znaków, jedną dużą literę, jedną małą literę, jedną cyfrę i jeden znak specjalny';
+            hasErrors = true;
+        }
+
+        if (!formData.name) {
+            newErrors.name = 'Pole Imię nie może być puste';
+            hasErrors = true;
+        } else if (/\d/.test(formData.name)) {
+            newErrors.name = 'Imię nie może zawierać cyfr';
+            hasErrors = true;
+        }
+
+        if (!formData.surname) {
+            newErrors.surname = 'Pole Nazwisko nie może być puste';
+            hasErrors = true;
+        } else if (/\d/.test(formData.surname)) {
+            newErrors.surname = 'Nazwisko nie może zawierać cyfr';
+            hasErrors = true;
+        }
+
+        if (!formData.phoneNumber) {
+            newErrors.phoneNumber = 'Pole Numer telefonu nie może być puste'
+            hasErrors = true;
+        } else if (!validatePhoneNumber(formData.phoneNumber)) {
+            newErrors.phoneNumber = 'Numer telefonu powinien składać się tylko z cyfr i mieć maksymalnie 9 cyfr';
+            hasErrors = true;
+        }
+
+        if (!formData.address.state) {
+            newErrors.address = { ...newErrors.address, state: 'Pole Województwo nie może być puste' };
+            hasErrors = true;
+          }
+      
+          if (!formData.address.city) {
+            newErrors.address = { ...newErrors.address, city: 'Pole Miasto nie może być puste' };
+            hasErrors = true;
+          }
+      
+          if (!formData.address.street) {
+            newErrors.address = { ...newErrors.address, street: 'Pole Ulica nie może być puste' };
+            hasErrors = true;
+          }
+      
+          if (!formData.address.postCode) {
+            newErrors.address = { ...newErrors.address, postCode: 'Pole Kod pocztowy nie może być puste' };
+            hasErrors = true;
+          }
+
+          if (!formData.address.apartment) {
+            newErrors.address = { ...newErrors.address, apartment: 'Pole Numer domu nie może być puste' };
+            hasErrors = true;
+          }
+
+        setErrors(newErrors);
+
+        if(!hasErrors){
+            registerNewUser();
+        }
+    }
+
     const postUser = () => {
         const postData = isFacebookLogging ? facebookFormData : formData;
         axios
             .post('http://localhost:8080/persons', postData)
             .then((response) => {
-                console.log(response.data);
                 localStorage.setItem('user', JSON.stringify(response.data));
                 navigate('/loginhome');
             })
             .catch((error) => {
                 console.log(error.response.data);
-                setErrorMessages([error.response.data]);
+                if(error.response.data === 'Email already exists'){
+                    alert('Podany email już istnieje');
+                }
             });
     }
 
@@ -129,27 +233,8 @@ const Register = () => {
     const registerNewUser = () => {
         if (isFacebookLogging === true) {
             registerFacebookUser();
-            if (!validateFieldsDialog()) {
-                return;
-            }
+
             handleCloseDialog();
-        } else {
-            setErrorMessages([]);
-            const emptyFields = Object.entries(formData).filter(([key, value]) => {
-                if (typeof value === 'string') {
-                    return value.trim() === '';
-                } else if (typeof value === 'object') {
-                    return Object.values(value).some((addressFieldValue) => String(addressFieldValue).trim() === '');
-                }
-                return false;
-            });
-
-            const emptyFieldNames = emptyFields.map(([key]) => key);
-            setErrorMessages([...emptyFieldNames, 'Wprowadź wartości w powyższych polach']);
-
-            if (emptyFields.length > 0) {
-                return;
-            }
         }
 
         postUser();
@@ -197,191 +282,145 @@ const Register = () => {
                             onChangeForm={onChangeForm}
                             facebookFormData={facebookFormData}
                         />
-
-
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            label="Adres email"
-                            value={formData.email}
-                            onChange={(e) => onChangeForm('email', e.target.value)}
-                            error={
-                                errorMessages.includes('Email already exists') ||
-                                errorMessages.includes('email')
-                            }
-                            helperText={
-                                errorMessages.includes('Email already exists') ?
-                                    'Konto o podanym emailu już istnieje' :
-                                    errorMessages.includes('email') ?
-                                        'Pole nie może być puste' :
-                                        ''
-                            }
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            type={isPasswordShown ? 'text' : 'password'}
-                            id="password"
-                            label="Hasło"
-                            name="password"
-                            autoComplete="password"
-                            value={formData.password}
-                            onChange={(e) => onChangeForm('password', e.target.value)}
-                            error={errorMessages.includes('password')}
-                            helperText={
-                                errorMessages.includes('password') ? 'Pole nie może być puste' : ''
-                            }
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="name"
-                            label="Imie"
-                            name="name"
-                            autoComplete="Imie"
-                            value={formData.name}
-                            onChange={(e) => onChangeForm('name', e.target.value)}
-                            error={errorMessages.includes('name')}
-                            helperText={
-                                errorMessages.includes('name') ? 'Pole nie może być puste' : ''
-                            }
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="surname"
-                            label="Nazwisko"
-                            name="surname"
-                            autoComplete="Nazwisko"
-                            value={formData.surname}
-                            onChange={(e) => onChangeForm('surname', e.target.value)}
-                            error={errorMessages.includes('surname')}
-                            helperText={
-                                errorMessages.includes('surname') ? 'Pole nie może być puste' : ''
-                            }
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="phoneNumber"
-                            label="Numer telefonu"
-                            name="phoneNumber"
-                            autoComplete="Numer telefonu"
-                            value={formData.phoneNumber}
-                            onChange={(e) => onChangeForm('phoneNumber', e.target.value)}
-                            error={errorMessages.includes('phoneNumber')}
-                            helperText={
-                                errorMessages.includes('phoneNumber') ? 'Pole nie może być puste' : ''
-                            }
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="state"
-                            label="Wojewójdztwo"
-                            name="state"
-                            autoComplete="Województwo"
-                            value={formData.address.state}
-                            onChange={(e) =>
-                                onChangeForm('address', { ...formData.address, state: e.target.value })
-                            }
-                            error={errorMessages.includes('address.state')}
-                            helperText={
-                                errorMessages.includes('address.state') ? 'Pole nie może być puste' : ''
-                            }
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="city"
-                            label="Miasto"
-                            name="city"
-                            autoComplete="Miasto"
-                            value={formData.address.city}
-                            onChange={(e) =>
-                                onChangeForm('address', { ...formData.address, city: e.target.value })
-                            }
-                            error={errorMessages.includes('address.city')}
-                            helperText={
-                                errorMessages.includes('address.city') ? 'Pole nie może być puste' : ''
-                            }
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="street"
-                            label="Ulica"
-                            name="street"
-                            autoComplete="Ulica"
-                            value={formData.address.street}
-                            onChange={(e) =>
-                                onChangeForm('address', { ...formData.address, street: e.target.value })
-                            }
-                            error={errorMessages.includes('address.street')}
-                            helperText={
-                                errorMessages.includes('address.street') ? 'Pole nie może być puste' : ''
-                            }
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="postCode"
-                            label="Kod pocztowy"
-                            name="postCode"
-                            autoComplete="Kod pocztowy"
-                            value={formData.address.postCode}
-                            onChange={(e) =>
-                                onChangeForm('address', { ...formData.address, postCode: e.target.value })
-                            }
-                            error={errorMessages.includes('address.postCode')}
-                            helperText={
-                                errorMessages.includes('address.postCode') ? 'Pole nie może być puste' : ''
-                            }
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="apartment"
-                            label="Numer domu"
-                            name="apartment"
-                            autoComplete="Numer domu"
-                            value={formData.address.apartment}
-                            onChange={(e) =>
-                                onChangeForm('address', { ...formData.address, apartment: e.target.value })
-                            }
-                            error={errorMessages.includes('address.apartment')}
-                            helperText={
-                                errorMessages.includes('address.apartment') ? 'Pole nie może być puste' : ''
-                            }
-                        />
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    value={isPasswordShown}
-                                    onChange={() => setPasswordIsShown(!isPasswordShown)}
-                                    color="primary"
-                                />
-                            }
-                            label="Pokaż hasło"
-                        />
-                        <Button
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                            onClick={registerNewUser}
-                        >
-                            Zarejestruj się
-                        </Button>
+                        <form>
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                label="Adres email"
+                                value={formData.email}
+                                onChange={(e) => onChangeForm('email', e.target.value)}
+                            />
+                            {errors.email && <span>{errors.email}</span>}
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                type={isPasswordShown ? 'text' : 'password'}
+                                id="password"
+                                label="Hasło"
+                                name="password"
+                                autoComplete="password"
+                                value={formData.password}
+                                onChange={(e) => onChangeForm('password', e.target.value)}
+                            />
+                            {errors.password && <span>{errors.password}</span>}
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="name"
+                                label="Imie"
+                                name="name"
+                                autoComplete="Imie"
+                                value={formData.name}
+                                onChange={(e) => onChangeForm('name', e.target.value)}
+                            />
+                            {errors.name && <span>{errors.name}</span>}
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="surname"
+                                label="Nazwisko"
+                                name="surname"
+                                autoComplete="Nazwisko"
+                                value={formData.surname}
+                                onChange={(e) => onChangeForm('surname', e.target.value)}
+                            />
+                            {errors.surname && <span>{errors.surname}</span>}
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="phoneNumber"
+                                label="Numer telefonu"
+                                name="phoneNumber"
+                                autoComplete="Numer telefonu"
+                                value={formData.phoneNumber}
+                                onChange={(e) => onChangeForm('phoneNumber', e.target.value)}
+                            />
+                            {errors.phoneNumber && <span>{errors.phoneNumber}</span>}
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="state"
+                                label="Wojewójdztwo"
+                                name="state"
+                                autoComplete="Województwo"
+                                value={formData.address.state}
+                                onChange={handleAddressChange}
+                            />
+                            {errors.address && errors.address.state && <span>{errors.address.state}</span>}
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="city"
+                                label="Miasto"
+                                name="city"
+                                autoComplete="Miasto"
+                                value={formData.address.city}
+                                onChange={handleAddressChange}
+                            />
+                            {errors.address && errors.address.city && <span>{errors.address.city}</span>}
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="street"
+                                label="Ulica"
+                                name="street"
+                                autoComplete="Ulica"
+                                value={formData.address.street}
+                                onChange={handleAddressChange}
+                            />
+                            {errors.address && errors.address.street && <span>{errors.address.street}</span>}
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="postCode"
+                                label="Kod pocztowy"
+                                name="postCode"
+                                autoComplete="Kod pocztowy"
+                                value={formData.address.postCode}
+                                onChange={handleAddressChange}
+                            />
+                            {errors.address && errors.address.postCode && <span>{errors.address.postCode}</span>}
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="apartment"
+                                label="Numer domu"
+                                name="apartment"
+                                autoComplete="Numer domu"
+                                value={formData.address.apartment}
+                                onChange={handleAddressChange}
+                            />
+                            {errors.address && errors.address.apartment && <span>{errors.address.apartment}</span>}
+                            <br />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        value={isPasswordShown}
+                                        onChange={() => setPasswordIsShown(!isPasswordShown)}
+                                        color="primary"
+                                    />
+                                }
+                                label="Pokaż hasło"
+                            />
+                            <Button
+                                fullWidth
+                                variant="contained"
+                                sx={{ mt: 3, mb: 2 }}
+                                onClick={handleErrors}
+                            >
+                                Zarejestruj się
+                            </Button>
+                        </form>
                         <LoginSocialFacebook
                             appId={process.env.REACT_APP_FACEBOOK_ID ?? ""}
                             fieldsProfile='email, first_name, last_name'

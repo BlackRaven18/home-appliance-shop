@@ -290,10 +290,8 @@ const Register = () => {
                             handleCloseDialog={handleCloseDialog}
                             onChangeForm={onChangeForm}
                             handleAddressChange={handleAddressChange}
-                            //handleErrors={handleErrors}
                             facebookFormData={facebookFormData}
                             registerNewUser={registerNewUser}
-                            //errors={errors}
                         />
                         <form>
                             <TextField

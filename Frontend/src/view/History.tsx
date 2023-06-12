@@ -1,11 +1,10 @@
 
-import { Typography, Box, Divider, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import TopBar from '../TopBar/TopBar';
-import { useEffect, useState } from 'react';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Typography } from '@mui/material';
 import axios from 'axios';
+import { useEffect, useState } from 'react';
 import PriceFormatter from '../PriceFormattingUtils/PriceFormatter';
-import { validateLocaleAndSetLanguage } from 'typescript';
+import TopBar from '../TopBar/TopBar';
 import UserDataManager from '../UserDataManager/UserDataManager';
 
 interface HistoryI {

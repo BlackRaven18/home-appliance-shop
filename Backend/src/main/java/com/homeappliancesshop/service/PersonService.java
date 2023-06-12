@@ -1,6 +1,5 @@
 package com.homeappliancesshop.service;
 
-import com.homeappliancesshop.model.Admin;
 import com.homeappliancesshop.model.Person;
 import com.homeappliancesshop.model.Transaction;
 import com.homeappliancesshop.model.TransactionsHistory;
@@ -93,7 +92,7 @@ public class PersonService {
     public Person getAdminByLoginDatas(String email, String password) {
         if(repository.findByEmail(email) != null){
             Person admin = repository.findByEmail(email);
-            //if (admin.getPassword().equals(password)) {
+
             if(bCryptPasswordEncoder.matches(password, admin.getPassword())){
                 return admin;
             }

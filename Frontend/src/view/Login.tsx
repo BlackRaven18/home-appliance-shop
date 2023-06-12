@@ -51,8 +51,6 @@ const Login = () => {
         password: '',
     });
 
-    const dispatch = useDispatch();
-
     const handleFacebookLogin = (facebookResponse: FacebookResponseI) => {
         axios
             .post('http://localhost:8080/persons/login',
@@ -98,22 +96,16 @@ const Login = () => {
         const postData = formData;
 
         await axios
-            .post('http://localhost:8080/persons/login', postData, {
-                auth: {
-
-                    // username: "admin",
-                    // password: "admin"
-                    username: postData.email,
-                    password: postData.password
-                }
-            })
+            .post('http://localhost:8080/persons/login', postData)
             .then((response) => {
-                console.log("ujajajajjaja")
+
                 UserDataManager.setId(response.data);
                 UserDataManager.setUsername(postData.email);
                 UserDataManager.setPassword(postData.password);
 
                 UserDataManager.TEST_printData();
+
+                navigate('/loginhome');
 
             })
             .catch((error) => {

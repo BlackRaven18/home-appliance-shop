@@ -5,6 +5,7 @@ import com.homeappliancesshop.model.Transaction;
 import com.homeappliancesshop.model.TransactionsHistory;
 import com.homeappliancesshop.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +23,9 @@ public class PersonService {
     @Autowired
     private TransactionsHistoryService transactionsHistoryService;
 
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     public List<Person> findAllPersons() {
         return repository.findAll();
     }
@@ -34,6 +38,10 @@ public class PersonService {
         addressService.addAddress(person.getAddress());
         TransactionsHistory transactionsHistory = transactionsHistoryService.addTransactionsHistory(new TransactionsHistory());
         person.setTransactionsHistory(transactionsHistory);
+
+        String encryptedPassword = bCryptPasswordEncoder.encode(person.getPassword());
+        person.setPassword(encryptedPassword);
+
         return repository.save(person);
     }
 
@@ -70,7 +78,10 @@ public class PersonService {
     public Person getPersonByLoginDatas(String email, String password) {
         if(repository.findByEmail(email) != null){
             Person person = repository.findByEmail(email);
-            if (person.getPassword().equals(password)) {
+
+
+            //if (person.getPassword().equals(password)) {
+            if(bCryptPasswordEncoder.matches(password, person.getPassword())){
                 return person;
             }
             return null;

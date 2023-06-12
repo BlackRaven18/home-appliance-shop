@@ -19,6 +19,7 @@ import {
     ListItem,
 } from '@mui/material';
 import UserDataManager from '../UserDataManager/UserDataManager';
+import ErrorHandler from './ErrorHandler';
 
 
 const theme = createTheme();
@@ -84,12 +85,7 @@ export default function AdminLogin() {
                 }
             })
             .catch((error) => {
-                switch(error.response.status){
-                    case 401: setServerErrorMessage("Nie znaleziono użytkownika: Error 401"); break;
-                    case 403: setServerErrorMessage("Brak dostępu: Error 403"); break;
-                    case 404: setServerErrorMessage("Nie znaleziono: Error 404"); break;
-                }
-               
+                setServerErrorMessage(ErrorHandler.getErrorMessage(error.response.status));
             });
     };
 

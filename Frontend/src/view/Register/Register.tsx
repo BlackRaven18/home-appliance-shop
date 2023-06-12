@@ -118,14 +118,24 @@ const Register = () => {
 
     const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-    
-        setFormData((prevState) => ({
-          ...prevState,
-          address: {
-            ...prevState.address,
-            [name]: value,
-          },
-        }));
+      
+        if (isFacebookLogging) {
+          setFacebookFormData((prevFacebookData) => ({
+            ...prevFacebookData,
+            address: {
+              ...prevFacebookData.address,
+              [name]: value,
+            },
+          }));
+        } else {
+          setFormData((prevFormData) => ({
+            ...prevFormData,
+            address: {
+              ...prevFormData.address,
+              [name]: value,
+            },
+          }));
+        }
       };
 
     const handleErrors = (e: React.FormEvent) => {
@@ -278,9 +288,12 @@ const Register = () => {
                         <FacebookRegisterDialog
                             openDialog={openDialog}
                             handleCloseDialog={handleCloseDialog}
-                            registerNewUser={registerNewUser}
                             onChangeForm={onChangeForm}
+                            handleAddressChange={handleAddressChange}
+                            //handleErrors={handleErrors}
                             facebookFormData={facebookFormData}
+                            registerNewUser={registerNewUser}
+                            //errors={errors}
                         />
                         <form>
                             <TextField

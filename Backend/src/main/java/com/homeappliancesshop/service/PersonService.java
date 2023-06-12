@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,6 +39,10 @@ public class PersonService {
         addressService.addAddress(person.getAddress());
         TransactionsHistory transactionsHistory = transactionsHistoryService.addTransactionsHistory(new TransactionsHistory());
         person.setTransactionsHistory(transactionsHistory);
+
+        ArrayList<String> roles = new ArrayList<>();
+        roles.add("ROLE_USER");
+        person.setRoles(roles);
 
         String encryptedPassword = bCryptPasswordEncoder.encode(person.getPassword());
         person.setPassword(encryptedPassword);

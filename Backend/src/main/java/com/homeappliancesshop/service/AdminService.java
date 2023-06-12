@@ -3,6 +3,7 @@ package com.homeappliancesshop.service;
 import com.homeappliancesshop.model.Admin;
 import com.homeappliancesshop.repository.AdminRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,6 +12,9 @@ import java.util.List;
 public class AdminService {
     @Autowired
     private AdminRepository repository;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public List<Admin> findAllAdmins() {
         return repository.findAll();
@@ -43,7 +47,8 @@ public class AdminService {
     public Admin getAdminByLoginDatas(String email, String password) {
         if(repository.findByEmail(email) != null){
             Admin admin = repository.findByEmail(email);
-            if (admin.getPassword().equals(password)) {
+            //if (admin.getPassword().equals(password)) {
+            if(bCryptPasswordEncoder.matches(password, admin.getPassword())){
                 return admin;
             }
             return null;

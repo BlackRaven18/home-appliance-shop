@@ -1,125 +1,126 @@
-import { Button, TextField } from "@mui/material";
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Accordion, AccordionDetails, AccordionSummary, Box, Typography } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import { useState, useEffect } from "react";
 import axios from 'axios';
-import { useEffect, useState } from 'react';
-import PriceFormatter from '../../PriceFormattingUtils/PriceFormatter';
-import UserDataManager from '../../UserDataManager/UserDataManager';
+import PersonInterface from "../shared/PersonInterface";
+import { Button, TextField, Box } from "@mui/material";
+import Grid from "@mui/material/Grid";
 
-interface HistoryI {
-    transactionId: string,
-    transactions: TransactionI[],
+interface TransactionInterface {
+    date: string;
+    status: string;
 }
 
-interface TransactionI {
-    date: string,
-    status: string,
-    totalAmount: number,
-    deliveryMethod: string,
-    products: ProductsInTransactionI[],
+interface ExtendedPersonInterface extends PersonInterface {
+    personId: string;
+    transactions_history: TransactionInterface[];
 }
 
-interface ProductsInTransactionI {
-    productId: string,
-    price: number,
-    quantity: number,
-    name: string,
-    imageURL: string,
-}
+const ManagePayments = () => {
+    const [people, setPeople] = useState<ExtendedPersonInterface[]>([]);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [currentPerson, setCurrentPerson] = useState<ExtendedPersonInterface | null>(null);
+    const [approvedTransactions, setApprovedTransactions] = useState<string[]>([]);
 
-function ManagePayments() {
-
-    const [history, setHistory] = useState<HistoryI>();
-    const userId = UserDataManager.getUserId();
-    const [selectedTransactionId, setSelectedTransactionId] = useState<string | null>(null);
 
     useEffect(() => {
-        getHistory();
+        getUsers();
     }, []);
 
-    const getHistory = async () => {
-
-        await axios
-            .get(process.env.REACT_APP_BACKEND_URL + "/persons/"
-                + userId + "/paymenthistory", {
-                auth: {
-                    username: UserDataManager.getUsername(),
-                    password: UserDataManager.getPassword()
-                }
-            })
+    const getUsers = () => {
+        axios
+            .get(`${process.env.REACT_APP_BACKEND_URL}/persons`)
             .then((response) => {
-                console.log("response in history:" + response.data)
-                setHistory(response.data);
+                setPeople(response.data);
             })
-            .catch((error) => {
+            .catch(function (error) {
                 console.log(error);
-            })
+            });
+    };
 
-    }
+    const handleSearchTermChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchTerm(event.target.value);
+    };
+
+    const filteredPeople = people.filter((person) => {
+        const fullName = `${person.name} ${person.surname}`;
+        return fullName.toLowerCase().includes(searchTerm.toLowerCase());
+    });
+
+    const handleTransactionApproval = (personId: string, date: string) => {
+        // Znajdź osobę na podstawie personId
+        const person = people.find((person) => person.personId === personId);
+
+        if (person) {
+            // Znajdź transakcję w historii transakcji osoby na podstawie daty
+            const transaction = person.transactions_history.find((transaction) => transaction.date === date);
+
+            if (transaction) {
+                // Zaktualizuj status transakcji na "manually-accepted"
+                transaction.status = 'manually-accepted';
+
+                // Dodaj transakcję do zatwierdzonych transakcji
+                setApprovedTransactions([...approvedTransactions, `${personId}_${date}`]);
+            }
+        }
+    };
 
     return (
-        <div>
-            {history ? (
-                history.transactions.map((transaction) => (
-                    <Box
-                        sx={{
-                            border: '1px solid grey',
-                            padding: '15px',
-                            marginLeft: 'auto',
-                            marginRight: 'auto',
-                            marginBottom: '15px',
-                            borderRadius: '8px',
-                            width: '90%',
-                        }}
-                    >
-                        <Typography>Data: {transaction.date}</Typography>
-                        <Typography>Status: {transaction.status}</Typography>
-                        <Typography>Metoda dostawy: {transaction.deliveryMethod}</Typography>
-                        <Typography>Kwota zamówienia: {PriceFormatter.getFormattedPrice(transaction.totalAmount)}</Typography>
-                        <Typography
-                            variant='h5'
-                            margin="10px"
-                        >
-                            Produkty w zamówieniu
-                        </Typography>
-                        {transaction.products.map((product) => (
-                            <Box>
-                                <Accordion>
-                                    <AccordionSummary
-                                        expandIcon={<ExpandMoreIcon />}
-                                        aria-controls="panel1a-content"
-                                        id="panel1a-header"
-                                    >
-                                        <Typography>Produkt {product.name}</Typography>
-                                    </AccordionSummary>
-                                    <AccordionDetails>
-                                        <Typography>Id produktu: {product.productId}</Typography>
-                                        <Typography>Cena: {PriceFormatter.getFormattedPrice(product.price)}</Typography>
-                                        <Typography>Ilosc: {product.quantity}</Typography>
-                                        <Typography>Obrazek: {product.imageURL}</Typography>
-                                    </AccordionDetails>
-                                </Accordion>
-                            </Box>
-                        ))}
-                        {transaction.status === 'failed' && (
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                style={{ marginTop: '10px' }}
-                            >
-                                Zatwierdź
-                            </Button>
+        <>
+            <Box display="flex" flexDirection={{ xs: 'column', sm: 'row' }} gap={2}>
+                <Box flex="1">
+                    <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+                        <TextField
+                            label="Wyszukaj osobę"
+                            variant="outlined"
+                            value={searchTerm}
+                            onChange={handleSearchTermChange}
+                            style={{ marginTop: '20px' }}
+                        />
+                        {filteredPeople.length === 0 ? (
+                            <Typography>Nie znaleziono osób spełniających kryteria wyszukiwania</Typography>
+                        ) : (
+                            filteredPeople.map((person, index) => (
+                                <div key={index} style={{
+                                    border: '1px solid #ccc',
+                                    borderRadius: '5px',
+                                    padding: '10px',
+                                    margin: '20px'
+                                }}>
+                                    <p style={{ fontSize: '20px' }}><strong>Imię:</strong> {person ? person.name : 'unknown'}</p>
+                                    <p style={{ fontSize: '20px' }}><strong>Nazwisko:</strong> {person ? person.surname : 'unknown'}</p>
+                                    <p style={{ fontSize: '20px' }}><strong>Email:</strong> {person ? person.email : 'unknown'}</p>
+                                    <p style={{ fontSize: '20px' }}><strong>Numer telefonu:</strong> {person ? person.phoneNumber : 'unknown'}</p>
+                                    {person.transactions_history && person.transactions_history.length > 0 ? (
+                                        person.transactions_history.map((transaction, transactionIndex) => (
+                                            <div key={transactionIndex} style={{ marginTop: '10px' }}>
+                                                <p style={{ fontSize: '16px' }}><strong>Data transakcji:</strong> {transaction.date}</p>
+                                                <p style={{ fontSize: '16px' }}><strong>Status transakcji:</strong> {transaction.status}</p>
+                                                {transaction.status === 'failed' && (
+                                                    <Button
+                                                        variant="contained"
+                                                        color="primary"
+                                                        size="small"
+                                                        onClick={() => handleTransactionApproval(person.personId, transaction.date)}
+                                                        disabled={approvedTransactions.includes(`${person.personId}_${transaction.date}`)}
+                                                    >
+                                                        Zatwierdź
+                                                    </Button>
+
+                                                )
+                                                }
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <p>Brak historii transakcji dla tej osoby.</p>
+                                    )}
+                                </div>
+                            ))
                         )}
-                    </Box>
-                ))
-            ) : (
-                <p></p>
-            )}
-
-
-
-        </div>
+                    </div>
+                </Box>
+            </Box>
+        </>
     );
-}
+};
 
 export default ManagePayments;

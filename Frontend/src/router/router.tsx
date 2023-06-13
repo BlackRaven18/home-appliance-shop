@@ -12,12 +12,17 @@ import Login from './../view/Login';
 import ShoppingCart from './../view/ShoppingCart/ShoppingCart';
 import ProtectedElement from "./ProtectedElement";
 import LoginHome from "../view/Home/LoginHome";
+import NotFoundView from "../view/NotFoundView";
 
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <Home />,
+    },
+    {
+        path: "*",
+        element: <NotFoundView/>
     },
     {
         path: "/login",
@@ -38,17 +43,10 @@ const router = createBrowserRouter([
     {
         path: "/loginhome",
         element: <ProtectedElement element={<LoginHome/>} redirectPath="/login" />
-        //<LoginHome/>
-        // element:<ProtectedRoute redirectPath="/login" children={<LoginHome/>}/> 
-        // //<LoginHome />,
     },
     {
         path: "/adminhome",
-        element: <AdminHome />,
-    },
-    {
-        path: "/adminlogin",
-        element: <AdminLogin />,
+        element: <ProtectedElement element={<AdminHome/>} redirectPath="/adminlogin" /> 
     },
     {
         path: "/adminlogin",
@@ -56,24 +54,25 @@ const router = createBrowserRouter([
     },
     {
         path: "/shoppingcart",
-        element: <ShoppingCart />,
+        element: <ProtectedElement element={<ShoppingCart/>} redirectPath="/login" />
     },
     {
         path: "/summary",
-        element: <Summary />,
+        element: <ProtectedElement element={<Summary/>} redirectPath="/login" /> 
     },
     {
         path: "/history",
-        element: <History />,
+        element: <ProtectedElement element={<History/>} redirectPath="/login" />
     },
     {
         path: "/profil",
-        element: <Profil />,
+        element: <ProtectedElement element={<Profil/>} redirectPath="/login" /> 
     },
     {
         path: "/adminprofil",
-        element: <AdminProfil />,
+        element: <ProtectedElement element={<AdminProfil/>} redirectPath="/adminlogin" /> 
     },
+    
 ]);
 
 

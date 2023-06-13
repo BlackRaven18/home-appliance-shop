@@ -1,11 +1,8 @@
-import {
-    createBrowserRouter,
-} from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import AdminHome from '../view/AdminHome/AdminHome';
 import AdminLogin from '../view/AdminLogin';
 import History from '../view/History';
 import Home from '../view/Home/Home';
-import LoginHome from '../view/Home/LoginHome';
 import ProductDetails from "../view/ProductDetails/ProductDetails";
 import AdminProfil from '../view/Profil/AdminProfil';
 import Profil from '../view/Profil/Profil';
@@ -13,6 +10,9 @@ import Register from '../view/Register/Register';
 import Summary from "../view/Summary/Summary";
 import Login from './../view/Login';
 import ShoppingCart from './../view/ShoppingCart/ShoppingCart';
+import ProtectedElement from "./ProtectedElement";
+import LoginHome from "../view/Home/LoginHome";
+
 
 const router = createBrowserRouter([
     {
@@ -37,7 +37,10 @@ const router = createBrowserRouter([
     },
     {
         path: "/loginhome",
-        element: <LoginHome />,
+        element: <ProtectedElement element={<LoginHome/>} redirectPath="/login" />
+        //<LoginHome/>
+        // element:<ProtectedRoute redirectPath="/login" children={<LoginHome/>}/> 
+        // //<LoginHome />,
     },
     {
         path: "/adminhome",
@@ -72,5 +75,6 @@ const router = createBrowserRouter([
         element: <AdminProfil />,
     },
 ]);
+
 
 export default router;

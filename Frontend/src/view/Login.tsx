@@ -19,6 +19,7 @@ import React, { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { FacebookLoginButton } from 'react-social-login-buttons';
 import { IResolveParams, LoginSocialFacebook } from 'reactjs-social-login';
+import UserDataManager from '../UserDataManager/UserDataManager';
 
 const theme = createTheme();
 
@@ -62,7 +63,13 @@ const Login = () => {
                     password: facebookResponse.id,
                 })
             .then((response) => {
-                localStorage.setItem('user', response.data);
+
+                UserDataManager.setId(response.data);
+                UserDataManager.setUsername(facebookResponse.email);
+                UserDataManager.setPassword(facebookResponse.id);
+
+                UserDataManager.TEST_printData();
+
                 navigate('/loginhome');
             })
             .catch((error) => {
@@ -90,7 +97,7 @@ const Login = () => {
         }
         setErrors(newErrors);
 
-        if(!hasErrors){
+        if (!hasErrors) {
             loginUser();
         }
     }
@@ -105,13 +112,21 @@ const Login = () => {
             [key]: value,
         }));
     };
+    const postUser = async () => {
+        const postData = formData;
 
-    const postUser = () => {
-        axios
-            .post('http://localhost:8080/persons/login', formData)
+        await axios
+            .post('http://localhost:8080/persons/login', postData)
             .then((response) => {
-                localStorage.setItem('user', response.data);
+
+                UserDataManager.setId(response.data);
+                UserDataManager.setUsername(postData.email);
+                UserDataManager.setPassword(postData.password);
+
+                UserDataManager.TEST_printData();
+
                 navigate('/loginhome');
+
             })
             .catch((error) => {
                 alert('Nieprawidłowe dane logowania lub użytkownik nie istnieje');
@@ -199,7 +214,7 @@ const Login = () => {
                                 Zaloguj
                             </Button>
                             <LoginSocialFacebook
-                                appId={process.env.REACT_APP_FACEBOOK_ID?? ""}
+                                appId={process.env.REACT_APP_FACEBOOK_ID ?? ""}
                                 onResolve={({ provider, data }: IResolveParams) => {
                                     if (data) {
                                         handleFacebookLogin({

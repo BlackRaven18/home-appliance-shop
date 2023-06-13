@@ -24,7 +24,6 @@ const ProductList = ({ categoryId }: ProductListProps) => {
             .get(process.env.REACT_APP_BACKEND_URL + "/products")
             .then(function (response) {
                 setProducts(response.data);
-                console.log(response.data);
             })
             .catch(function (error) {
                 console.log(error);

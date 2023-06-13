@@ -2,20 +2,18 @@ import { Toolbar, Typography } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
 import { Link, useNavigate } from "react-router-dom";
+import UserDataManager from '../UserDataManager/UserDataManager';
 
 export default function AdminTopBar() {
 
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        localStorage.removeItem("user");
-        if (localStorage.getItem("user") === null) {
-            navigate('/login');
-            console.log("Logged out");
-        }
-        else {
-            console.error("An error occurred while logging out");
-        }
+
+        UserDataManager.clearData();
+        
+        navigate('/adminLogin');
+        console.log("Logged out");
     }
 
     return (
@@ -27,12 +25,6 @@ export default function AdminTopBar() {
 
                 <Button color="inherit" component={Link} to="/AdminHome">
                     Strona główna
-                </Button>
-                <Button color="inherit" component={Link} to="/login">
-                    Logowanie
-                </Button>
-                <Button color="inherit" component={Link} to="/register">
-                    Rejestracja
                 </Button>
                 <Button color="inherit" component={Link} to="/adminprofil">
                     Profil

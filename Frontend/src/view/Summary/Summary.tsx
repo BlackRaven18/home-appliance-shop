@@ -19,12 +19,13 @@ import { RootState } from "../../redux/store";
 import SummaryTopBar from "../../TopBar/SummaryTopBar";
 import SummaryProductElement from './SummaryProductElement';
 import PriceFormatter from "../../PriceFormattingUtils/PriceFormatter";
+import UserDataManager from "../../UserDataManager/UserDataManager";
 
 interface TokenI {
     id: string;
 }
 
-interface PaymentStatusDTO{
+interface PaymentStatusDTO {
     status: string,
     message: string,
 }
@@ -38,7 +39,7 @@ function Summary() {
     const navigate = useNavigate();
 
     const [deliveryMethod, setDeliveryMethod] = useState<String>('odbior-osobisty');
-    const buyerId = localStorage.getItem('user');
+    const buyerId = UserDataManager.getUserId();
 
     const handleSelectShippingMethod = (deliveryMethod: String) => {
         setDeliveryMethod(deliveryMethod)
@@ -70,24 +71,29 @@ function Summary() {
                 deliveryMethod,
                 productDetailsDTO,
 
-            }, {
-            headers: {
-                token: token.id,
             },
+            {
+                auth: {
+                    username: UserDataManager.getUsername(),
+                    password: UserDataManager.getPassword()
+                },
 
-        }).then((response) => {
-            console.log(response);
-            console.log(buyerId);
-            if(response.data.status === 'failed'){
-                handleFailedTransaction(response.data)
-            }else{
-                handleSuccessfulTransaction();
-            }
+                headers: {
+                    token: token.id,
+                },
 
-        }).catch((error) => {
-            console.log(buyerId);
-            alert(error);
-        });
+            }).then((response) => {
+                console.log(response.data);
+                if (response.data.status === 'failed') {
+                    handleFailedTransaction(response.data)
+                } else {
+                    handleSuccessfulTransaction();
+                }
+
+            }).catch((error) => {
+                console.log(buyerId);
+                alert(error);
+            });
     }
 
 
@@ -177,7 +183,7 @@ function Summary() {
                             currency="PLN"
                             panelLabel="Zapłać"
                             image={require('../logo.jpg')}
-                            
+
                         />
                     </Box>
                 ) : (

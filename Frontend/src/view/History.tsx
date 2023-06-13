@@ -1,10 +1,11 @@
 
-import { Typography, Box, Divider, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import TopBar from '../TopBar/TopBar';
-import { useEffect, useState } from 'react';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Typography } from '@mui/material';
 import axios from 'axios';
+import { useEffect, useState } from 'react';
 import PriceFormatter from '../PriceFormattingUtils/PriceFormatter';
+import TopBar from '../TopBar/TopBar';
+import UserDataManager from '../UserDataManager/UserDataManager';
 
 interface HistoryI {
     transactionId: string,
@@ -30,7 +31,7 @@ interface ProductsInTransactionI {
 function History() {
 
     const [history, setHistory] = useState<HistoryI>();
-    const userId = localStorage.getItem('user');
+    const userId = UserDataManager.getUserId();
 
     useEffect(() => {
         getHistory();
@@ -40,8 +41,14 @@ function History() {
 
         await axios
             .get(process.env.REACT_APP_BACKEND_URL + "/persons/"
-                + userId + "/paymenthistory")
+                + userId + "/paymenthistory", {
+                auth: {
+                    username: UserDataManager.getUsername(),
+                    password: UserDataManager.getPassword()
+                }
+            })
             .then((response) => {
+                console.log("response in history:" + response.data)
                 setHistory(response.data);
             })
             .catch((error) => {

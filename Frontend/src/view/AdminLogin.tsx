@@ -18,6 +18,8 @@ import {
     List,
     ListItem,
 } from '@mui/material';
+import UserDataManager from '../UserDataManager/UserDataManager';
+import ErrorHandler from './ErrorHandler';
 
 
 const theme = createTheme();
@@ -40,7 +42,8 @@ export default function AdminLogin() {
         password: '',
     })
 
-    const [isPasswordShown, setPasswordIsShown] = useState(false);
+    const [isPasswordShown, setPasswordIsShown] = useState(false)
+
 
     const onChangeForm = (key: string, value: any) => {
         setFormData((prevFormData) => ({
@@ -81,10 +84,19 @@ export default function AdminLogin() {
 
     const loginAdmin = () => {
         axios
-            .post('http://localhost:8080/admin/login', formData)
+            .post('http://localhost:8080/admin/login', formData, {
+                auth: {
+                    username: formData.email,
+                    password: formData.password
+                }
+            })
             .then((response) => {
+
                 if (response.data) {
-                    localStorage.setItem('admin', response.data);
+                    UserDataManager.setId(response.data);
+                    UserDataManager.setUsername(formData.email);
+                    UserDataManager.setPassword(formData.password);
+
                     navigate('/adminhome');
                 } else {
                     console.log('Empty response data');

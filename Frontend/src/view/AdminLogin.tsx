@@ -31,13 +31,16 @@ interface Admin {
 
 export default function AdminLogin() {
     const navigate = useNavigate();
+
     const [formData, setFormData] = useState<Admin>({
         email: '',
         password: '',
     });
 
-    const [serverErrorMessage, setServerErrorMessage] = useState('');
-    const [errorMessages, setErrorMessages] = useState<string[]>([]);
+    const [errors, setErrors] = useState<Admin>({
+        email: '',
+        password: '',
+    })
 
     const [isPasswordShown, setPasswordIsShown] = useState(false)
 
@@ -49,23 +52,38 @@ export default function AdminLogin() {
         }));
     };
 
-    const loginAdmin = async () => {
-        setErrorMessages([]);
+    const validateEmail = (value: string) => {
+        const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+        return emailRegex.test(value);
+    }
 
-        const emptyFields = Object.entries(formData).filter(([key, value]) => {
-            if (typeof value === 'string') {
-                return value.trim() === '';
-            }
-            return false;
-        });
+    const handleErrors = (e: React.FormEvent) => {
+        e.preventDefault();
 
-        if (emptyFields.length > 0) {
-            const emptyFieldNames = emptyFields.map(([key]) => key);
-            setErrorMessages([...emptyFieldNames, 'Wprowadź wartości w powyższych polach']);
-            return;
+        let hasErrors = false;
+        const newErrors: any = {};
+
+        if (!formData.email) {
+            newErrors.email = 'Pole Email nie może być puste';
+            hasErrors = true;
+        } else if (!validateEmail(formData.email)) {
+            newErrors.email = 'Podaj prawidłowy adres email';
+            hasErrors = true;
         }
 
-        await axios
+        if (!formData.password) {
+            newErrors.password = 'Pole Hasło nie może być puste';
+            hasErrors = true;
+        }
+        setErrors(newErrors);
+
+        if(!hasErrors){
+            loginAdmin();
+        }
+    }
+
+    const loginAdmin = () => {
+        axios
             .post('http://localhost:8080/admin/login', formData, {
                 auth: {
                     username: formData.email,
@@ -85,7 +103,7 @@ export default function AdminLogin() {
                 }
             })
             .catch((error) => {
-                setServerErrorMessage(ErrorHandler.getErrorMessage(error.response.status));
+                alert('Nieprawidłowe dane logowania lub administrator nie istnieje');
             });
     };
 
@@ -131,15 +149,8 @@ export default function AdminLogin() {
                                 label="Adres email"
                                 value={formData.email}
                                 onChange={(e) => onChangeForm('email', e.target.value)}
-                                error={
-                                    errorMessages.includes('email')
-                                }
-                                helperText={
-                                    errorMessages.includes('email') ?
-                                        'Pole nie może być puste' :
-                                        ''
-                                }
                             />
+                            {errors.email && <span>{errors.email}</span>}
                             <TextField
                                 margin="normal"
                                 required
@@ -151,11 +162,9 @@ export default function AdminLogin() {
                                 autoComplete="password"
                                 value={formData.password}
                                 onChange={(e) => onChangeForm('password', e.target.value)}
-                                error={errorMessages.includes('password')}
-                                helperText={
-                                    errorMessages.includes('password') ? 'Pole nie może być puste' : ''
-                                }
                             />
+                            {errors.password && <span>{errors.password}</span>}
+                            <br />
                             <FormControlLabel
                                 control={
                                     <Checkbox
@@ -166,14 +175,11 @@ export default function AdminLogin() {
                                 }
                                 label="Pokaż hasło"
                             />
-                            {serverErrorMessage ? (
-                                <p>{serverErrorMessage}</p>
-                            ) : (<p></p>)}
                             <Button
                                 fullWidth
                                 variant="contained"
                                 sx={{ mt: 3, mb: 2 }}
-                                onClick={loginAdmin}
+                                onClick={handleErrors}
                             >
                                 Zaloguj się
                             </Button>

@@ -11,24 +11,85 @@ import {
 import { useState } from "react";
 import PersonInterface from "../shared/PersonInterface";
 
-
-
 interface FacebookRegisterDialogProps {
     openDialog: boolean;
     handleCloseDialog: () => void;
-    registerNewUser: () => void;
     onChangeForm: (key: string, value: any) => void;
+    handleAddressChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    //handleErrors: (e: React.FormEvent) => void;
     facebookFormData: PersonInterface;
+    registerNewUser: () => void;
+    //errors: PersonInterface;
 }
-
-
 
 const FacebookRegisterDialog = (props: FacebookRegisterDialogProps) => {
     const [emptyFieldsDialog, setEmptyFieldsDialog] = useState<string[]>([]);
 
+    const [errors, setErrors] = useState({
+        phoneNumber: '',
+        address: {
+            state: '',
+            city: '',
+            street: '',
+            postCode: '',
+            apartment: '',
+        },
+    })
+
     const handleClose = () => {
         props.handleCloseDialog();
         setEmptyFieldsDialog([]);
+    }
+
+    const validatePhoneNumber = (value: string) => {
+        const phoneNumberRegex = /^\d{9}$/;
+        return phoneNumberRegex.test(value);
+    };
+
+    const handleErrors = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        let hasErrors = false;
+        const newErrors: any = {};
+
+        if (!props.facebookFormData.phoneNumber) {
+            newErrors.phoneNumber = 'Pole Numer telefonu nie może być puste'
+            hasErrors = true;
+        } else if (!validatePhoneNumber(props.facebookFormData.phoneNumber)) {
+            newErrors.phoneNumber = 'Numer telefonu powinien składać się tylko z cyfr i mieć maksymalnie 9 cyfr';
+            hasErrors = true;
+        }
+
+        if (!props.facebookFormData.address.state) {
+            newErrors.address = { ...newErrors.address, state: 'Pole Województwo nie może być puste' };
+            hasErrors = true;
+          }
+      
+          if (!props.facebookFormData.address.city) {
+            newErrors.address = { ...newErrors.address, city: 'Pole Miasto nie może być puste' };
+            hasErrors = true;
+          }
+      
+          if (!props.facebookFormData.address.street) {
+            newErrors.address = { ...newErrors.address, street: 'Pole Ulica nie może być puste' };
+            hasErrors = true;
+          }
+      
+          if (!props.facebookFormData.address.postCode) {
+            newErrors.address = { ...newErrors.address, postCode: 'Pole Kod pocztowy nie może być puste' };
+            hasErrors = true;
+          }
+
+          if (!props.facebookFormData.address.apartment) {
+            newErrors.address = { ...newErrors.address, apartment: 'Pole Numer domu nie może być puste' };
+            hasErrors = true;
+          }
+
+        setErrors(newErrors);
+
+        if(!hasErrors){
+            props.registerNewUser();
+        }
     }
 
     return (
@@ -48,27 +109,20 @@ const FacebookRegisterDialog = (props: FacebookRegisterDialogProps) => {
                         autoComplete="Nr telefonu"
                         value={props.facebookFormData.phoneNumber}
                         onChange={(e) => props.onChangeForm('phoneNumber', e.target.value)}
-                        error={emptyFieldsDialog.includes('phoneNumber')}
-                        helperText={
-                            emptyFieldsDialog.includes('phoneNumber') ? 'Pole nie może być puste' : ''
-                        }
                     />
+                    {errors.phoneNumber && <span>{errors.phoneNumber}</span>}
                     <TextField
                         margin="normal"
                         required
                         fullWidth
+                        id="state"
                         label="Województwo"
                         name="state"
                         autoComplete="Województwo"
                         value={props.facebookFormData.address.state}
-                        onChange={(e) =>
-                            props.onChangeForm('address', { ...props.facebookFormData.address, state: e.target.value })
-                        }
-                        error={emptyFieldsDialog.includes('address.state')}
-                        helperText={
-                            emptyFieldsDialog.includes('address.state') ? 'Pole nie może być puste' : ''
-                        }
+                        onChange={ props.handleAddressChange }
                     />
+                    {errors.address && errors.address.state && <span>{errors.address.state}</span>}
                     <TextField
                         margin="normal"
                         required
@@ -77,14 +131,9 @@ const FacebookRegisterDialog = (props: FacebookRegisterDialogProps) => {
                         name="city"
                         autoComplete="Miasto"
                         value={props.facebookFormData.address.city}
-                        onChange={(e) =>
-                            props.onChangeForm('address', { ...props.facebookFormData.address, city: e.target.value })
-                        }
-                        error={emptyFieldsDialog.includes('address.city')}
-                        helperText={
-                            emptyFieldsDialog.includes('address.city') ? 'Pole nie może być puste' : ''
-                        }
+                        onChange={ props.handleAddressChange }
                     />
+                    {errors.address && errors.address.city && <span>{errors.address.city}</span>}
                     <TextField
                         margin="normal"
                         required
@@ -94,14 +143,9 @@ const FacebookRegisterDialog = (props: FacebookRegisterDialogProps) => {
                         name="street"
                         autoComplete="Ulica"
                         value={props.facebookFormData.address.street}
-                        onChange={(e) =>
-                            props.onChangeForm('address', { ...props.facebookFormData.address, street: e.target.value })
-                        }
-                        error={emptyFieldsDialog.includes('address.street')}
-                        helperText={
-                            emptyFieldsDialog.includes('address.street') ? 'Pole nie może być puste' : ''
-                        }
+                        onChange={ props.handleAddressChange }
                     />
+                    {errors.address && errors.address.street && <span>{errors.address.street}</span>}
                     <TextField
                         margin="normal"
                         required
@@ -110,15 +154,9 @@ const FacebookRegisterDialog = (props: FacebookRegisterDialogProps) => {
                         name="postCode"
                         autoComplete="Kod pocztowy"
                         value={props.facebookFormData.address.postCode}
-                        onChange={(e) =>
-                            props.onChangeForm('address', { ...props.facebookFormData.address, postCode: e.target.value })
-                        }
-                        error={emptyFieldsDialog.includes('address.postCode')}
-                        helperText={
-                            emptyFieldsDialog.includes('address.postCode') ? 'Pole nie może być puste' : ''
-                        }
+                        onChange={ props.handleAddressChange }
                     />
-
+                    {errors.address && errors.address.postCode && <span>{errors.address.postCode}</span>}
                     <TextField
                         margin="normal"
                         required
@@ -128,22 +166,17 @@ const FacebookRegisterDialog = (props: FacebookRegisterDialogProps) => {
                         name="apartment"
                         autoComplete="Numer domu"
                         value={props.facebookFormData.address.apartment}
-                        onChange={(e) =>
-                            props.onChangeForm('address', { ...props.facebookFormData.address, apartment: e.target.value })
-                        }
-                        error={emptyFieldsDialog.includes('address.apartment')}
-                        helperText={
-                            emptyFieldsDialog.includes('address.apartment') ? 'Pole nie może być puste' : ''
-                        }
+                        onChange={ props.handleAddressChange }
                     />
+                    {errors.address && errors.address.apartment && <span>{errors.address.apartment}</span>}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Anuluj</Button>
-                    <Button onClick={props.registerNewUser}>Utwórz konto</Button>
+                    <Button onClick={handleErrors}>Utwórz konto</Button>
                 </DialogActions>
             </Dialog>
         </Box>
     )
 }
 
-export default FacebookRegisterDialog
+export default FacebookRegisterDialog;

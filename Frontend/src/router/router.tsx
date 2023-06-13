@@ -14,27 +14,49 @@ import ProtectedElement from "./ProtectedElement";
 import LoginHome from "../view/Home/LoginHome";
 import NotFoundView from "../view/NotFoundView";
 
-
+/*
+    <ProtectedElement> checks conditions and pass the user or not
+    element - component to which user is trying to get access
+    redirectPath - path to redirect when user is not allowed to go to specific path
+    allowLoggedInUser - e.g. when user is logged-in we don't wan't him to go to /login page
+                        because he's logged in already
+*/
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <Home />,
+        element: <ProtectedElement
+            element={<Home />}
+            redirectPath="/loginhome"
+            allowLoggedInUser={false} />
+        //<Home />,
     },
     {
         path: "*",
-        element: <NotFoundView/>
+        element: <NotFoundView />
     },
     {
         path: "/login",
-        element: <Login />,
+        element: <ProtectedElement
+            element={<Login />}
+            redirectPath="/loginhome"
+            allowLoggedInUser={false} />
+        //<Login />,
     },
     {
         path: "/register",
-        element: <Register />,
+        element: <ProtectedElement
+            element={<Register />}
+            redirectPath="/loginhome"
+            allowLoggedInUser={false} />
+        //<Register />,
     },
     {
         path: "/home",
-        element: <Home />,
+        element: <ProtectedElement
+            element={<Home />}
+            redirectPath="/loginhome"
+            allowLoggedInUser={false} />
+        //<Home />,
     },
     {
         path: "/productdetails",
@@ -42,11 +64,17 @@ const router = createBrowserRouter([
     },
     {
         path: "/loginhome",
-        element: <ProtectedElement element={<LoginHome/>} redirectPath="/login" />
+        element: <ProtectedElement
+            element={<LoginHome />}
+            redirectPath="/login"
+            allowLoggedInUser={true} />
     },
     {
         path: "/adminhome",
-        element: <ProtectedElement element={<AdminHome/>} redirectPath="/adminlogin" /> 
+        element: <ProtectedElement
+            element={<AdminHome />}
+            redirectPath="/adminlogin"
+            allowLoggedInUser={true} />
     },
     {
         path: "/adminlogin",
@@ -54,25 +82,40 @@ const router = createBrowserRouter([
     },
     {
         path: "/shoppingcart",
-        element: <ProtectedElement element={<ShoppingCart/>} redirectPath="/login" />
+        element: <ProtectedElement
+            element={<ShoppingCart />}
+            redirectPath="/login"
+            allowLoggedInUser={true} />
     },
     {
         path: "/summary",
-        element: <ProtectedElement element={<Summary/>} redirectPath="/login" /> 
+        element: <ProtectedElement
+            element={<Summary />}
+            redirectPath="/login"
+            allowLoggedInUser={true} />
     },
     {
         path: "/history",
-        element: <ProtectedElement element={<History/>} redirectPath="/login" />
+        element: <ProtectedElement
+            element={<History />}
+            redirectPath="/login"
+            allowLoggedInUser={true} />
     },
     {
         path: "/profil",
-        element: <ProtectedElement element={<Profil/>} redirectPath="/login" /> 
+        element: <ProtectedElement
+            element={<Profil />}
+            redirectPath="/login"
+            allowLoggedInUser={true} />
     },
     {
         path: "/adminprofil",
-        element: <ProtectedElement element={<AdminProfil/>} redirectPath="/adminlogin" /> 
+        element: <ProtectedElement
+            element={<AdminProfil />}
+            redirectPath="/adminlogin"
+            allowLoggedInUser={true} />
     },
-    
+
 ]);
 
 

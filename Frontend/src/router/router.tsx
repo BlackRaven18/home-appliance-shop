@@ -40,7 +40,6 @@ const router = createBrowserRouter([
             element={<Login />}
             redirectPath="/loginhome"
             allowLoggedInUser={false} />
-        //<Login />,
     },
     {
         path: "/register",
@@ -48,7 +47,6 @@ const router = createBrowserRouter([
             element={<Register />}
             redirectPath="/loginhome"
             allowLoggedInUser={false} />
-        //<Register />,
     },
     {
         path: "/home",
@@ -56,7 +54,6 @@ const router = createBrowserRouter([
             element={<Home />}
             redirectPath="/loginhome"
             allowLoggedInUser={false} />
-        //<Home />,
     },
     {
         path: "/productdetails",

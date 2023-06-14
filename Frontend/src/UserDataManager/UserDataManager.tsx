@@ -40,6 +40,12 @@ class UserDataManager {
         localStorage.removeItem("user.password");
     }
 
+    static isLogged(): boolean {
+        //console.log(this.getUserId() !== null ? true : false);
+
+        return this.getUserId() !== "" ? true : false;
+    }
+
 }
 
 export default UserDataManager;

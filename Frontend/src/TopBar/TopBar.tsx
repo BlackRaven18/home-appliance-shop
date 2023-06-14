@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from "react-router-dom";
 import { RootState } from '../redux/store';
 import UserDataManager from '../UserDataManager/UserDataManager';
+import { clearShoppingCart } from '../redux/ShoppingCartReducer';
 
 
 export default function TopBar() {
@@ -22,8 +23,9 @@ export default function TopBar() {
 
 
         UserDataManager.clearData();
+        dispatch(clearShoppingCart());
 
-        if (localStorage.getItem("user.id") === null) {
+        if (!UserDataManager.isLogged()) {
             navigate('/login');
             console.log("Logged out");
         }

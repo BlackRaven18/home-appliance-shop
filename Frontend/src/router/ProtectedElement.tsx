@@ -10,7 +10,7 @@ interface ProtectedElementProps {
 const ProtectedElement = (
   { element, redirectPath, allowLoggedInUser }: ProtectedElementProps): JSX.Element => {
 
-  const isAuthenticated = UserDataManager.getUserId() ? true : false;
+  const isAuthenticated = UserDataManager.isLogged();
 
   if (allowLoggedInUser) {
     return isAuthenticated ? element : <Navigate to={redirectPath} />

@@ -19,9 +19,7 @@ export default function TopBar() {
 
 
     const handleLogout = () => {
-
-
-
+        
         UserDataManager.clearData();
         dispatch(clearShoppingCart());
 

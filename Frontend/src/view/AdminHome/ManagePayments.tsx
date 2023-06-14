@@ -13,20 +13,29 @@ interface TransactionInterface {
 
 interface ExtendedPersonInterface extends PersonInterface {
     personId: string;
-    transactions_history: TransactionInterface;
+    transactionsHistory: TransactionInterface;
 }
 
 const ManagePayments = () => {
     const [people, setPeople] = useState<ExtendedPersonInterface[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPerson, setCurrentPerson] = useState<ExtendedPersonInterface | null>(null);
-    const [approvedTransactions, setApprovedTransactions] = useState<string>();
+    const [approvedTransactions, setApprovedTransactions] = useState<TransactionInterface[]>([]);
 
 
     useEffect(() => {
-        getUsers();
+        if (people.length < 1)
+            getUsers();
+
+        getTrans("646d18b61cc8495ea08cf58e");
         getTrans("64679522e57752643a41b1dc");
-    }, []);
+        /*people.forEach((element) => {
+            const transId = element.transactionsHistory.transactionId;
+
+            console.log(transId);
+            getTrans(transId);
+        });*/
+    }, [people]);
 
     const getUsers = () => {
         axios
@@ -39,11 +48,7 @@ const ManagePayments = () => {
             .then((response) => {
                 setPeople(response.data);
 
-                people.forEach((element) => {
-                    const transId = element.transactions_history;
-                    //getTrans(transId);
-                    console.log(transId.transactionId);
-                });
+
             })
             .catch(function (error) {
                 console.log(error);
@@ -59,7 +64,7 @@ const ManagePayments = () => {
                 }
             })
             .then((response) => {
-                setApprovedTransactions(response.data);
+                setApprovedTransactions(oldArray  => [...oldArray, response.data]);
                 //console.log(response.data);
             })
             .catch(function (error) {

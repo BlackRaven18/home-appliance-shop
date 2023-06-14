@@ -57,13 +57,25 @@ function ShoppingCart() {
         alignItems="center"
         margin='20px'
       >
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={resetCart}
-        >
-          Usuń zawartość koszyka
-        </Button>
+        {shoppingCart.productsNumber > 0 ? (
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={resetCart}
+          >
+            Usuń zawartość koszyka
+          </Button>
+
+        ) : (
+          <Button
+            disabled
+            variant="contained"
+            color="primary"
+            onClick={resetCart}
+          >
+            Usuń zawartość koszyka
+          </Button>
+        )}
       </Box>
 
       <Typography variant='h5' padding='10px'>

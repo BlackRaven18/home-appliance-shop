@@ -7,6 +7,7 @@ import PriceFormatter from "../../PriceFormattingUtils/PriceFormatter";
 import ProductInterface from "../shared/ProductInterface";
 
 import { addProductToCart } from '../../redux/ShoppingCartReducer';
+import UserDataManager from "../../UserDataManager/UserDataManager";
 
 
 
@@ -54,15 +55,18 @@ const ProductListElement = (product: ProductInterface) => {
                     <Typography><strong>Specyfikacja:</strong> {product.specification ?? 'unknown'}</Typography>
                     <Typography><strong>Cena:</strong> {PriceFormatter.getFormattedPrice(product.price) ?? 'unknown'}</Typography>
 
-                    <Button variant="contained" color="primary" onClick={(event) => {
-                        // zatrzymanie propagacji zdarzenia, czyli nastąpi tylko obsługa kliknięcia
-                        // przycisku a nie najpierw obsługa zdarzenia kliknięcia w Box
-                        event.stopPropagation();
-                        addProductToShoppingCart(product);
-                        setOpen(true);
-                    }}>
-                        Dodaj do koszyka
-                    </Button>
+                    {UserDataManager.isLogged() ? (
+                        <Button variant="contained" color="primary" onClick={(event) => {
+                            // zatrzymanie propagacji zdarzenia, czyli nastąpi tylko obsługa kliknięcia
+                            // przycisku a nie najpierw obsługa zdarzenia kliknięcia w Box
+                            event.stopPropagation();
+                            addProductToShoppingCart(product);
+                            setOpen(true);
+                        }}>
+                            Dodaj do koszyka
+                        </Button>
+
+                    ) : (<></>)}
 
                     <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
                         <Alert variant="filled" onClose={handleClose} severity="success" sx={{ width: '100%' }}>

@@ -15,12 +15,11 @@ import {
 } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { FacebookLoginButton } from 'react-social-login-buttons';
 import { IResolveParams, LoginSocialFacebook } from 'reactjs-social-login';
 import UserDataManager from '../UserDataManager/UserDataManager';
-import { BackHandler } from 'react-native';
 
 const theme = createTheme();
 
@@ -54,15 +53,6 @@ const Login = () => {
     const validateEmail = (value: string) => {
         const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
         return emailRegex.test(value);
-    }
-
-
-    const checkIfUserIsLogged = () => {
-        if (UserDataManager.getUserId() !== null) {
-            navigate("/loginhome");
-        }else{
-            return
-        }
     }
 
     const handleFacebookLogin = (facebookResponse: FacebookResponseI) => {

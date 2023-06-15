@@ -26,6 +26,9 @@ public class ProductService {
     public Optional<Product> findProductById(String productId){
         return productRepository.findById(productId);
     }
+    public List<Product> findProductsByCategoryId(String categoryId){
+        return productRepository.findByCategory_CategoryId(categoryId);
+    }
 
     public Product getProductById(String productId){
         return productRepository.findById(productId).get();

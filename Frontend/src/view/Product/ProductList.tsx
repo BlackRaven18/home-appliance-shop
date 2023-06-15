@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import ProductListElement from './ProductListElement';
 import ProductInterface from '../shared/ProductInterface'
 import { Stack, Typography } from '@mui/material';
+import LoadingSpinner from '../LoadingSpinner';
 
 
 
@@ -23,9 +24,9 @@ const ProductList = ({ categoryId }: ProductListProps) => {
     }, []);
 
     const getProducts = () => {
-        // if(categoryId.length <= 0){
-        //     return;
-        // }
+        if(categoryId.length <= 0){
+            return;
+        }
 
         setIsLoading(true);
 
@@ -57,29 +58,8 @@ const ProductList = ({ categoryId }: ProductListProps) => {
             </Box>
 
             {isLoading ? (
-                <Box
-                    display={'flex'}
-                    justifyContent={'center'}
-                    alignItems={'center'}
-                    margin={10}
-                >
-                    <Stack
-                        display={'flex'}
-                        justifyContent={'center'}
-                        alignItems={'center'}
-                        spacing={2}
-                    >
-                        <CircularProgress
-                            style={{ color: '#6699ff' }}
-                            size={100}
-                        />
-                        <Typography>Trwa ładowanie produktów...</Typography>
-                    </Stack>
-
-                </Box>
-
-            )
-                : <p></p>}
+                <LoadingSpinner label='Trwa ładowanie produktów...'/>
+            ): <p></p>}
 
             {filteredProducts.length > 0 ? (
                 filteredProducts.map((product) => (

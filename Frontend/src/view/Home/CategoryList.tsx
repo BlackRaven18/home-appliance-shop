@@ -5,10 +5,12 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Category, setActiveCategory } from '../../redux/CategoryReducer';
+import LoadingSpinner from '../LoadingSpinner';
 
 
 const CategoryList = () => {
     const [categoriesFromEndpoint, setCategoriesFromEndpoint] = useState<Category[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -21,9 +23,11 @@ const CategoryList = () => {
     }, [])
 
     const getCategories = () => {
+        setIsLoading(true);
         axios.get(process.env.REACT_APP_BACKEND_URL + "/categories")
             .then((response) => {
                 setCategoriesFromEndpoint(response.data);
+                setIsLoading(false);
             })
             .catch((error) => {
                 setCategoriesFromEndpoint([]);
@@ -35,9 +39,14 @@ const CategoryList = () => {
             <Paper sx={{ backgroundColor: '#f5f5f5', padding: '17px', height: '100%', width: '200px' }}>
                 <Typography variant="h5" sx={{ textAlign: 'center' }}>Kategorie</Typography>
                 <List sx={{ marginTop: '16px' }}>
+
+                    {isLoading ? (
+                        <LoadingSpinner label='Trwa ładowanie kategorii...' />
+                    ) : <></>}
+
                     {categoriesFromEndpoint.map((category) => (
                         <div key={category.name}>
-                    
+
                             <ListItemButton onClick={() => setCategory(category)}>
                                 <ListItemText primary={category.name} sx={{ textAlign: 'center' }} />
                             </ListItemButton>

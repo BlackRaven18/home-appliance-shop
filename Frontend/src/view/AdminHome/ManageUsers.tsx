@@ -1,10 +1,10 @@
 import { Button, TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import Typography from '@mui/material/Typography';
 import axios from 'axios';
 import * as React from 'react';
 import { useState } from "react";
+import LoadingSpinner from "../LoadingSpinner";
 import PersonInterface from '../shared/PersonInterface';
 
 interface ExtendedPersonInterface extends PersonInterface {
@@ -15,16 +15,30 @@ const ManageUsers = () => {
     const [people, setPeople] = useState<ExtendedPersonInterface[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [personId, setPersonId] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+
+    const [isModifyClicked, setIsModifyClicked] = useState(false);
+    const [newFirstName, setNewFirstName] = useState("");
+    const [newLastName, setNewLastName] = useState("");
+    const [newEmail, setNewEmail] = useState("");
+    const [newNumber, setNewNumber] = useState("");
+    const [newState, setNewState] = useState("");
+    const [newCity, setNewCity] = useState("");
+    const [newStreet, setNewStreet] = useState("");
+    const [newPostCode, setNewPostCode] = useState("");
 
     React.useEffect(() => {
         getUsers();
     }, []);
 
     const getUsers = () => {
+        setIsLoading(true)
+
         axios
             .get(process.env.REACT_APP_BACKEND_URL + '/persons')
             .then((response) => {
                 setPeople(response.data);
+                setIsLoading(false);
             })
             .catch(function (error) {
                 console.log(error);
@@ -49,15 +63,6 @@ const ManageUsers = () => {
         return fullName.toLowerCase().includes(searchTerm.toLowerCase());
     });
 
-    const [isModifyClicked, setIsModifyClicked] = useState(false);
-    const [newFirstName, setNewFirstName] = useState("");
-    const [newLastName, setNewLastName] = useState("");
-    const [newEmail, setNewEmail] = useState("");
-    const [newNumber, setNewNumber] = useState("");
-    const [newState, setNewState] = useState("");
-    const [newCity, setNewCity] = useState("");
-    const [newStreet, setNewStreet] = useState("");
-    const [newPostCode, setNewPostCode] = useState("");
     const handleModifyClick = (personId: string) => {
         setIsModifyClicked(true);
         setPersonId(personId);
@@ -122,9 +127,12 @@ const ManageUsers = () => {
                             onChange={handleSearchTermChange}
                             style={{ marginTop: '20px' }}
                         />
-                        {filteredPeople.length === 0 ? (
-                            <Typography>Nie znaleziono osób spełniających kryteria wyszukiwania</Typography>
-                        ) : (
+
+                        {isLoading ? (
+                            <LoadingSpinner label='Trwa ładowanie użytkowników...' />
+                        ) : <></>}
+
+                        {filteredPeople.length !== 0 ? (
                             filteredPeople.map((person, index) => (
                                 <div key={index} style={{
                                     border: '1px solid #ccc',
@@ -140,8 +148,12 @@ const ManageUsers = () => {
                                     <p style={{ fontSize: '20px' }}><strong>Miasto:</strong> {person && person.address && person.address.city ? person.address.city : 'unknown'}</p>
                                     <p style={{ fontSize: '20px' }}><strong>Ulica:</strong> {person && person.address && person.address.street ? person.address.street : 'unknown'}</p>
                                     <p style={{ fontSize: '20px' }}><strong>Kod pocztowy:</strong> {person && person.address && person.address.postCode ? person.address.postCode : 'unknown'}</p>
-                                    <Button variant="contained" style={{ margin: '15px' }} onClick={() => handleDeleteUser(person.personId)}>Usuń</Button>
-                                    <Button variant="contained" onClick={() => handleModifyClick(person.personId)}>Modyfikuj</Button>
+
+                                    <Button variant="contained" style={{ margin: '15px' }}
+                                        onClick={() => handleDeleteUser(person.personId)}>Usuń</Button>
+
+                                    <Button variant="contained"
+                                        onClick={() => handleModifyClick(person.personId)}>Modyfikuj</Button>
 
                                     {isModifyClicked && personId === person.personId && (
                                         <Grid container direction="column" spacing={2}>
@@ -210,11 +222,9 @@ const ManageUsers = () => {
                                             </Grid>
                                         </Grid>
                                     )}
-
-
                                 </div>
                             ))
-                        )}
+                        ) : (<></>)}
                     </div>
                 </Box>
                 <Box flex="1">

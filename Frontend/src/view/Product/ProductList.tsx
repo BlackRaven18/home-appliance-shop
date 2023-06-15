@@ -1,9 +1,11 @@
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
+import CircularProgress from "@mui/material/CircularProgress";
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import ProductListElement from './ProductListElement';
-import  ProductInterface  from '../shared/ProductInterface'
+import ProductInterface from '../shared/ProductInterface'
+import { Stack, Typography } from '@mui/material';
 
 
 
@@ -14,16 +16,24 @@ interface ProductListProps {
 const ProductList = ({ categoryId }: ProductListProps) => {
     const [products, setProducts] = useState<ProductInterface[]>([]);
     const [searchText, setSearchText] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         getProducts();
     }, []);
 
     const getProducts = () => {
+        // if(categoryId.length <= 0){
+        //     return;
+        // }
+
+        setIsLoading(true);
+
         axios
             .get(process.env.REACT_APP_BACKEND_URL + "/products/categories/" + categoryId)
             .then(function (response) {
                 setProducts(response.data);
+                setIsLoading(false);
             })
             .catch(function (error) {
                 console.log(error);
@@ -46,16 +56,39 @@ const ProductList = ({ categoryId }: ProductListProps) => {
                 />
             </Box>
 
-            {filteredProducts.length > 0 ? (
+            {isLoading ? (
+                <Box
+                    display={'flex'}
+                    justifyContent={'center'}
+                    alignItems={'center'}
+                    margin={10}
+                >
+                    <Stack
+                        display={'flex'}
+                        justifyContent={'center'}
+                        alignItems={'center'}
+                        spacing={2}
+                    >
+                        <CircularProgress
+                            style={{ color: '#6699ff' }}
+                            size={100}
+                        />
+                        <Typography>Trwa ładowanie produktów...</Typography>
+                    </Stack>
 
+                </Box>
+
+            )
+                : <p></p>}
+
+            {filteredProducts.length > 0 ? (
                 filteredProducts.map((product) => (
                     <ProductListElement key={product.productId} {...product} />
                 ))
 
+            ) : (<p></p>)
+            }
 
-            ) : (
-                <p></p>
-            )}
         </Box>
     );
 }

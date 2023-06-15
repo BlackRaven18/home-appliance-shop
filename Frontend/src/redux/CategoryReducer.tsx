@@ -8,7 +8,7 @@ export interface Category {
 
 
 const initialState: Category = {
-    categoryId: " ",
+    categoryId: '',
     name: '',
 }
 

@@ -3,8 +3,9 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import axios from 'axios';
 import * as React from 'react';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ProductInterface from "../shared/ProductInterface";
+import LoadingSpinner from "../LoadingSpinner";
 
 
 
@@ -13,16 +14,28 @@ const ManageProducts = () => {
     const [products, setProducts] = useState<ProductInterface[]>([]);
     const [searchText, setSearchText] = useState("");
     const [productId, setProductId] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
-    React.useEffect(() => {
+    const [isModifyClicked, setIsModifyClicked] = useState(false);
+    const [newName, setNewName] = useState("");
+    const [newBrand, setNewBrand] = useState("");
+    const [newColor, setNewColor] = useState("");
+    const [newSpecification, setNewSpecification] = useState("");
+    const [newPrice, setNewPrice] = useState("");
+    const [newCategoryName, setNewCategoryName] = useState("");
+    const [newImageURL, setNewImageURL] = useState("url");
+
+    useEffect(() => {
         getProducts();
     }, []);
 
     const getProducts = () => {
+        setIsLoading(true);
         axios
             .get(process.env.REACT_APP_BACKEND_URL + `/products`)
             .then((response) => {
                 setProducts(response.data);
+                setIsLoading(false);
             })
             .catch(function (error) {
                 console.log(error);
@@ -84,17 +97,6 @@ const ManageProducts = () => {
     }
 
 
-
-    const [isModifyClicked, setIsModifyClicked] = useState(false);
-    const [newName, setNewName] = useState("");
-    const [newBrand, setNewBrand] = useState("");
-    const [newColor, setNewColor] = useState("");
-    const [newSpecification, setNewSpecification] = useState("");
-    const [newPrice, setNewPrice] = useState("");
-    const [newCategoryName, setNewCategoryName] = useState("");
-    const [newImageURL, setNewImageURL] = useState("url");
-
-
     const handleModifyClick = (productId: string) => {
         setIsModifyClicked(true);
         setProductId(productId);
@@ -152,7 +154,9 @@ const ManageProducts = () => {
                                 onChange={handleSearchTextChange}
                                 style={{ margin: '20px' }}
                             />
-
+                {isLoading? (
+                    <LoadingSpinner label="Trwa ładowanie produktów..."/>
+                ) : <></>}
                 {filteredProducts.map((product, index) => (
                         <div key={product.productId} style={{
                             border: '1px solid #ccc',

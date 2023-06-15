@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import PriceFormatter from '../PriceFormattingUtils/PriceFormatter';
 import TopBar from '../TopBar/TopBar';
 import UserDataManager from '../UserDataManager/UserDataManager';
+import LoadingSpinner from './LoadingSpinner';
 
 interface HistoryI {
     transactionId: string,
@@ -31,6 +32,7 @@ interface ProductsInTransactionI {
 function History() {
 
     const [history, setHistory] = useState<HistoryI>();
+    const [isLoading, setIsLoading] = useState(false);
     const userId = UserDataManager.getUserId();
 
     useEffect(() => {
@@ -38,7 +40,7 @@ function History() {
     }, []);
 
     const getHistory = async () => {
-
+        setIsLoading(true);
         await axios
             .get(process.env.REACT_APP_BACKEND_URL + "/persons/"
                 + userId + "/paymenthistory", {
@@ -48,8 +50,8 @@ function History() {
                 }
             })
             .then((response) => {
-                console.log("response in history:" + response.data)
                 setHistory(response.data);
+                setIsLoading(false);
             })
             .catch((error) => {
                 console.log(error);
@@ -64,6 +66,9 @@ function History() {
                 Historia
             </Typography>
 
+            {isLoading ? (
+                <LoadingSpinner label='Trwa ładowanie historii transakcji...' />
+            ) : <p></p>}
 
             {history ? (
                 history.transactions.map((transaction) => (
@@ -110,9 +115,7 @@ function History() {
 
                     </Box>
                 ))
-            ) : (
-                <p></p>
-            )}
+            ) : (<></>)}
 
 
 

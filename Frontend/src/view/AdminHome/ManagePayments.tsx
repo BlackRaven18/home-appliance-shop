@@ -88,7 +88,7 @@ const ManagePayments = () => {
         return fullName.toLowerCase().includes(searchTerm.toLowerCase());
     });
 
-    const handleTransactionApproval = (personId: string, date: string) => {
+    /*const handleTransactionApproval = (personId: string, date: string) => {
         // Znajdź osobę na podstawie personId
         //const person = people.find((person) => person.personId === personId);
 
@@ -101,6 +101,30 @@ const ManagePayments = () => {
             //const transaction = person.transactions_history.find((transaction) => transaction.date === date);
 
         }
+    };*/
+
+    const handleTransactionApproval = (personId: string, date: string) => {
+        const updatedPeople = people.map((person) => {
+            if (person.personId === personId) {
+                const updatedTransactions = person.transactionsHistory.transactions.map((transaction) => {
+                    if (transaction.date === date && transaction.status === 'failed') {
+                        transaction.status = 'manually-accepted';
+                    }
+                    return transaction;
+                });
+
+                return {
+                    ...person,
+                    transactionsHistory: {
+                        ...person.transactionsHistory,
+                        transactions: updatedTransactions,
+                    },
+                };
+            }
+            return person;
+        });
+
+        setPeople(updatedPeople);
     };
 
     return (
@@ -134,8 +158,18 @@ const ManagePayments = () => {
                                             <div key={transactionIndex} style={{ marginTop: '10px' }}>
                                                 <p style={{ fontSize: '16px' }}><strong>Data transakcji:</strong> {transaction.date}</p>
                                                 <p style={{ fontSize: '16px' }}><strong>Status transakcji:</strong> {transaction.status}</p>
+                                                {transaction.status === 'failed' && (
+                                                    <Button
+                                                        variant="contained"
+                                                        color="primary"
+                                                        size="small"
+                                                        onClick={() => handleTransactionApproval(person.personId, transaction.date)}
 
-                                                
+                                                    >
+                                                        Zatwierdź
+                                                    </Button>
+                                                )}
+
                                             </div>
                                         ))
                                     ) : (

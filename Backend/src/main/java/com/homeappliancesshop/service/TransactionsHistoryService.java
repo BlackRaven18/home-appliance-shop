@@ -32,6 +32,12 @@ public class TransactionsHistoryService {
         return repository.save(transactionsHistory);
     }
 
-
+//    public void acceptTransaction(String transactionHistoryId, String transactionId){
+//        TransactionsHistory transactionHistory = repository.findById(transactionHistoryId).get();
+//        Transaction[] transactions = transactionHistory.getTransactions().get();
+//        for(Transaction t : transactions){
+//            if(t.getDate());
+//        }
+//    }
 
 }

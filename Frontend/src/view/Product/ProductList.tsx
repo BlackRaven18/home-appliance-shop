@@ -21,7 +21,7 @@ const ProductList = ({ categoryId }: ProductListProps) => {
 
     const getProducts = () => {
         axios
-            .get(process.env.REACT_APP_BACKEND_URL + "/products")
+            .get(process.env.REACT_APP_BACKEND_URL + "/products/categories/" + categoryId)
             .then(function (response) {
                 setProducts(response.data);
             })

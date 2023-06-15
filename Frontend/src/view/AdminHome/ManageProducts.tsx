@@ -11,7 +11,7 @@ import ProductInterface from "../shared/ProductInterface";
 
 const ManageProducts = () => {
     const [products, setProducts] = useState<ProductInterface[]>([]);
-    const [searchTerm, setSearchTerm] = useState<string>('');
+    const [searchText, setSearchText] = useState("");
     const [productId, setProductId] = useState("");
 
     React.useEffect(() => {
@@ -30,11 +30,12 @@ const ManageProducts = () => {
     };
 
     const filteredProducts = products.filter((product) => {
-        return product.name.toLowerCase().includes(searchTerm.toLowerCase());
+        const productString = `${product.name} ${product.brand} ${product.color} ${product.specification} ${product.category.name}`.toLowerCase();
+        return productString.includes(searchText.toLowerCase());
     });
 
-    const handleSearchTermChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchTerm(event.target.value);
+    const handleSearchTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchText(event.target.value);
     };
 
     const createProduct = (event: React.FormEvent<HTMLFormElement>) => {
@@ -147,8 +148,8 @@ const ManageProducts = () => {
                             <TextField
                                 label="Wyszukaj produkt"
                                 variant="outlined"
-                                value={searchTerm}
-                                onChange={handleSearchTermChange}
+                                value={searchText}
+                                onChange={handleSearchTextChange}
                                 style={{ margin: '20px' }}
                             />
 

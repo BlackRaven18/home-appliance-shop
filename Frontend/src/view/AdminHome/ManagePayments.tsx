@@ -8,7 +8,12 @@ import UserDataManager from "../../UserDataManager/UserDataManager";
 
 interface TransactionInterface {
     transactionId: string;
-    transactions: string[];
+    transactions: TransactionInfoInterface[];
+}
+
+interface TransactionInfoInterface {
+    date: string;
+    status: string;
 }
 
 interface ExtendedPersonInterface extends PersonInterface {
@@ -26,15 +31,16 @@ const ManagePayments = () => {
     useEffect(() => {
         if (people.length < 1)
             getUsers();
+        else { // to delete
+            console.log(people);
+        }
 
-        getTrans("646d18b61cc8495ea08cf58e");
-        getTrans("64679522e57752643a41b1dc");
-        /*people.forEach((element) => {
-            const transId = element.transactionsHistory.transactionId;
+        //getTrans("64679522e57752643a41b1dc");
+        people.forEach((element) => {
+            const transId = element.personId;
 
-            console.log(transId);
-            getTrans(transId);
-        });*/
+            getTrans(element);
+        });
     }, [people]);
 
     const getUsers = () => {
@@ -55,9 +61,9 @@ const ManagePayments = () => {
             });
     };
 
-    const getTrans = ( id : string) => {
+    const getTrans = ( user : ExtendedPersonInterface) => {
         axios
-            .get(`${process.env.REACT_APP_BACKEND_URL}/persons/`+id+`/paymenthistory`,{
+            .get(`${process.env.REACT_APP_BACKEND_URL}/persons/`+user.personId+`/paymenthistory`,{
                 auth: {
                     username: UserDataManager.getUsername(),
                     password: UserDataManager.getPassword()
@@ -65,6 +71,7 @@ const ManagePayments = () => {
             })
             .then((response) => {
                 setApprovedTransactions(oldArray  => [...oldArray, response.data]);
+                user.transactionsHistory = response.data;
                 //console.log(response.data);
             })
             .catch(function (error) {
@@ -93,13 +100,6 @@ const ManagePayments = () => {
 
             //const transaction = person.transactions_history.find((transaction) => transaction.date === date);
 
-            /*if (transaction) {
-                // Zaktualizuj status transakcji na "manually-accepted"
-                transaction.status = 'manually-accepted';
-
-                // Dodaj transakcję do zatwierdzonych transakcji
-                setApprovedTransactions([...approvedTransactions, `${personId}_${date}`]);
-            }*/
         }
     };
 
@@ -129,29 +129,18 @@ const ManagePayments = () => {
                                     <p style={{ fontSize: '20px' }}><strong>Nazwisko:</strong> {person ? person.surname : 'unknown'}</p>
                                     <p style={{ fontSize: '20px' }}><strong>Email:</strong> {person ? person.email : 'unknown'}</p>
                                     <p style={{ fontSize: '20px' }}><strong>Numer telefonu:</strong> {person ? person.phoneNumber : 'unknown'}</p>
-                                    {/*{person.transactions_history ? (*/}
-                                    {/*    person.transactions_history.map((transaction, transactionIndex) => (*/}
-                                    {/*        <div key={transactionIndex} style={{ marginTop: '10px' }}>*/}
-                                    {/*            <p style={{ fontSize: '16px' }}><strong>Data transakcji:</strong> {transaction.date}</p>*/}
-                                    {/*            <p style={{ fontSize: '16px' }}><strong>Status transakcji:</strong> {transaction.status}</p>*/}
-                                    {/*            {transaction.status === 'failed' && (*/}
-                                    {/*                <Button*/}
-                                    {/*                    variant="contained"*/}
-                                    {/*                    color="primary"*/}
-                                    {/*                    size="small"*/}
-                                    {/*                    onClick={() => handleTransactionApproval(person.personId, transaction.date)}*/}
-                                    {/*                    disabled={approvedTransactions.includes(`${person.personId}_${transaction.date}`)}*/}
-                                    {/*                >*/}
-                                    {/*                    Zatwierdź*/}
-                                    {/*                </Button>*/}
+                                    {person.transactionsHistory.transactions ? (
+                                        person.transactionsHistory.transactions.map((transaction, transactionIndex) => (
+                                            <div key={transactionIndex} style={{ marginTop: '10px' }}>
+                                                <p style={{ fontSize: '16px' }}><strong>Data transakcji:</strong> {transaction.date}</p>
+                                                <p style={{ fontSize: '16px' }}><strong>Status transakcji:</strong> {transaction.status}</p>
 
-                                    {/*            )*/}
-                                    {/*            }*/}
-                                    {/*        </div>*/}
-                                    {/*    ))*/}
-                                    {/*) : (*/}
-                                    {/*    <p>Brak historii transakcji dla tej osoby.</p>*/}
-                                    {/*)}*/}
+                                                
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <p>Brak historii transakcji dla tej osoby.</p>
+                                    )}
                                 </div>
                             ))
                         )}

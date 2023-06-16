@@ -111,12 +111,22 @@ const ManageProducts = () => {
     const [newSpecification, setNewSpecification] = useState("");
     const [newPrice, setNewPrice] = useState("");
     const [newCategoryName, setNewCategoryName] = useState("");
-    const [newImageURL, setNewImageURL] = useState("url");
+    const [newImageURL, setNewImageURL] = useState("");
 
 
     const handleModifyClick = (productId: string) => {
-        setIsModifyClicked(true);
-        setProductId(productId);
+        const product = products.find((p) => p.productId === productId);
+        if (product) {
+            setIsModifyClicked(true);
+            setProductId(productId);
+            setNewName(product.name);
+            setNewBrand(product.brand);
+            setNewColor(product.color);
+            setNewSpecification(product.specification);
+            setNewPrice(product.price.toString());
+            setNewCategoryName(product.category?.name || "");
+            setNewImageURL(product.imageURL);
+        }
     };
 
     const handleModifySubmit = async () => {

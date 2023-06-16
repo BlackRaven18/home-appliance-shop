@@ -24,6 +24,7 @@ interface ExtendedPersonInterface extends PersonInterface {
 const ManagePayments = () => {
     const [people, setPeople] = useState<ExtendedPersonInterface[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
+    const [expandedTransactionIds, setExpandedTransactionIds] = useState<string[]>([]);
 
     useEffect(() => {
         getUsers();
@@ -39,8 +40,6 @@ const ManagePayments = () => {
             })
             .then((response) => {
                 setPeople(response.data);
-
-
             })
             .catch(function (error) {
                 console.log(error);
@@ -51,25 +50,37 @@ const ManagePayments = () => {
         setSearchTerm(event.target.value);
     };
 
+    const toggleTransactionExpansion = (transactionId: string) => {
+        if (expandedTransactionIds.includes(transactionId)) {
+            setExpandedTransactionIds(expandedTransactionIds.filter(id => id !== transactionId));
+        } else {
+            setExpandedTransactionIds([...expandedTransactionIds, transactionId]);
+        }
+    };
+
     const filteredPeople = people.filter((person) => {
         const fullName = `${person.name} ${person.surname}`;
         return fullName.toLowerCase().includes(searchTerm.toLowerCase());
     });
 
     const handleAcceptTransaction = (transactionId: string) => {
-        axios.post(process.env.REACT_APP_BACKEND_URL + "/transactions/" + transactionId + "/accept",{}, {
-            auth: {
-                username: UserDataManager.getUsername(),
-                password: UserDataManager.getPassword()
+        axios.post(
+            process.env.REACT_APP_BACKEND_URL + "/transactions/" + transactionId + "/accept",
+            {},
+            {
+                auth: {
+                    username: UserDataManager.getUsername(),
+                    password: UserDataManager.getPassword()
+                }
             }
-        })
+        )
             .then((response) => {
                 getUsers();
             })
             .catch((error) => {
                 console.log(error);
-            })
-    }
+            });
+    };
 
     return (
         <>
@@ -91,7 +102,7 @@ const ManagePayments = () => {
                                     border: '1px solid #ccc',
                                     borderRadius: '5px',
                                     padding: '10px',
-                                    margin: '20px'
+                                    margin: '20px',
                                 }}>
                                     <p style={{ fontSize: '20px' }}><strong>Imię:</strong> {person ? person.name : 'unknown'}</p>
                                     <p style={{ fontSize: '20px' }}><strong>Nazwisko:</strong> {person ? person.surname : 'unknown'}</p>
@@ -100,21 +111,31 @@ const ManagePayments = () => {
                                     {person.transactionsHistory.transactions ? (
                                         person.transactionsHistory.transactions.map((transaction, transactionIndex) => (
                                             <div key={transactionIndex} style={{ marginTop: '10px' }}>
-                                                <p style={{ fontSize: '16px' }}><strong>Id:</strong> {transaction.transactionId}</p>
-                                                <p style={{ fontSize: '16px' }}><strong>Data transakcji:</strong> {transaction.date}</p>
-                                                <p style={{ fontSize: '16px' }}><strong>Status transakcji:</strong> {transaction.status}</p>
-                                                {transaction.status === 'failed' && (
-                                                    <Button
-                                                        variant="contained"
-                                                        color="primary"
-                                                        size="small"
-                                                        onClick={() => handleAcceptTransaction(transaction.transactionId)}
-
-                                                    >
-                                                        Zatwierdź
-                                                    </Button>
+                                                <Button
+                                                    variant="outlined"
+                                                    color="primary"
+                                                    onClick={() => toggleTransactionExpansion(transaction.transactionId)}
+                                                    style={{ marginBottom: '10px' }}
+                                                >
+                                                    {expandedTransactionIds.includes(transaction.transactionId) ? 'Ukryj' : 'Pokaż'} transakcję
+                                                </Button>
+                                                {expandedTransactionIds.includes(transaction.transactionId) && (
+                                                    <>
+                                                        <p style={{ fontSize: '16px' }}><strong>Id:</strong> {transaction.transactionId}</p>
+                                                        <p style={{ fontSize: '16px' }}><strong>Data transakcji:</strong> {transaction.date}</p>
+                                                        <p style={{ fontSize: '16px' }}><strong>Status transakcji:</strong> {transaction.status}</p>
+                                                        {transaction.status === 'failed' && (
+                                                            <Button
+                                                                variant="contained"
+                                                                color="primary"
+                                                                size="small"
+                                                                onClick={() => handleAcceptTransaction(transaction.transactionId)}
+                                                            >
+                                                                Zatwierdź
+                                                            </Button>
+                                                        )}
+                                                    </>
                                                 )}
-
                                             </div>
                                         ))
                                     ) : (

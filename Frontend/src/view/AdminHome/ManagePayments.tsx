@@ -145,6 +145,7 @@ const ManagePayments = () => {
                                                                     Zatwierdź
                                                                 </Button>
                                                             )}
+                                                            <hr style={{ margin: '10px 0' }} />
                                                         </div>
                                                     ))}
                                                 </div>

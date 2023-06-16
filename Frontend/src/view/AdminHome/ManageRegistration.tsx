@@ -436,7 +436,7 @@ const ManageRegistration = () => {
                         >
                             <FacebookLoginButton />
                         </LoginSocialFacebook>
-                        
+
                     </Box>
                 </Grid>
             </Grid>

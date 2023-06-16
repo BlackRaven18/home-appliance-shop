@@ -6,6 +6,7 @@ import * as React from 'react';
 import { useState, useEffect } from "react";
 import ProductInterface from "../shared/ProductInterface";
 import { SelectChangeEvent } from "@mui/material";
+import UserDataManager from "../../UserDataManager/UserDataManager";
 
 type Category = {
     categoryId: string;
@@ -26,7 +27,12 @@ const ManageProducts = () => {
 
     const getProducts = () => {
         axios
-            .get(process.env.REACT_APP_BACKEND_URL + `/products`)
+            .get(process.env.REACT_APP_BACKEND_URL + `/products`,{
+                auth: {
+                    username: UserDataManager.getUsername(),
+                    password: UserDataManager.getPassword()
+                }
+            })
             .then((response) => {
                 setProducts(response.data);
             })
@@ -37,7 +43,12 @@ const ManageProducts = () => {
 
     const getCategories = () => {
         axios
-            .get(process.env.REACT_APP_BACKEND_URL + `/categories`) // Endpoint do pobierania kategorii
+            .get(process.env.REACT_APP_BACKEND_URL + `/categories`,{
+                auth: {
+                    username: UserDataManager.getUsername(),
+                    password: UserDataManager.getPassword()
+                }
+            }) // Endpoint do pobierania kategorii
             .then((response) => {
                 setCategories(response.data);
             })
@@ -83,7 +94,12 @@ const ManageProducts = () => {
         };
 
         axios
-            .post(process.env.REACT_APP_BACKEND_URL + '/products', newProduct)
+            .post(process.env.REACT_APP_BACKEND_URL + '/products', newProduct,{
+                auth: {
+                    username: UserDataManager.getUsername(),
+                    password: UserDataManager.getPassword()
+                }
+            })
             .then((response) => {
                 setProducts([...products, response.data]);
                 event.currentTarget.reset();
@@ -95,7 +111,12 @@ const ManageProducts = () => {
 
     const handleDeleteProduct = async (productId: string) => {
         try {
-            await axios.delete(process.env.REACT_APP_BACKEND_URL + '/products/' + productId);
+            await axios.delete(process.env.REACT_APP_BACKEND_URL + '/products/' + productId,{
+                auth: {
+                    username: UserDataManager.getUsername(),
+                    password: UserDataManager.getPassword()
+                }
+            });
             getProducts(); // reload the user list after deleting the user
         } catch (error) {
             console.error(error);
@@ -130,24 +151,35 @@ const ManageProducts = () => {
     };
 
     const handleModifySubmit = async () => {
-        await axios.put(process.env.REACT_APP_BACKEND_URL + '/products/' + productId, {
-            productId: productId,
-            name: newName,
-            brand: newBrand,
-            color: newColor,
-            specification: newSpecification,
-            price: newPrice,
-            category: {
-                name: newCategoryName,
-            },
-            imageURL: newImageURL,
-        }).then(() => {
+        try {
+            await axios.put(
+                process.env.REACT_APP_BACKEND_URL + '/products/' + productId,
+                {
+                    productId: productId,
+                    name: newName,
+                    brand: newBrand,
+                    color: newColor,
+                    specification: newSpecification,
+                    price: newPrice,
+                    category: {
+                        name: newCategoryName,
+                    },
+                    imageURL: newImageURL,
+                },
+                {
+                    auth: {
+                        username: UserDataManager.getUsername(),
+                        password: UserDataManager.getPassword(),
+                    },
+                }
+            );
             getProducts(); // załaduj ponownie listę produktów po modyfikacji
             setIsModifyClicked(false); // Zresetuj stan po zatwierdzeniu modyfikacji
-        }).catch((error) => {
+        } catch (error) {
             console.log(error);
-        })
+        }
     };
+
 
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setNewName(event.target.value);

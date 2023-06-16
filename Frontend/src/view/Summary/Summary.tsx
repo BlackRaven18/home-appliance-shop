@@ -52,11 +52,11 @@ function Summary() {
     const handleSuccessfulTransaction = () => {
         dispatch(clearShoppingCart());
         navigate("/shoppingcart");
-        alert("Payment Success");
+        alert("Płatność udana! Przejdź do historii aby zobaczyć transakcje.");
     }
 
     const handleFailedTransaction = (status: PaymentStatusDTO) => {
-        alert("Payment failed!. " + status.message);
+        alert("Płatność zakończona niepowodzeniem!. komunikat: " + status.message);
     }
 
     async function handleToken(token: TokenI) {
@@ -109,7 +109,7 @@ function Summary() {
             <SummaryTopBar />
 
             {isWaitingForResponse ? (
-                <CustomBackdrop label={"Płatnosć w realizacji..."}/>
+                <CustomBackdrop label={"Płatnosć w realizacji..."} />
             ) : (<></>)}
             <Box>
                 <Typography variant="h4" align="center">
@@ -198,10 +198,7 @@ function Summary() {
                     </Box>
                 ) : (
                     <p></p>
-                )
-                }
-
-
+                )}
             </Box>
         </>
     );

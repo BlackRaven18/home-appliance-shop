@@ -7,6 +7,7 @@ import * as React from 'react';
 import { useState } from "react";
 import PersonInterface from '../shared/PersonInterface';
 import UserDataManager from "../../UserDataManager/UserDataManager";
+import ManageRegistration from "./ManageRegistration";
 
 interface ExtendedPersonInterface extends PersonInterface {
     personId: string,
@@ -239,63 +240,17 @@ const ManageUsers = () => {
             </div>
                 </Box>
                 <Box flex="1">
-            <Box
-                component="form"
-                noValidate
-                sx={{
-                    ml: 1,
-                    width: '400px' // Add this line to set the width of the Box
-                }}
-                style={{ margin: '5px' }}
-            >
-                <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="email"
-                    label="Adres email"
-                    name="email"
-                    autoComplete="email"
-                    autoFocus
-                />
-                <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    name="password"
-                    label="Hasło"
-                    type="password"
-                    id="password"
-                    autoComplete="current-password"
-                />
-                <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    name="name"
-                    label="Imię"
-                    id="name"
-                    autoComplete="Imię"
-                />
-                <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    name="surname"
-                    label="Nazwisko"
-                    id="surname"
-                    autoComplete="Nazwisko"
-                />
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    sx={{ mt: 3, mb: 2 }}
-                >
-                    Zarejestruj użytkownika
-                </Button>
-
-            </Box>
+                    <Box
+                        component="form"
+                        noValidate
+                        sx={{
+                            ml: 1,
+                            width: '600px', // Add this line to set the width of the Box
+                        }}
+                        style={{ margin: '5px' }}
+                    >
+                        <ManageRegistration />
+                    </Box>
                 </Box>
             </Box>
         </>

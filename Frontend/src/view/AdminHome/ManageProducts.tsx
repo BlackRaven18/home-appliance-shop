@@ -1,21 +1,27 @@
-import { Button, TextField } from "@mui/material";
+import { Button, TextField, Select, MenuItem } from "@mui/material";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import axios from 'axios';
 import * as React from 'react';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ProductInterface from "../shared/ProductInterface";
+import { SelectChangeEvent } from "@mui/material";
 
-
-
+type Category = {
+    categoryId: string;
+    name: string;
+};
 
 const ManageProducts = () => {
     const [products, setProducts] = useState<ProductInterface[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [productId, setProductId] = useState("");
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [newCategory, setNewCategory] = useState("");
 
     React.useEffect(() => {
         getProducts();
+        getCategories();
     }, []);
 
     const getProducts = () => {
@@ -23,6 +29,17 @@ const ManageProducts = () => {
             .get(process.env.REACT_APP_BACKEND_URL + `/products`)
             .then((response) => {
                 setProducts(response.data);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    };
+
+    const getCategories = () => {
+        axios
+            .get(process.env.REACT_APP_BACKEND_URL + `/categories`) // Endpoint do pobierania kategorii
+            .then((response) => {
+                setCategories(response.data);
             })
             .catch(function (error) {
                 console.log(error);
@@ -138,6 +155,10 @@ const ManageProducts = () => {
         setNewCategoryName(event.target.value);
     };
 
+    const handleCategoryChange = (event: SelectChangeEvent<string>) => {
+        setNewCategory(event.target.value);
+    };
+
     return (
         <>
             <Box display="flex" flexDirection={{ xs: 'column', sm: 'row' }} gap={2}>
@@ -224,17 +245,29 @@ const ManageProducts = () => {
                 ))}
             </div>
             </Box>
-            <Box flex="1">
-                <Box
-                    component="form"
-                    noValidate
-                    onSubmit={createProduct}
-                    sx={{
-                        ml: 1,
-                        width: '400px',
-                    }}
-                    style={{ margin: '5px' }}
-                >
+                <Box flex="1">
+                    <Box
+                        component="form"
+                        noValidate
+                        onSubmit={createProduct}
+                        sx={{
+                            ml: 1,
+                            width: '400px',
+                        }}
+                        style={{ margin: '5px' }}
+                    >
+                        {/* Pozycja dla wyboru kategorii */}
+                        <Select
+                            value={newCategory}
+                            onChange={handleCategoryChange}
+                            fullWidth
+                        >
+                            {categories.map(category => (
+                                <MenuItem key={category.categoryId} value={category.categoryId}>
+                                    {category.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
                 <TextField
                     margin="normal"
                     required

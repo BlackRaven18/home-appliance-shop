@@ -62,12 +62,15 @@ const ManageProducts = () => {
             brand: { value: string };
             color: { value: string };
             specification: { value: string };
+            price: {value: string};
+            imageURL: {value: string};
         };
         const name = target.name.value;
         const brand = target.brand.value;
         const color = target.color.value;
         const specification = target.specification.value;
         const price = parseFloat(event.currentTarget.price.value);
+        const imageURL = target.name.value;
 
 
         const newProduct = {
@@ -76,7 +79,7 @@ const ManageProducts = () => {
             color,
             specification,
             price,
-
+            imageURL,
         };
 
         axios
@@ -159,6 +162,10 @@ const ManageProducts = () => {
         setNewCategory(event.target.value);
     };
 
+    const handleImageURLChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+        setNewImageURL(event.target.value as string);
+    };
+
     return (
         <>
             <Box display="flex" flexDirection={{ xs: 'column', sm: 'row' }} gap={2}>
@@ -186,6 +193,7 @@ const ManageProducts = () => {
                         <p style={{ fontSize: '20px' }}><strong>Specyfikacja:</strong> {product.specification}</p>
                         <p style={{ fontSize: '20px' }}><strong>Cena:</strong> {product.price}</p>
                         <p style={{ fontSize: '20px' }}><strong>Kategoria:</strong> {product && product.category && product.category.name ? product.category.name : 'unknown'}</p>
+                        <p style={{ fontSize: '20px' }}><strong>Obrazek:</strong> {product.imageURL}</p>
                         <Button variant="contained" style={{ margin: '15px' }} onClick={() => handleDeleteProduct(product.productId)}>Usuń</Button>
                         <Button variant="contained" onClick={() => handleModifyClick(product.productId)}>Modyfikuj</Button>
                         {isModifyClicked && productId === product.productId && (
@@ -231,6 +239,13 @@ const ManageProducts = () => {
                                         variant="outlined"
                                         value={newCategoryName}
                                         onChange={handleCategoryNameChange}
+                                        style={{ margin: '5px' }}
+                                    />
+                                    <TextField
+                                        label="Nowy obrazek"
+                                        variant="outlined"
+                                        value={newImageURL}
+                                        onChange={handleImageURLChange}
                                         style={{ margin: '5px' }}
                                     />
                                 </Grid>
@@ -314,6 +329,15 @@ const ManageProducts = () => {
                     label="Cena"
                     id="price"
                     autoComplete="price"
+                />
+                <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="imageURL"
+                    label="Obrazek link"
+                    id="imageURL"
+                    autoComplete="imageURL"
                 />
                 <Button
                     type="submit"

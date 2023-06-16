@@ -1,10 +1,9 @@
+import { Box, Button, TextField } from "@mui/material";
 import Typography from '@mui/material/Typography';
-import { useState, useEffect } from "react";
 import axios from 'axios';
-import PersonInterface from "../shared/PersonInterface";
-import { Button, TextField, Box } from "@mui/material";
-import Grid from "@mui/material/Grid";
+import { useEffect, useState } from "react";
 import UserDataManager from "../../UserDataManager/UserDataManager";
+import PersonInterface from "../shared/PersonInterface";
 
 interface TransactionInterface {
     transactionId: string;
@@ -12,6 +11,7 @@ interface TransactionInterface {
 }
 
 interface TransactionInfoInterface {
+    transactionId: string;
     date: string;
     status: string;
 }
@@ -24,28 +24,14 @@ interface ExtendedPersonInterface extends PersonInterface {
 const ManagePayments = () => {
     const [people, setPeople] = useState<ExtendedPersonInterface[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
-    const [currentPerson, setCurrentPerson] = useState<ExtendedPersonInterface | null>(null);
-    const [approvedTransactions, setApprovedTransactions] = useState<TransactionInterface[]>([]);
-
 
     useEffect(() => {
-        if (people.length < 1)
-            getUsers();
-        else { // to delete
-            console.log(people);
-        }
-
-        //getTrans("64679522e57752643a41b1dc");
-        people.forEach((element) => {
-            const transId = element.personId;
-
-            getTrans(element);
-        });
-    }, [people]);
+        getUsers();
+    }, []);
 
     const getUsers = () => {
         axios
-            .get(`${process.env.REACT_APP_BACKEND_URL}/persons`,{
+            .get(process.env.REACT_APP_BACKEND_URL + "/persons", {
                 auth: {
                     username: UserDataManager.getUsername(),
                     password: UserDataManager.getPassword()
@@ -61,24 +47,6 @@ const ManagePayments = () => {
             });
     };
 
-    const getTrans = ( user : ExtendedPersonInterface) => {
-        axios
-            .get(`${process.env.REACT_APP_BACKEND_URL}/persons/`+user.personId+`/paymenthistory`,{
-                auth: {
-                    username: UserDataManager.getUsername(),
-                    password: UserDataManager.getPassword()
-                }
-            })
-            .then((response) => {
-                setApprovedTransactions(oldArray  => [...oldArray, response.data]);
-                user.transactionsHistory = response.data;
-                //console.log(response.data);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    };
-
     const handleSearchTermChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
     };
@@ -88,44 +56,20 @@ const ManagePayments = () => {
         return fullName.toLowerCase().includes(searchTerm.toLowerCase());
     });
 
-    /*const handleTransactionApproval = (personId: string, date: string) => {
-        // Znajdź osobę na podstawie personId
-        //const person = people.find((person) => person.personId === personId);
-
-        const person = {};
-        console.log(person);
-        if (person) {
-            // Znajdź transakcję w historii transakcji osoby na podstawie daty
-            //console.log(person.transactions_history);
-
-            //const transaction = person.transactions_history.find((transaction) => transaction.date === date);
-
-        }
-    };*/
-
-    const handleTransactionApproval = (personId: string, date: string) => {
-        const updatedPeople = people.map((person) => {
-            if (person.personId === personId) {
-                const updatedTransactions = person.transactionsHistory.transactions.map((transaction) => {
-                    if (transaction.date === date && transaction.status === 'failed') {
-                        transaction.status = 'manually-accepted';
-                    }
-                    return transaction;
-                });
-
-                return {
-                    ...person,
-                    transactionsHistory: {
-                        ...person.transactionsHistory,
-                        transactions: updatedTransactions,
-                    },
-                };
+    const handleAcceptTransaction = (transactionId: string) => {
+        axios.post(process.env.REACT_APP_BACKEND_URL + "/transactions/" + transactionId + "/accept",{}, {
+            auth: {
+                username: UserDataManager.getUsername(),
+                password: UserDataManager.getPassword()
             }
-            return person;
-        });
-
-        setPeople(updatedPeople);
-    };
+        })
+            .then((response) => {
+                getUsers();
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+    }
 
     return (
         <>
@@ -156,6 +100,7 @@ const ManagePayments = () => {
                                     {person.transactionsHistory.transactions ? (
                                         person.transactionsHistory.transactions.map((transaction, transactionIndex) => (
                                             <div key={transactionIndex} style={{ marginTop: '10px' }}>
+                                                <p style={{ fontSize: '16px' }}><strong>Id:</strong> {transaction.transactionId}</p>
                                                 <p style={{ fontSize: '16px' }}><strong>Data transakcji:</strong> {transaction.date}</p>
                                                 <p style={{ fontSize: '16px' }}><strong>Status transakcji:</strong> {transaction.status}</p>
                                                 {transaction.status === 'failed' && (
@@ -163,7 +108,7 @@ const ManagePayments = () => {
                                                         variant="contained"
                                                         color="primary"
                                                         size="small"
-                                                        onClick={() => handleTransactionApproval(person.personId, transaction.date)}
+                                                        onClick={() => handleAcceptTransaction(transaction.transactionId)}
 
                                                     >
                                                         Zatwierdź

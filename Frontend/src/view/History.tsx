@@ -13,6 +13,7 @@ interface HistoryI {
 }
 
 interface TransactionI {
+    transactionId: string,
     date: string,
     status: string,
     totalAmount: number,
@@ -48,7 +49,7 @@ function History() {
                 }
             })
             .then((response) => {
-                console.log("response in history:" + response.data)
+                console.log(response.data)
                 setHistory(response.data);
             })
             .catch((error) => {
@@ -78,6 +79,7 @@ function History() {
                             width: '90%',
                         }}
                     >
+                        <Typography>Id: {transaction.transactionId}</Typography>
                         <Typography>Data: {transaction.date}</Typography>
                         <Typography>Status: {transaction.status}</Typography>
                         <Typography>Metoda dostawy: {transaction.deliveryMethod}</Typography>

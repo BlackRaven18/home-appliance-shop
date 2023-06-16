@@ -68,8 +68,6 @@ const Login = () => {
                 UserDataManager.setUsername(facebookResponse.email);
                 UserDataManager.setPassword(facebookResponse.id);
 
-                UserDataManager.TEST_printData();
-
                 navigate('/loginhome');
             })
             .catch((error) => {
@@ -122,8 +120,6 @@ const Login = () => {
                 UserDataManager.setId(response.data);
                 UserDataManager.setUsername(postData.email);
                 UserDataManager.setPassword(postData.password);
-
-                UserDataManager.TEST_printData();
 
                 navigate('/loginhome');
 

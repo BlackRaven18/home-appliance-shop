@@ -6,6 +6,7 @@ import axios from 'axios';
 import * as React from 'react';
 import { useState } from "react";
 import PersonInterface from '../shared/PersonInterface';
+import UserDataManager from "../../UserDataManager/UserDataManager";
 
 interface ExtendedPersonInterface extends PersonInterface {
     personId: string,
@@ -22,7 +23,12 @@ const ManageUsers = () => {
 
     const getUsers = () => {
         axios
-            .get(process.env.REACT_APP_BACKEND_URL + '/persons')
+            .get(process.env.REACT_APP_BACKEND_URL + '/persons',{
+                auth: {
+                    username: UserDataManager.getUsername(),
+                    password: UserDataManager.getPassword()
+                }
+            })
             .then((response) => {
                 setPeople(response.data);
             })
@@ -37,7 +43,12 @@ const ManageUsers = () => {
 
     const handleDeleteUser = async (personId: string) => {
         try {
-            await axios.delete(process.env.REACT_APP_BACKEND_URL + '/persons/' + personId);
+            await axios.delete(process.env.REACT_APP_BACKEND_URL + '/persons/' + personId,{
+                auth: {
+                    username: UserDataManager.getUsername(),
+                    password: UserDataManager.getPassword()
+                }
+            });
             getUsers(); // reload the user list after deleting the user
         } catch (error) {
             console.error(error);
@@ -65,24 +76,34 @@ const ManageUsers = () => {
 
     const handleModifySubmit = async () => {
         try {
-            await axios.put(process.env.REACT_APP_BACKEND_URL + '/persons/' + personId, {
-                name: newFirstName,
-                surname: newLastName,
-                email: newEmail,
-                phoneNumber: newNumber,
-                address: {
-                    state: newState,
-                    city: newCity,
-                    street: newStreet,
-                    postCode: newPostCode
+            await axios.put(
+                process.env.REACT_APP_BACKEND_URL + '/persons/' + personId,
+                {
+                    name: newFirstName,
+                    surname: newLastName,
+                    email: newEmail,
+                    phoneNumber: newNumber,
+                    address: {
+                        state: newState,
+                        city: newCity,
+                        street: newStreet,
+                        postCode: newPostCode,
+                    },
+                },
+                {
+                    auth: {
+                        username: UserDataManager.getUsername(),
+                        password: UserDataManager.getPassword(),
+                    },
                 }
-            });
+            );
             getUsers(); // załaduj ponownie listę użytkowników po modyfikacji
             setIsModifyClicked(false); // Zresetuj stan po zatwierdzeniu modyfikacji
         } catch (error) {
             console.error(error);
         }
     };
+
 
 
     const handleFirstNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {

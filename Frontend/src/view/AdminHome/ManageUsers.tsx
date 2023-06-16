@@ -71,8 +71,19 @@ const ManageUsers = () => {
     const [newStreet, setNewStreet] = useState("");
     const [newPostCode, setNewPostCode] = useState("");
     const handleModifyClick = (personId: string) => {
-        setIsModifyClicked(true);
-        setPersonId(personId);
+        const person = people.find((person) => person.personId === personId);
+        if (person) {
+            setIsModifyClicked(true);
+            setPersonId(personId);
+            setNewFirstName(person.name || "");
+            setNewLastName(person.surname || "");
+            setNewEmail(person.email || "");
+            setNewNumber(person.phoneNumber || "");
+            setNewState(person.address?.state || "");
+            setNewCity(person.address?.city || "");
+            setNewStreet(person.address?.street || "");
+            setNewPostCode(person.address?.postCode || "");
+        }
     };
 
     const handleModifySubmit = async () => {

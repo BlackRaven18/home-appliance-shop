@@ -22,6 +22,7 @@ import { clearShoppingCart } from '../../redux/ShoppingCartReducer';
 import { RootState } from "../../redux/store";
 import LoadingSpinner from "../LoadingSpinner";
 import SummaryProductElement from './SummaryProductElement';
+import CustomBackdrop from "../CustomBackdrop";
 
 interface TokenI {
     id: string;
@@ -108,14 +109,7 @@ function Summary() {
             <SummaryTopBar />
 
             {isWaitingForResponse ? (
-                <Box>
-                    <Backdrop
-                        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                        open={isWaitingForResponse}
-                    >
-                        <LoadingSpinner label={"Płatnosć w realizacji..."} />
-                    </Backdrop>
-                </Box>
+                <CustomBackdrop label={"Płatnosć w realizacji..."}/>
             ) : (<></>)}
             <Box>
                 <Typography variant="h4" align="center">

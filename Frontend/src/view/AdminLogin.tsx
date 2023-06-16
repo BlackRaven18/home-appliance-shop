@@ -1,25 +1,25 @@
-import * as React from 'react';
-import { NavLink, useNavigate } from "react-router-dom";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useState } from 'react';
-import axios from 'axios';
 import {
     Avatar,
-    Button,
-    CssBaseline,
-    TextField,
-    FormControlLabel,
-    Checkbox,
-    Paper,
     Box,
+    Button,
+    Checkbox,
+    CssBaseline,
+    FormControlLabel,
     Grid,
-    Typography,
     List,
     ListItem,
+    Paper,
+    TextField,
+    Typography,
 } from '@mui/material';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import axios from 'axios';
+import * as React from 'react';
+import { useState } from 'react';
+import { NavLink, useNavigate } from "react-router-dom";
 import UserDataManager from '../UserDataManager/UserDataManager';
-import ErrorHandler from './ErrorHandler';
+import CustomBackdrop from './CustomBackdrop';
 
 
 const theme = createTheme();
@@ -31,6 +31,8 @@ interface Admin {
 
 export default function AdminLogin() {
     const navigate = useNavigate();
+    const [isPasswordShown, setPasswordIsShown] = useState(false)
+    const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
 
     const [formData, setFormData] = useState<Admin>({
         email: '',
@@ -42,7 +44,6 @@ export default function AdminLogin() {
         password: '',
     })
 
-    const [isPasswordShown, setPasswordIsShown] = useState(false)
 
 
     const onChangeForm = (key: string, value: any) => {
@@ -77,12 +78,15 @@ export default function AdminLogin() {
         }
         setErrors(newErrors);
 
-        if(!hasErrors){
+        if (!hasErrors) {
             loginAdmin();
         }
     }
 
     const loginAdmin = () => {
+
+        setIsWaitingForResponse(true);
+
         axios
             .post('http://localhost:8080/admin/login', formData, {
                 auth: {
@@ -104,11 +108,19 @@ export default function AdminLogin() {
             })
             .catch((error) => {
                 alert('Nieprawidłowe dane logowania lub administrator nie istnieje');
+            })
+            .finally(() => {
+                setIsWaitingForResponse(false)
             });
     };
 
     return (
         <ThemeProvider theme={theme}>
+
+            {isWaitingForResponse ? (
+                <CustomBackdrop label='Oczekiwanie na odpowiedź serwera...' />
+            ) : (<></>)}
+
             <Grid container component="main" sx={{ height: '100vh' }}>
                 <CssBaseline />
                 <Grid

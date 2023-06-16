@@ -25,6 +25,7 @@ const ManagePayments = () => {
     const [people, setPeople] = useState<ExtendedPersonInterface[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [expandedTransactionIds, setExpandedTransactionIds] = useState<string[]>([]);
+    const [expandedUserIds, setExpandedUserIds] = useState<string[]>([]);
 
     useEffect(() => {
         getUsers();
@@ -50,11 +51,11 @@ const ManagePayments = () => {
         setSearchTerm(event.target.value);
     };
 
-    const toggleTransactionExpansion = (transactionId: string) => {
-        if (expandedTransactionIds.includes(transactionId)) {
-            setExpandedTransactionIds(expandedTransactionIds.filter(id => id !== transactionId));
+    const toggleUserExpansion = (userId: string) => {
+        if (expandedUserIds.includes(userId)) {
+            setExpandedUserIds(expandedUserIds.filter((id) => id !== userId));
         } else {
-            setExpandedTransactionIds([...expandedTransactionIds, transactionId]);
+            setExpandedUserIds([...expandedUserIds, userId]);
         }
     };
 
@@ -98,46 +99,57 @@ const ManagePayments = () => {
                             <Typography>Nie znaleziono osób spełniających kryteria wyszukiwania</Typography>
                         ) : (
                             filteredPeople.map((person, index) => (
-                                <div key={index} style={{
-                                    border: '1px solid #ccc',
-                                    borderRadius: '5px',
-                                    padding: '10px',
-                                    margin: '20px',
-                                }}>
-                                    <p style={{ fontSize: '20px' }}><strong>Imię:</strong> {person ? person.name : 'unknown'}</p>
-                                    <p style={{ fontSize: '20px' }}><strong>Nazwisko:</strong> {person ? person.surname : 'unknown'}</p>
-                                    <p style={{ fontSize: '20px' }}><strong>Email:</strong> {person ? person.email : 'unknown'}</p>
-                                    <p style={{ fontSize: '20px' }}><strong>Numer telefonu:</strong> {person ? person.phoneNumber : 'unknown'}</p>
+                                <div key={index} style={{ border: '1px solid #ccc', borderRadius: '5px', padding: '10px', margin: '20px' }}>
+                                    <p style={{ fontSize: '20px' }}>
+                                        <strong>Imię:</strong> {person ? person.name : 'unknown'}
+                                    </p>
+                                    <p style={{ fontSize: '20px' }}>
+                                        <strong>Nazwisko:</strong> {person ? person.surname : 'unknown'}
+                                    </p>
+                                    <p style={{ fontSize: '20px' }}>
+                                        <strong>Email:</strong> {person ? person.email : 'unknown'}
+                                    </p>
+                                    <p style={{ fontSize: '20px' }}>
+                                        <strong>Numer telefonu:</strong> {person ? person.phoneNumber : 'unknown'}
+                                    </p>
                                     {person.transactionsHistory.transactions ? (
-                                        person.transactionsHistory.transactions.map((transaction, transactionIndex) => (
-                                            <div key={transactionIndex} style={{ marginTop: '10px' }}>
-                                                <Button
-                                                    variant="outlined"
-                                                    color="primary"
-                                                    onClick={() => toggleTransactionExpansion(transaction.transactionId)}
-                                                    style={{ marginBottom: '10px' }}
-                                                >
-                                                    {expandedTransactionIds.includes(transaction.transactionId) ? 'Ukryj' : 'Pokaż'} transakcję
-                                                </Button>
-                                                {expandedTransactionIds.includes(transaction.transactionId) && (
-                                                    <>
-                                                        <p style={{ fontSize: '16px' }}><strong>Id:</strong> {transaction.transactionId}</p>
-                                                        <p style={{ fontSize: '16px' }}><strong>Data transakcji:</strong> {transaction.date}</p>
-                                                        <p style={{ fontSize: '16px' }}><strong>Status transakcji:</strong> {transaction.status}</p>
-                                                        {transaction.status === 'failed' && (
-                                                            <Button
-                                                                variant="contained"
-                                                                color="primary"
-                                                                size="small"
-                                                                onClick={() => handleAcceptTransaction(transaction.transactionId)}
-                                                            >
-                                                                Zatwierdź
-                                                            </Button>
-                                                        )}
-                                                    </>
-                                                )}
-                                            </div>
-                                        ))
+                                        <>
+                                            <Button
+                                                variant="outlined"
+                                                color="primary"
+                                                onClick={() => toggleUserExpansion(person.personId)}
+                                                style={{ marginBottom: '10px' }}
+                                            >
+                                                {expandedUserIds.includes(person.personId) ? 'Ukryj' : 'Pokaż'} transakcje
+                                            </Button>
+                                            {expandedUserIds.includes(person.personId) && (
+                                                <div style={{ marginTop: '10px' }}>
+                                                    {person.transactionsHistory.transactions.map((transaction, transactionIndex) => (
+                                                        <div key={transactionIndex}>
+                                                            <p style={{ fontSize: '16px' }}>
+                                                                <strong>Id:</strong> {transaction.transactionId}
+                                                            </p>
+                                                            <p style={{ fontSize: '16px' }}>
+                                                                <strong>Data transakcji:</strong> {transaction.date}
+                                                            </p>
+                                                            <p style={{ fontSize: '16px' }}>
+                                                                <strong>Status transakcji:</strong> {transaction.status}
+                                                            </p>
+                                                            {transaction.status === 'failed' && (
+                                                                <Button
+                                                                    variant="contained"
+                                                                    color="primary"
+                                                                    size="small"
+                                                                    onClick={() => handleAcceptTransaction(transaction.transactionId)}
+                                                                >
+                                                                    Zatwierdź
+                                                                </Button>
+                                                            )}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </>
                                     ) : (
                                         <p>Brak historii transakcji dla tej osoby.</p>
                                     )}

@@ -30,7 +30,7 @@ public class PersonController {
         return service.getPersonById(personId);
     }
 
-    @GetMapping("/persons/{personId}/paymenthistory")
+    @GetMapping("/persons/{personId}/transactions-history")
     public TransactionsHistory getPersonTransactionsHistory(@PathVariable String personId){
         return service.getPersonById(personId).getTransactionsHistory();
     }

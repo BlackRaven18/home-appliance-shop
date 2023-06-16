@@ -43,7 +43,7 @@ function History() {
         setIsLoading(true);
         await axios
             .get(process.env.REACT_APP_BACKEND_URL + "/persons/"
-                + userId + "/paymenthistory", {
+                + userId + "/transactions-history", {
                 auth: {
                     username: UserDataManager.getUsername(),
                     password: UserDataManager.getPassword()

@@ -20,8 +20,7 @@ import SummaryTopBar from "../../TopBar/SummaryTopBar";
 import UserDataManager from "../../UserDataManager/UserDataManager";
 import { clearShoppingCart } from '../../redux/ShoppingCartReducer';
 import { RootState } from "../../redux/store";
-import LoadingSpinner from "../LoadingSpinner";
-import SummaryProductElement from './SummaryProductElement';
+import ShoppingCartElement from "../ShoppingCart/ShoppingCartElement";
 import CustomBackdrop from "../CustomBackdrop";
 
 interface TokenI {
@@ -125,7 +124,7 @@ function Summary() {
                 >
                     {shoppingCart.cart.length > 0 ? (
                         shoppingCart.cart.map((cartElement) => (
-                            <SummaryProductElement
+                            <ShoppingCartElement
                                 key={cartElement.productDetails.productId}
                                 quantity={cartElement.quantity}
                                 productDetails={cartElement.productDetails} />

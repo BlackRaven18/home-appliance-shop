@@ -1,11 +1,13 @@
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Grid } from '@mui/material';
 import { Accordion, AccordionDetails, AccordionSummary, Box, Typography } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import PriceFormatter from '../PriceFormattingUtils/PriceFormatter';
 import TopBar from '../TopBar/TopBar';
 import UserDataManager from '../UserDataManager/UserDataManager';
+import LoadingSpinner from './LoadingSpinner';
 
 interface HistoryI {
     transactionId: string,
@@ -32,6 +34,7 @@ interface ProductsInTransactionI {
 function History() {
 
     const [history, setHistory] = useState<HistoryI>();
+    const [isLoading, setIsLoading] = useState(false);
     const userId = UserDataManager.getUserId();
 
     useEffect(() => {
@@ -39,18 +42,18 @@ function History() {
     }, []);
 
     const getHistory = async () => {
-
+        setIsLoading(true);
         await axios
             .get(process.env.REACT_APP_BACKEND_URL + "/persons/"
-                + userId + "/paymenthistory", {
+                + userId + "/transactions-history", {
                 auth: {
                     username: UserDataManager.getUsername(),
                     password: UserDataManager.getPassword()
                 }
             })
             .then((response) => {
-                console.log(response.data)
                 setHistory(response.data);
+                setIsLoading(false);
             })
             .catch((error) => {
                 console.log(error);
@@ -65,6 +68,9 @@ function History() {
                 Historia
             </Typography>
 
+            {isLoading ? (
+                <LoadingSpinner label='Trwa ładowanie historii transakcji...' />
+            ) : <p></p>}
 
             {history ? (
                 history.transactions.map((transaction) => (
@@ -79,11 +85,10 @@ function History() {
                             width: '90%',
                         }}
                     >
-                        <Typography>Id: {transaction.transactionId}</Typography>
-                        <Typography>Data: {transaction.date}</Typography>
-                        <Typography>Status: {transaction.status}</Typography>
-                        <Typography>Metoda dostawy: {transaction.deliveryMethod}</Typography>
-                        <Typography>Kwota zamówienia: {PriceFormatter.getFormattedPrice(transaction.totalAmount)}</Typography>
+                        <Typography><strong>Data:</strong> {transaction.date}</Typography>
+                        <Typography><strong>Status:</strong> {transaction.status}</Typography>
+                        <Typography><strong>Metoda dostawy:</strong> {transaction.deliveryMethod}</Typography>
+                        <Typography><strong>Kwota zamówienia:</strong> {PriceFormatter.getFormattedPrice(transaction.totalAmount)}</Typography>
                         <Typography
                             variant='h5'
                             margin="10px"
@@ -98,23 +103,37 @@ function History() {
                                         aria-controls="panel1a-content"
                                         id="panel1a-header"
                                     >
-                                        <Typography>Produkt {product.name}</Typography>
+                                        <Typography><strong>Produkt {product.name}</strong></Typography>
                                     </AccordionSummary>
                                     <AccordionDetails>
-                                        <Typography>Id produktu: {product.productId}</Typography>
-                                        <Typography>Cena: {PriceFormatter.getFormattedPrice(product.price)}</Typography>
-                                        <Typography>Ilosc: {product.quantity}</Typography>
-                                        <Typography>Obrazek: {product.imageURL}</Typography>
+                                        <Grid container spacing={2}>
+                                            <Grid item xs={12} md={4}>
+                                                <Box
+                                                    component="img"
+                                                    src={product.imageURL}
+                                                    sx={{
+                                                        height: 173.5,
+                                                        width: '80%',
+                                                        maxWidth: { xs: 350, md: '100%' },
+                                                    }}
+                                                />
+                                            </Grid>
+                                            <Grid item xs={12} md={8} sx={{ textAlign: { xs: 'left', md: 'initial' } }}>
+                                                <Typography><strong>Id produktu:</strong> {product.productId}</Typography>
+                                                <Typography><strong>Cena:</strong> {PriceFormatter.getFormattedPrice(product.price)}</Typography>
+                                                <Typography><strong>Ilosc:</strong> {product.quantity}</Typography>
+                                            </Grid>
+                                        </Grid>
                                     </AccordionDetails>
+
+
                                 </Accordion>
                             </Box>
                         ))}
 
                     </Box>
                 ))
-            ) : (
-                <p></p>
-            )}
+            ) : (<></>)}
 
 
 

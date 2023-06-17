@@ -20,6 +20,7 @@ import { IResolveParams, LoginSocialFacebook } from 'reactjs-social-login';
 import FacebookRegisterDialog from './FacebookRegisterDialog';
 import PersonInterface from '../shared/PersonInterface';
 import UserDataManager from '../../UserDataManager/UserDataManager';
+import CustomBackdrop from '../CustomBackdrop';
 
 const theme = createTheme({});
 
@@ -27,6 +28,7 @@ const theme = createTheme({});
 const Register = () => {
     const navigate = useNavigate();
     const [openDialog, setOpenDialog] = useState(false);
+    const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
 
     const handleOpenDialog = () => {
         setOpenDialog(true);
@@ -119,25 +121,25 @@ const Register = () => {
 
     const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-      
+
         if (isFacebookLogging) {
-          setFacebookFormData((prevFacebookData) => ({
-            ...prevFacebookData,
-            address: {
-              ...prevFacebookData.address,
-              [name]: value,
-            },
-          }));
+            setFacebookFormData((prevFacebookData) => ({
+                ...prevFacebookData,
+                address: {
+                    ...prevFacebookData.address,
+                    [name]: value,
+                },
+            }));
         } else {
-          setFormData((prevFormData) => ({
-            ...prevFormData,
-            address: {
-              ...prevFormData.address,
-              [name]: value,
-            },
-          }));
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                address: {
+                    ...prevFormData.address,
+                    [name]: value,
+                },
+            }));
         }
-      };
+    };
 
     const handleErrors = (e: React.FormEvent) => {
         e.preventDefault();
@@ -189,51 +191,57 @@ const Register = () => {
         if (!formData.address.state) {
             newErrors.address = { ...newErrors.address, state: 'Pole Województwo nie może być puste' };
             hasErrors = true;
-          }
-      
-          if (!formData.address.city) {
+        }
+
+        if (!formData.address.city) {
             newErrors.address = { ...newErrors.address, city: 'Pole Miasto nie może być puste' };
             hasErrors = true;
-          }
-      
-          if (!formData.address.street) {
+        }
+
+        if (!formData.address.street) {
             newErrors.address = { ...newErrors.address, street: 'Pole Ulica nie może być puste' };
             hasErrors = true;
-          }
-      
-          if (!formData.address.postCode) {
+        }
+
+        if (!formData.address.postCode) {
             newErrors.address = { ...newErrors.address, postCode: 'Pole Kod pocztowy nie może być puste' };
             hasErrors = true;
-          }
+        }
 
-          if (!formData.address.apartment) {
+        if (!formData.address.apartment) {
             newErrors.address = { ...newErrors.address, apartment: 'Pole Numer domu nie może być puste' };
             hasErrors = true;
-          }
+        }
 
         setErrors(newErrors);
 
-        if(!hasErrors){
+        if (!hasErrors) {
             registerNewUser();
         }
     }
 
     const postUser = () => {
         const postData = isFacebookLogging ? facebookFormData : formData;
+
+        setIsWaitingForResponse(true);
+
         axios
             .post('http://localhost:8080/persons', postData)
             .then((response) => {
                 UserDataManager.setId(response.data);
                 UserDataManager.setUsername(postData.email);
                 UserDataManager.setPassword(postData.password);
-                
+
                 navigate('/loginhome');
             })
             .catch((error) => {
                 console.log(error.response.data);
-                if(error.response.data === 'Email already exists'){
+                if (error.response.data === 'Email already exists') {
                     alert('Podany email już istnieje');
                 }
+            })
+            .finally(() => {
+                setIsWaitingForResponse(false);
             });
     }
 
@@ -256,6 +264,11 @@ const Register = () => {
 
     return (
         <ThemeProvider theme={theme}>
+
+            {isWaitingForResponse ? (
+                <CustomBackdrop label='Oczekiwanie na odpowiedź serwera...' />
+            ) : (<></>)}
+
             <Grid container component="main" sx={{ height: '100vh' }}>
                 <CssBaseline />
                 <Grid
@@ -264,7 +277,7 @@ const Register = () => {
                     sm={4}
                     md={7}
                     sx={{
-                        backgroundImage: 'url(https://source.unsplash.com/random)',
+                        backgroundImage: 'url(https://picsum.photos/1000/600)',
                         backgroundRepeat: 'no-repeat',
                         backgroundColor: (t) =>
                             t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],

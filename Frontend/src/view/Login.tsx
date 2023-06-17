@@ -20,6 +20,7 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { FacebookLoginButton } from 'react-social-login-buttons';
 import { IResolveParams, LoginSocialFacebook } from 'reactjs-social-login';
 import UserDataManager from '../UserDataManager/UserDataManager';
+import CustomBackdrop from './CustomBackdrop';
 
 const theme = createTheme();
 
@@ -38,6 +39,8 @@ interface FacebookResponseI {
 const Login = () => {
     const [isFacebookLogging, setFacebookLogging] = useState(false);
     const [isPasswordShown, setPasswordIsShown] = useState(false);
+    const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
+
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState<Person>({
@@ -56,6 +59,9 @@ const Login = () => {
     }
 
     const handleFacebookLogin = (facebookResponse: FacebookResponseI) => {
+
+        setIsWaitingForResponse(true);
+
         axios
             .post('http://localhost:8080/persons/login',
                 {
@@ -74,6 +80,9 @@ const Login = () => {
             })
             .catch((error) => {
                 alert('Wystąpił błąd podczas logowania');
+            })
+            .finally(() => {
+                setIsWaitingForResponse(false);
             });
     };
 
@@ -115,6 +124,8 @@ const Login = () => {
     const postUser = async () => {
         const postData = formData;
 
+        setIsWaitingForResponse(true);
+
         await axios
             .post('http://localhost:8080/persons/login', postData)
             .then((response) => {
@@ -130,6 +141,8 @@ const Login = () => {
             })
             .catch((error) => {
                 alert('Nieprawidłowe dane logowania lub użytkownik nie istnieje');
+            }).finally(() => {
+                setIsWaitingForResponse(false);
             });
     }
 
@@ -139,6 +152,11 @@ const Login = () => {
 
     return (
         <ThemeProvider theme={theme}>
+
+            {isWaitingForResponse? (
+                <CustomBackdrop label='Oczekiwanie na odpowiedź serwera...'/>
+            ) : (<></>)}
+
             <Grid container component="main" sx={{ height: '100vh' }}>
                 <CssBaseline />
                 <Grid
@@ -147,7 +165,7 @@ const Login = () => {
                     sm={4}
                     md={7}
                     sx={{
-                        backgroundImage: 'url(https://source.unsplash.com/random)',
+                        backgroundImage: 'url(https://picsum.photos/1000/600)',
                         backgroundRepeat: 'no-repeat',
                         backgroundColor: (t) =>
                             t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],

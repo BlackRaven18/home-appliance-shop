@@ -11,9 +11,12 @@ export default function AdminTopBar() {
     const handleLogout = () => {
 
         UserDataManager.clearData();
-        
-        navigate('/adminLogin');
-        console.log("Logged out");
+
+        if (!UserDataManager.isLogged()) {
+            navigate('/adminLogin');
+        }else {
+            console.error("An error occurred while logging out");
+        }
     }
 
     return (

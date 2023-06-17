@@ -1,11 +1,8 @@
-import {
-    createBrowserRouter,
-} from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import AdminHome from '../view/AdminHome/AdminHome';
 import AdminLogin from '../view/AdminLogin';
 import History from '../view/History';
 import Home from '../view/Home/Home';
-import LoginHome from '../view/Home/LoginHome';
 import ProductDetails from "../view/ProductDetails/ProductDetails";
 import AdminProfil from '../view/Profil/AdminProfil';
 import Profil from '../view/Profil/Profil';
@@ -13,23 +10,50 @@ import Register from '../view/Register/Register';
 import Summary from "../view/Summary/Summary";
 import Login from './../view/Login';
 import ShoppingCart from './../view/ShoppingCart/ShoppingCart';
+import ProtectedElement from "./ProtectedElement";
+import LoginHome from "../view/Home/LoginHome";
+import NotFoundView from "../view/NotFoundView";
 
+/*
+    <ProtectedElement> checks conditions and pass the user or not
+    element - component to which user is trying to get access
+    redirectPath - path to redirect when user is not allowed to go to specific path
+    allowLoggedInUser - e.g. when user is logged-in we don't wan't him to go to /login page
+                        because he's logged in already
+*/
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <Home />,
+        element: <ProtectedElement
+            element={<Home />}
+            redirectPath="/loginhome"
+            allowLoggedInUser={false} />
+        //<Home />,
+    },
+    {
+        path: "*",
+        element: <NotFoundView />
     },
     {
         path: "/login",
-        element: <Login />,
+        element: <ProtectedElement
+            element={<Login />}
+            redirectPath="/loginhome"
+            allowLoggedInUser={false} />
     },
     {
         path: "/register",
-        element: <Register />,
+        element: <ProtectedElement
+            element={<Register />}
+            redirectPath="/loginhome"
+            allowLoggedInUser={false} />
     },
     {
         path: "/home",
-        element: <Home />,
+        element: <ProtectedElement
+            element={<Home />}
+            redirectPath="/loginhome"
+            allowLoggedInUser={false} />
     },
     {
         path: "/productdetails",
@@ -37,15 +61,17 @@ const router = createBrowserRouter([
     },
     {
         path: "/loginhome",
-        element: <LoginHome />,
+        element: <ProtectedElement
+            element={<LoginHome />}
+            redirectPath="/login"
+            allowLoggedInUser={true} />
     },
     {
         path: "/adminhome",
-        element: <AdminHome />,
-    },
-    {
-        path: "/adminlogin",
-        element: <AdminLogin />,
+        element: <ProtectedElement
+            element={<AdminHome />}
+            redirectPath="/adminlogin"
+            allowLoggedInUser={true} />
     },
     {
         path: "/adminlogin",
@@ -53,24 +79,41 @@ const router = createBrowserRouter([
     },
     {
         path: "/shoppingcart",
-        element: <ShoppingCart />,
+        element: <ProtectedElement
+            element={<ShoppingCart />}
+            redirectPath="/login"
+            allowLoggedInUser={true} />
     },
     {
         path: "/summary",
-        element: <Summary />,
+        element: <ProtectedElement
+            element={<Summary />}
+            redirectPath="/login"
+            allowLoggedInUser={true} />
     },
     {
         path: "/history",
-        element: <History />,
+        element: <ProtectedElement
+            element={<History />}
+            redirectPath="/login"
+            allowLoggedInUser={true} />
     },
     {
         path: "/profil",
-        element: <Profil />,
+        element: <ProtectedElement
+            element={<Profil />}
+            redirectPath="/login"
+            allowLoggedInUser={true} />
     },
     {
         path: "/adminprofil",
-        element: <AdminProfil />,
+        element: <ProtectedElement
+            element={<AdminProfil />}
+            redirectPath="/adminlogin"
+            allowLoggedInUser={true} />
     },
+
 ]);
+
 
 export default router;

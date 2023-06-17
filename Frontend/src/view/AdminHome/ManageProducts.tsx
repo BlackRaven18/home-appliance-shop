@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import ProductInterface from "../shared/ProductInterface";
 import { SelectChangeEvent } from "@mui/material";
 import UserDataManager from "../../UserDataManager/UserDataManager";
+import LoadingSpinner from "../LoadingSpinner";
 
 type Category = {
     categoryId: string;
@@ -15,18 +16,29 @@ type Category = {
 
 const ManageProducts = () => {
     const [products, setProducts] = useState<ProductInterface[]>([]);
-    const [searchTerm, setSearchTerm] = useState<string>('');
+    const [searchText, setSearchText] = useState("");
     const [productId, setProductId] = useState("");
     const [categories, setCategories] = useState<Category[]>([]);
     const [newCategory, setNewCategory] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
-    React.useEffect(() => {
+    const [isModifyClicked, setIsModifyClicked] = useState(false);
+    const [newName, setNewName] = useState("");
+    const [newBrand, setNewBrand] = useState("");
+    const [newColor, setNewColor] = useState("");
+    const [newSpecification, setNewSpecification] = useState("");
+    const [newPrice, setNewPrice] = useState("");
+    const [newCategoryName, setNewCategoryName] = useState("");
+    const [newImageURL, setNewImageURL] = useState("url");
+
+    useEffect(() => {
         getProducts();
         getCategories();
     }, []);
 
     const getProducts = () => {
+        setIsLoading(true);
         axios
             .get(process.env.REACT_APP_BACKEND_URL + `/products`,{
                 auth: {
@@ -36,6 +48,7 @@ const ManageProducts = () => {
             })
             .then((response) => {
                 setProducts(response.data);
+                setIsLoading(false);
             })
             .catch(function (error) {
                 console.log(error);
@@ -59,11 +72,12 @@ const ManageProducts = () => {
     };
 
     const filteredProducts = products.filter((product) => {
-        return product.name.toLowerCase().includes(searchTerm.toLowerCase());
+        const productString = `${product.name} ${product.brand} ${product.color} ${product.specification} ${product.category.name}`.toLowerCase();
+        return productString.includes(searchText.toLowerCase());
     });
 
-    const handleSearchTermChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchTerm(event.target.value);
+    const handleSearchTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchText(event.target.value);
     };
 
     const createProduct = (event: React.FormEvent<HTMLFormElement>) => {
@@ -127,17 +141,6 @@ const ManageProducts = () => {
             console.error(error);
         }
     }
-
-
-
-    const [isModifyClicked, setIsModifyClicked] = useState(false);
-    const [newName, setNewName] = useState("");
-    const [newBrand, setNewBrand] = useState("");
-    const [newColor, setNewColor] = useState("");
-    const [newSpecification, setNewSpecification] = useState("");
-    const [newPrice, setNewPrice] = useState("");
-    const [newCategoryName, setNewCategoryName] = useState("");
-    const [newImageURL, setNewImageURL] = useState("");
 
 
     const handleModifyClick = (productId: string) => {
@@ -222,11 +225,13 @@ const ManageProducts = () => {
                             <TextField
                                 label="Wyszukaj produkt"
                                 variant="outlined"
-                                value={searchTerm}
-                                onChange={handleSearchTermChange}
+                                value={searchText}
+                                onChange={handleSearchTextChange}
                                 style={{ margin: '20px' }}
                             />
-
+                {isLoading? (
+                    <LoadingSpinner label="Trwa ładowanie produktów..."/>
+                ) : <></>}
                 {filteredProducts.map((product, index) => (
                         <div key={product.productId} style={{
                             border: '1px solid #ccc',

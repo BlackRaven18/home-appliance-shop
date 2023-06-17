@@ -60,6 +60,16 @@ public class PersonService {
         return repository.save(existingPerson);
     }
 
+    public Person updatePerson(String personId, Person personRequest) {
+        Person existingPerson = repository.findById(personId).get();
+        existingPerson.setName(personRequest.getName());
+        existingPerson.setSurname(personRequest.getSurname());
+        existingPerson.setEmail(personRequest.getEmail());
+        existingPerson.setPassword(personRequest.getPassword());
+        existingPerson.setPhoneNumber(personRequest.getPhoneNumber());
+        return repository.save(existingPerson);
+    }
+
     public String deletePerson(String personId) {
         repository.deleteById(personId);
         return personId + "person deleted from database";

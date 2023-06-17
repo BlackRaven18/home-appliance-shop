@@ -7,6 +7,8 @@ import PriceFormatter from '../../PriceFormattingUtils/PriceFormatter';
 import TopBar from '../../TopBar/TopBar';
 import { addProductToCart } from '../../redux/ShoppingCartReducer';
 import ProductInterface from '../shared/ProductInterface';
+import UserDataManager from '../../UserDataManager/UserDataManager';
+import NotLoggedInTopBar from '../../TopBar/NotLoggedInTopBar';
 
 
 
@@ -34,7 +36,11 @@ const ProductDetails = () => {
 
     return (
         <>
-            <TopBar />
+            {UserDataManager.isLogged() ? (
+                <TopBar />
+            ) : (
+                <NotLoggedInTopBar />
+            )}
 
             <Typography
                 variant="h4"
@@ -93,12 +99,15 @@ const ProductDetails = () => {
                             {PriceFormatter.getFormattedPrice(productDetails.price) ?? 'unknown'}
                         </Typography>
 
-                        <Button variant="contained" color="primary" onClick={() => {
-                            addProductToShoppingCart(productDetails);
-                            setOpen(true);
-                        }}>
-                            Dodaj do koszyka
-                        </Button>
+                        {UserDataManager.isLogged() ? (
+                            <Button variant="contained" color="primary" onClick={() => {
+                                addProductToShoppingCart(productDetails);
+                                setOpen(true);
+                            }}>
+                                Dodaj do koszyka
+                            </Button>
+
+                        ) : (<></>)}
 
                         <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
                             <Alert variant="filled" onClose={handleClose} severity="success" sx={{ width: '100%' }}>

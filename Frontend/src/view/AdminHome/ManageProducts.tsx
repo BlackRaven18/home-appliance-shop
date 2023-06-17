@@ -19,6 +19,7 @@ const ManageProducts = () => {
     const [productId, setProductId] = useState("");
     const [categories, setCategories] = useState<Category[]>([]);
     const [newCategory, setNewCategory] = useState("");
+    const [selectedCategory, setSelectedCategory] = useState("");
 
     React.useEffect(() => {
         getProducts();
@@ -91,6 +92,10 @@ const ManageProducts = () => {
             specification,
             price,
             imageURL,
+            category: {
+                categoryId: selectedCategory,
+                name: "", // Możesz zostawić puste pole name, jeśli nie jest dostępne w tym miejscu
+            },
         };
 
         axios
@@ -315,17 +320,18 @@ const ManageProducts = () => {
                     >
                         {/* Pozycja dla wyboru kategorii */}
                         <Select
-                            value={newCategory}
-                            onChange={handleCategoryChange}
+                            value={selectedCategory}
+                            onChange={(event) => setSelectedCategory(event.target.value as string)}
                             fullWidth
                         >
-                            {categories.map(category => (
+                            {categories.map((category) => (
                                 <MenuItem key={category.categoryId} value={category.categoryId}>
                                     {category.name}
                                 </MenuItem>
                             ))}
                         </Select>
-                <TextField
+
+                        <TextField
                     margin="normal"
                     required
                     fullWidth

@@ -30,6 +30,12 @@ public class PersonController {
         return service.getPersonById(personId);
     }
 
+    @PutMapping("/persons/{personId}")
+    public Person modifyPerson(@PathVariable String personId, @RequestBody Person person){
+        System.out.println(person.toString());
+        return service.updatePerson(personId, person);
+    }
+
     @GetMapping("/persons/{personId}/transactions-history")
     public TransactionsHistory getPersonTransactionsHistory(@PathVariable String personId){
         return service.getPersonById(personId).getTransactionsHistory();

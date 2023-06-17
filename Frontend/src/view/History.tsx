@@ -15,6 +15,7 @@ interface HistoryI {
 }
 
 interface TransactionI {
+    transactionId: string,
     date: string,
     status: string,
     totalAmount: number,

@@ -223,11 +223,7 @@ const ManageRegistration = () => {
         axios
             .post('http://localhost:8080/persons', postData)
             .then((response) => {
-                UserDataManager.setId(response.data);
-                UserDataManager.setUsername(postData.email);
-                UserDataManager.setPassword(postData.password);
-
-                navigate('/loginhome');
+                
             })
             .catch((error) => {
                 console.log(error.response.data);

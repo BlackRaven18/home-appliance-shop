@@ -5,9 +5,11 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Category, setActiveCategory } from '../../redux/CategoryReducer';
+import LoadingSpinner from '../LoadingSpinner';
 
 const CategoryList = () => {
     const [categoriesFromEndpoint, setCategoriesFromEndpoint] = useState<Category[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -20,10 +22,11 @@ const CategoryList = () => {
     }, []);
 
     const getCategories = () => {
-        axios
-            .get(process.env.REACT_APP_BACKEND_URL + '/categories')
+        setIsLoading(true);
+        axios.get(process.env.REACT_APP_BACKEND_URL + "/categories")
             .then((response) => {
                 setCategoriesFromEndpoint(response.data);
+                setIsLoading(false);
             })
             .catch((error) => {
                 setCategoriesFromEndpoint([]);
@@ -37,6 +40,11 @@ const CategoryList = () => {
                     Kategorie
                 </Typography>
                 <List sx={{ marginTop: '16px' }}>
+
+                    {isLoading ? (
+                        <LoadingSpinner label='Trwa ładowanie kategorii...' />
+                    ) : <></>}
+
                     {categoriesFromEndpoint.map((category) => (
                         <div key={category.name}>
                             <ListItemButton onClick={() => setCategory(category)}>

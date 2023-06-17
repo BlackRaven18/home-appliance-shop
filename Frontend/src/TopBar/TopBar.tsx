@@ -1,27 +1,33 @@
-import { AppBar, Button, Grid, Toolbar, Typography, Box } from '@mui/material'
-import { Link } from "react-router-dom";
-import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from "react-router-dom";
 import { RootState } from '../redux/store';
+import UserDataManager from '../UserDataManager/UserDataManager';
+import { clearShoppingCart } from '../redux/ShoppingCartReducer';
 
 
 export default function TopBar() {
 
     const navigate = useNavigate();
-
+    const dispatch = useDispatch();
     const shoppingCart = useSelector((state: RootState) => state.shoppingCart);
+
 
     const goToHome = () => {
         navigate('/loginhome');
     }
 
+
     const handleLogout = () => {
-        localStorage.removeItem("user");
-        if(localStorage.getItem("user") === null){
+        
+        UserDataManager.clearData();
+        dispatch(clearShoppingCart());
+
+        if (!UserDataManager.isLogged()) {
             navigate('/login');
             console.log("Logged out");
         }
-        else{
+        else {
             console.error("An error occurred while logging out");
         }
     }

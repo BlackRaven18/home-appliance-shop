@@ -1,6 +1,5 @@
-import { AppBar, Button, Grid, Toolbar, Typography, Box } from '@mui/material'
-import { Link } from "react-router-dom";
-import { useNavigate } from 'react-router-dom';
+import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material';
+import { Link, useNavigate } from "react-router-dom";
 
 export default function NotLoggedInTopBar() {
     const navigate = useNavigate();

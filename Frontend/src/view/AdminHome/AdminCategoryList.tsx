@@ -1,15 +1,12 @@
-import * as React from 'react';
-import TextField from '@mui/material/TextField';
-import { Link } from "react-router-dom";
+import { Grid, List, ListItem, ListItemText } from '@mui/material';
 import Paper from '@mui/material/Paper';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import AdminTopBar from '../../TopBar/AdminTopBar';
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';
-import { Grid, List, ListItem, ListItemText } from '@mui/material';
+import ManagePayments from "./ManagePayments";
 import ManageProducts from "./ManageProducts";
 import ManageUsers from "./ManageUsers";
-import ManagePayments from "./ManagePayments";
 
 const categories = ['Zarządzaj produktami', 'Zarządzaj użytkownikami', 'Zarządzaj płatnościami'];
 

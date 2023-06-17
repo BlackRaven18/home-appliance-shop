@@ -1,5 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit'
-import type { PayloadAction } from '@reduxjs/toolkit'
+import type { PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 export interface Category {
     categoryId: string;
@@ -8,7 +8,7 @@ export interface Category {
 
 
 const initialState: Category = {
-    categoryId: " ",
+    categoryId: '',
     name: '',
 }
 
@@ -25,6 +25,6 @@ export const categoriesSlice = createSlice({
     }
 })
 
-export const {setActiveCategory} = categoriesSlice.actions
+export const { setActiveCategory } = categoriesSlice.actions
 
 export default categoriesSlice.reducer;

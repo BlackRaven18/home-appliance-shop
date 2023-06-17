@@ -4,29 +4,19 @@ import { useState } from "react";
 import { useDispatch } from 'react-redux';
 import { useNavigate } from "react-router";
 import PriceFormatter from "../../PriceFormattingUtils/PriceFormatter";
+import ProductInterface from "../shared/ProductInterface";
+
 import { addProductToCart } from '../../redux/ShoppingCartReducer';
+import UserDataManager from "../../UserDataManager/UserDataManager";
 
 
-interface Product {
-    productId: string;
-    name: string;
-    brand: string;
-    color: string;
-    specification: string;
-    price: number;
-    imageURL: string;
-    category: {
-        categoryId: string;
-        name: string;
-    };
-}
 
-const ProductListElement = (product: Product) => {
+const ProductListElement = (product: ProductInterface) => {
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
     const dispatch = useDispatch();
 
-    const addProductToShoppingCart = (product: Product) => {
+    const addProductToShoppingCart = (product: ProductInterface) => {
         dispatch(addProductToCart(product));
     }
 
@@ -65,15 +55,18 @@ const ProductListElement = (product: Product) => {
                     <Typography><strong>Specyfikacja:</strong> {product.specification ?? 'unknown'}</Typography>
                     <Typography><strong>Cena:</strong> {PriceFormatter.getFormattedPrice(product.price) ?? 'unknown'}</Typography>
 
-                    <Button variant="contained" color="primary" onClick={(event) => {
-                        // zatrzymanie propagacji zdarzenia, czyli nastąpi tylko obsługa kliknięcia
-                        // przycisku a nie najpierw obsługa zdarzenia kliknięcia w Box
-                        event.stopPropagation();
-                        addProductToShoppingCart(product);
-                        setOpen(true);
-                    }}>
-                        Dodaj do koszyka
-                    </Button>
+                    {UserDataManager.isLogged() ? (
+                        <Button variant="contained" color="primary" onClick={(event) => {
+                            // zatrzymanie propagacji zdarzenia, czyli nastąpi tylko obsługa kliknięcia
+                            // przycisku a nie najpierw obsługa zdarzenia kliknięcia w Box
+                            event.stopPropagation();
+                            addProductToShoppingCart(product);
+                            setOpen(true);
+                        }}>
+                            Dodaj do koszyka
+                        </Button>
+
+                    ) : (<></>)}
 
                     <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
                         <Alert variant="filled" onClose={handleClose} severity="success" sx={{ width: '100%' }}>

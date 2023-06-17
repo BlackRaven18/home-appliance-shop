@@ -1,8 +1,4 @@
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import axios from 'axios';
-import React, { useState } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
 import {
     Avatar,
     Box,
@@ -11,12 +7,20 @@ import {
     CssBaseline,
     FormControlLabel,
     Grid,
+    List,
+    ListItem,
     Paper,
     TextField,
     Typography,
-    List,
-    ListItem,
 } from '@mui/material';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import axios from 'axios';
+import React, { useState } from 'react';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { FacebookLoginButton } from 'react-social-login-buttons';
+import { IResolveParams, LoginSocialFacebook } from 'reactjs-social-login';
+import UserDataManager from '../UserDataManager/UserDataManager';
+import CustomBackdrop from './CustomBackdrop';
 
 const theme = createTheme();
 
@@ -25,37 +29,91 @@ interface Person {
     password: string;
 }
 
-interface ErrorMessageProps {
-    message: string;
+interface FacebookResponseI {
+    id: string,
+    firstName: string,
+    lastName: string
+    email: string,
 }
 
 const Login = () => {
+    const [isFacebookLogging, setFacebookLogging] = useState(false);
+    const [isPasswordShown, setPasswordIsShown] = useState(false);
+    const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
+
     const navigate = useNavigate();
+
     const [formData, setFormData] = useState<Person>({
         email: '',
         password: '',
     });
 
-    const [serverErrorMessage, setServerErrorMessage] = useState('');
-    const [errorMessages, setErrorMessages] = useState<string[]>([]);
+    const [errors, setErrors] = useState<Person>({
+        email: '',
+        password: '',
+    })
 
-    const [isPasswordShown, setPasswordIsShown] = useState(false);
+    const validateEmail = (value: string) => {
+        const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+        return emailRegex.test(value);
+    }
 
-    const ErrorMessage = () => (
-        <div>
-            {errorMessages.map((errorMessage, index) => (
-                <p key={index} className="text-rose-600 font-medium">
-                    {errorMessage}
-                </p>
-            ))}
-        </div>
-    );
+    const handleFacebookLogin = (facebookResponse: FacebookResponseI) => {
 
-    const ServerErrorMessage: React.FC<ErrorMessageProps> = ({ message }) => (
-        <div>
-            <p className="text-rose-600 font-medium">{message}</p>
-        </div>
-    );
+        setIsWaitingForResponse(true);
+
+        axios
+            .post('http://localhost:8080/persons/login',
+                {
+                    email: facebookResponse.email,
+                    password: facebookResponse.id,
+                })
+            .then((response) => {
+
+                UserDataManager.setId(response.data);
+                UserDataManager.setUsername(facebookResponse.email);
+                UserDataManager.setPassword(facebookResponse.id);
+
+                UserDataManager.TEST_printData();
+
+                navigate('/loginhome');
+            })
+            .catch((error) => {
+                alert('Wystąpił błąd podczas logowania');
+            })
+            .finally(() => {
+                setIsWaitingForResponse(false);
+            });
+    };
+
+    const handleErrors = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        let hasErrors = false;
+        const newErrors: any = {};
+
+        if (!formData.email) {
+            newErrors.email = 'Pole Email nie może być puste';
+            hasErrors = true;
+        } else if (!validateEmail(formData.email)) {
+            newErrors.email = 'Podaj prawidłowy adres email';
+            hasErrors = true;
+        }
+
+        if (!formData.password) {
+            newErrors.password = 'Pole Hasło nie może być puste';
+            hasErrors = true;
+        }
+        setErrors(newErrors);
+
+        if (!hasErrors) {
+            loginUser();
+        }
+    }
+
+    const handleOnRejectFacebookLogin = () => {
+        setFacebookLogging(false);
+    }
 
     const onChangeForm = (key: string, value: any) => {
         setFormData((prevFormData) => ({
@@ -63,41 +121,42 @@ const Login = () => {
             [key]: value,
         }));
     };
+    const postUser = async () => {
+        const postData = formData;
 
-    const loginUser = () => {
-        setErrorMessages([]);
+        setIsWaitingForResponse(true);
 
-        const emptyFields = Object.entries(formData).filter(([key, value]) => {
-            if (typeof value === 'string') {
-                return value.trim() === '';
-            }
-            return false;
-        });
-
-        if (emptyFields.length > 0) {
-            const emptyFieldNames = emptyFields.map(([key]) => key);
-            setErrorMessages([...emptyFieldNames, 'Wprowadź wartości w powyższych polach']);
-            return;
-        }
-
-        axios
-            .post('http://localhost:8080/persons/login', formData)
+        await axios
+            .post('http://localhost:8080/persons/login', postData)
             .then((response) => {
-                if (response.data) {
-                    localStorage.setItem('user', response.data);
-                    navigate('/loginhome');
-                } else {
-                    console.log('Empty response data');
-                }
+
+                UserDataManager.setId(response.data);
+                UserDataManager.setUsername(postData.email);
+                UserDataManager.setPassword(postData.password);
+
+                UserDataManager.TEST_printData();
+
+                navigate('/loginhome');
+
             })
             .catch((error) => {
-                setErrorMessages([error.response.data]);
-                setServerErrorMessage(error.response.data);
+                alert('Nieprawidłowe dane logowania lub użytkownik nie istnieje');
+            }).finally(() => {
+                setIsWaitingForResponse(false);
             });
+    }
+
+    const loginUser = () => {
+        postUser();
     };
 
     return (
         <ThemeProvider theme={theme}>
+
+            {isWaitingForResponse? (
+                <CustomBackdrop label='Oczekiwanie na odpowiedź serwera...'/>
+            ) : (<></>)}
+
             <Grid container component="main" sx={{ height: '100vh' }}>
                 <CssBaseline />
                 <Grid
@@ -138,15 +197,8 @@ const Login = () => {
                                 label="Adres email"
                                 value={formData.email}
                                 onChange={(e) => onChangeForm('email', e.target.value)}
-                                error={
-                                    errorMessages.includes('email')
-                                }
-                                helperText={
-                                    errorMessages.includes('email') ?
-                                        'Pole nie może być puste' :
-                                        ''
-                                }
                             />
+                            {errors.email && <span>{errors.email}</span>}
                             <TextField
                                 margin="normal"
                                 required
@@ -158,11 +210,9 @@ const Login = () => {
                                 autoComplete="password"
                                 value={formData.password}
                                 onChange={(e) => onChangeForm('password', e.target.value)}
-                                error={errorMessages.includes('password')}
-                                helperText={
-                                    errorMessages.includes('password') ? 'Pole nie może być puste' : ''
-                                }
                             />
+                            {errors.password && <span>{errors.password}</span>}
+                            < br />
                             <FormControlLabel
                                 control={
                                     <Checkbox
@@ -173,18 +223,34 @@ const Login = () => {
                                 }
                                 label="Pokaż hasło"
                             />
-                            {/* <FacebookLoginButton /> */}
-                            {serverErrorMessage && serverErrorMessage.includes('Invalid login details or user does not exist') ? (
-                                <ServerErrorMessage message="Nieprawidłowe dane logowania lub użytkownik nie istnieje" />
-                            ) : null}
                             <Button
                                 fullWidth
                                 variant="contained"
                                 sx={{ mt: 3, mb: 2 }}
-                                onClick={loginUser}
+                                onClick={handleErrors}
                             >
                                 Zaloguj
                             </Button>
+                            <LoginSocialFacebook
+                                appId={process.env.REACT_APP_FACEBOOK_ID ?? ""}
+                                onResolve={({ provider, data }: IResolveParams) => {
+                                    if (data) {
+                                        handleFacebookLogin({
+                                            id: data.id,
+                                            firstName: data.first_name,
+                                            lastName: data.last_name,
+                                            email: data.email,
+                                        })
+
+                                    }
+                                }}
+                                onReject={(err) => {
+                                    handleOnRejectFacebookLogin();
+                                    console.log(err);
+                                }}
+                            >
+                                <FacebookLoginButton />
+                            </LoginSocialFacebook>
                             <List>
                                 <ListItem>
                                     <NavLink to='/register'>

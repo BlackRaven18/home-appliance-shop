@@ -15,29 +15,27 @@ import java.util.Map;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/persons")
-
 public class PersonController {
 
     @Autowired
     private PersonService service;
 
-    @GetMapping
+    @GetMapping("/persons")
     public List<Person> getPersons(){
         return service.findAllPersons();
     }
 
-    @GetMapping("/{personId}")
+    @GetMapping("/persons/{personId}")
     public Person getPersonById(@PathVariable String personId){
         return service.getPersonById(personId);
     }
 
-    @GetMapping("/{personId}/paymenthistory")
+    @GetMapping("/persons/{personId}/transactions-history")
     public TransactionsHistory getPersonTransactionsHistory(@PathVariable String personId){
         return service.getPersonById(personId).getTransactionsHistory();
     }
 
-    @PostMapping("/login")
+    @PostMapping("/persons/login")
     public ResponseEntity<?> getPersonId(@RequestBody Person person) {
         String email = person.getEmail();
         String password = person.getPassword();
@@ -51,7 +49,21 @@ public class PersonController {
         }
     }
 
-    @PostMapping
+    @PostMapping("/admin/login")
+    public ResponseEntity<?> getAdminId(@RequestBody Person admin) {
+        String email = admin.getEmail();
+        String password = admin.getPassword();
+
+        Person retrievedAdmin = service.getAdminByLoginDatas(email, password);
+
+        if (retrievedAdmin != null) {
+            return ResponseEntity.ok(retrievedAdmin.getPersonId());
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("\n" + "Invalid login details or admin does not exist");
+        }
+    }
+
+    @PostMapping("/persons")
     public ResponseEntity<?> createPerson(@RequestBody Person person) {
         if (service.existsByEmail(person.getEmail())) {
             return ResponseEntity.badRequest().body("Email already exists");
@@ -61,12 +73,12 @@ public class PersonController {
         return ResponseEntity.ok(person.getPersonId());
     }
 
-    @PutMapping
+    @PutMapping("/persons")
     public Person modifyPerson(@RequestBody Person person){
         return service.updatePerson(person);
     }
 
-    @DeleteMapping("/{personId}")
+    @DeleteMapping("/persons/{personId}")
     public String deletePerson(@PathVariable String personId){
         return service.deletePerson(personId);
     }

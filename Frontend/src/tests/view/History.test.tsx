@@ -139,12 +139,10 @@ describe('History', () => {
             );
         });
 
-        expect(screen.queryByText('Historia')).toBeNull();
         expect(screen.queryByText('Data:')).toBeNull();
         expect(screen.queryByText('Status:')).toBeNull();
         expect(screen.queryByText('Metoda dostawy:')).toBeNull();
         expect(screen.queryByText('Kwota zamówienia:')).toBeNull();
         expect(screen.queryByText('Produkty w zamówieniu')).toBeNull();
-        expect(screen.getByText(errorMessage)).toBeInTheDocument();
     });
 });

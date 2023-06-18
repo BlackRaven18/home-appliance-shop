@@ -35,6 +35,7 @@ const ProductListElement = (product: ProductInterface) => {
     return (
 
         <Box
+            data-testid="product-list-element"
             onClick={goToProductDetails}
             sx={{
                 border: '1px solid grey',

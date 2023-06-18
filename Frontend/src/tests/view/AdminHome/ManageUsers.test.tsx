@@ -172,20 +172,23 @@ describe('ManageUsers', () => {
 
         fireEvent.click(screen.getByText('Zatwierdź'));
 
-        expect(axios.put).toHaveBeenCalledWith(`${process.env.REACT_APP_BACKEND_URL}/persons/1`, {
-            name: 'Anna',
-            surname: 'Nowak',
-            email: 'annanowak@interia.com',
-            phoneNumber: '987654321',
-            address: {
-                state: 'Małopolskie',
-                city: 'Kraków',
-                street: 'Jana Pawła',
-                postCode: '54321',
-            },
-        });
+        expect(axios.put).toHaveBeenCalledWith(
+            `${process.env.REACT_APP_BACKEND_URL}/persons/1`,
+            {
+                name: 'Anna',
+                surname: 'Nowak',
+                email: 'annanowak@interia.com',
+                phoneNumber: '987654321',
+                address: {
+                    state: 'Małopolskie',
+                    city: 'Kraków',
+                    street: 'Jana Pawła',
+                    postCode: '54321',
+                },
+            }
+        );
 
-        await waitFor(() => expect(screen.queryByText('Imię: Jan')).toBeNull());
+        await waitFor(() => expect(screen.queryByText('Jan')).toBeNull());
         expect(await screen.findByText('Anna')).toBeInTheDocument();
     });
 

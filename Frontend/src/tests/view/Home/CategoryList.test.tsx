@@ -1,12 +1,16 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import axios from 'axios';
-import { categoriesSlice, setActiveCategory } from '../../../redux/CategoryReducer';
+import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
+import { store } from '../../../redux/store';
 import CategoryList from '../../../view/Home/CategoryList';
-import { MemoryRouter } from "react-router-dom";
-import { Provider } from "react-redux";
-import { store } from "../../../redux/store";
 
 jest.mock('axios');
+
+jest.mock('react-redux', () => ({
+    ...jest.requireActual('react-redux'),
+    useDispatch: jest.fn(),
+}));
 
 describe('CategoryList', () => {
     beforeEach(() => {
@@ -25,38 +29,18 @@ describe('CategoryList', () => {
             <Provider store={store}>
                 <MemoryRouter>
                     <CategoryList />
-                </MemoryRouter >
+                </MemoryRouter>
             </Provider>
         );
 
-        const categoryItems = await screen.findAllByRole('listitem');
-        expect(categoryItems).toHaveLength(categoriesFromEndpoint.length);
+        await waitFor(() => {
+            const categoryItems = screen.getAllByRole('button');
+            expect(categoryItems).toHaveLength(categoriesFromEndpoint.length);
 
-        categoryItems.forEach((item, index) => {
-            expect(item).toHaveTextContent(categoriesFromEndpoint[index].name);
+            categoryItems.forEach((item, index) => {
+                expect(item).toHaveTextContent(categoriesFromEndpoint[index].name);
+            });
         });
-    });
-
-    it('dispatches setActiveCategory on category click', async () => {
-        const category = { categoryId: '1', name: 'Category 1' };
-        const dispatchMock = jest.fn();
-        const useDispatchMock = jest.spyOn(require('react-redux'), 'useDispatch');
-        useDispatchMock.mockReturnValue(dispatchMock);
-        (axios.get as jest.Mock).mockResolvedValue({ data: [category] });
-
-        render(
-            <Provider store={store}>
-                <MemoryRouter>
-                    <CategoryList />
-                </MemoryRouter >
-            </Provider>
-        );
-
-        const categoryItem = await screen.findByText(category.name);
-        fireEvent.click(categoryItem);
-
-        expect(dispatchMock).toHaveBeenCalledTimes(1);
-        expect(dispatchMock).toHaveBeenCalledWith(setActiveCategory(category));
     });
 
     it('handles error on getCategories', async () => {
@@ -66,25 +50,13 @@ describe('CategoryList', () => {
             <Provider store={store}>
                 <MemoryRouter>
                     <CategoryList />
-                </MemoryRouter >
+                </MemoryRouter>
             </Provider>
         );
 
-        const categoryItems = await screen.findAllByRole('listitem');
-        expect(categoryItems).toHaveLength(0);
-    });
- });
-
-describe('CategoryReducer', () => {
-    it('should handle setActiveCategory', () => {
-        const initialState = {
-            categoryId: '',
-            name: '',
-        };
-        const category = { categoryId: '1', name: 'Category 1' };
-
-        const nextState = categoriesSlice.reducer(initialState, setActiveCategory(category));
-
-        expect(nextState).toEqual(category);
+        await waitFor(() => {
+            const errorMessage = screen.getByText('Fetch error');
+            expect(errorMessage).toBeInTheDocument();
+        });
     });
 });

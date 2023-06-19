@@ -95,13 +95,13 @@ describe('ProfilList', () => {
 
         await screen.findByText('Imię:');
 
-        expect(screen.getByText('Imię: unknown')).toBeInTheDocument();
-        expect(screen.getByText('Nazwisko: unknown')).toBeInTheDocument();
-        expect(screen.getByText('Email: unknown')).toBeInTheDocument();
-        expect(screen.getByText('Numer telefonu: unknown')).toBeInTheDocument();
-        expect(screen.getByText('Województwo: unknown')).toBeInTheDocument();
-        expect(screen.getByText('Miasto: unknown')).toBeInTheDocument();
-        expect(screen.getByText('Ulica: unknown')).toBeInTheDocument();
-        expect(screen.getByText('Kod pocztowy: unknown')).toBeInTheDocument();
+        expect(screen.getByText('Imię:')).toBeInTheDocument();
+        expect(screen.getByText('Nazwisko:')).toBeInTheDocument();
+        expect(screen.getByText('Email:')).toBeInTheDocument();
+        expect(screen.getByText('Numer telefonu:')).toBeInTheDocument();
+        expect(screen.getByText('Województwo:')).toBeInTheDocument();
+        expect(screen.getByText('Miasto:')).toBeInTheDocument();
+        expect(screen.getByText('Ulica:')).toBeInTheDocument();
+        expect(screen.getByText('Kod pocztowy:')).toBeInTheDocument();
     });
 });

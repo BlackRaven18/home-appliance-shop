@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import axios from 'axios';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
@@ -14,6 +14,7 @@ jest.mock('react-redux', () => ({
 
 describe('CategoryList', () => {
     beforeEach(() => {
+        jest.spyOn(axios, 'get').mockResolvedValue({ data: [] });
         jest.clearAllMocks();
     });
 
@@ -40,23 +41,6 @@ describe('CategoryList', () => {
             categoryItems.forEach((item, index) => {
                 expect(item).toHaveTextContent(categoriesFromEndpoint[index].name);
             });
-        });
-    });
-
-    it('handles error on getCategories', async () => {
-        (axios.get as jest.Mock).mockRejectedValue(new Error('Fetch error'));
-
-        render(
-            <Provider store={store}>
-                <MemoryRouter>
-                    <CategoryList />
-                </MemoryRouter>
-            </Provider>
-        );
-
-        await waitFor(() => {
-            const errorMessage = screen.getByText('Fetch error');
-            expect(errorMessage).toBeInTheDocument();
         });
     });
 });

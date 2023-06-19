@@ -1,4 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
+import { useNavigate } from 'react-router';
 import SummaryProductElement from '../../../view/Summary/SummaryProductElement';
 
 jest.mock('react-router', () => ({
@@ -40,8 +41,8 @@ describe('SummaryProductElement', () => {
     });
 
     it('navigates to product details page on click', () => {
-        const navigateMock = jest.requireMock('react-router').useNavigate;
-        navigateMock.mockImplementation(() => {});
+        const navigateMock = jest.fn();
+        (useNavigate as jest.Mock).mockReturnValue(navigateMock);
 
         render(
             <SummaryProductElement

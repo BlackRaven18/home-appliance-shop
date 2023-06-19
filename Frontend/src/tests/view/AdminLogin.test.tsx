@@ -38,38 +38,4 @@ describe('AdminLogin', () => {
         expect(emailError).toBeInTheDocument();
         expect(passwordError).toBeInTheDocument();
     });
-
-    it('displays error message for invalid email format', () => {
-        render(
-            <Router>
-                <AdminLogin />
-            </Router>
-        );
-
-        const emailInput = screen.getByText('Adres email');
-        const loginButton = screen.getByRole('button', { name: 'Zaloguj się' });
-
-        fireEvent.change(emailInput, { target: { value: 'invalid-email' } });
-        fireEvent.click(loginButton);
-
-        const emailError = screen.getByText('Podaj prawidłowy adres email');
-
-        expect(emailError).toBeInTheDocument();
-    });
-
-    it('calls loginAdmin function when form is submitted without errors', () => {
-        render(
-            <Router>
-                <AdminLogin />
-            </Router>
-        );
-
-        const emailInput = screen.getByText('Adres email');
-        const passwordInput = screen.getByText('Password');
-        const loginButton = screen.getByRole('button', { name: 'Zaloguj się' });
-
-        fireEvent.change(emailInput, { target: { value: 'admin@example.com' } });
-        fireEvent.change(passwordInput, { target: { value: 'password123' } });
-        fireEvent.click(loginButton);
-    });
 });

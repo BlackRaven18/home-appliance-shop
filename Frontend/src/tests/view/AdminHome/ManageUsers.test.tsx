@@ -135,7 +135,85 @@ describe('ManageUsers', () => {
         });
     });
 
-    it('allows modifying a user', async () => {
+    it("allows modifying a user", async () => {
+        const mockPersonId = "12345";
+        const mockPeople = [
+            {
+                personId: mockPersonId,
+                name: "Jan",
+                surname: "Kowalski",
+                email: "jankowalski@gmail.com",
+                phoneNumber: "123456789",
+                address: {
+                    state: "Świętokrzyskie",
+                    city: "Kielce",
+                    street: "IX Wieków",
+                    postCode: "12345",
+                },
+            },
+        ];
+
+        axios.get = jest.fn().mockResolvedValueOnce({ data: mockPeople });
+        axios.put = jest.fn().mockResolvedValueOnce({});
+
+        render(<ManageUsers />);
+
+        await waitFor(() => {
+            expect(screen.getByText("Jan")).toBeInTheDocument();
+        });
+
+        fireEvent.click(screen.getByTestId("Modyfikuj"));
+
+        const newFirstNameInput = screen.getByLabelText("Nowe imię");
+        fireEvent.change(newFirstNameInput, { target: { value: "Anna" } });
+
+        const newLastNameInput = screen.getByLabelText("Nowe nazwisko");
+        fireEvent.change(newLastNameInput, { target: { value: "Kowalska" } });
+
+        const newEmailInput = screen.getByLabelText("Nowy email");
+        fireEvent.change(newEmailInput, { target: { value: "annakowalska@gmail.com" } });
+
+        const newPhoneNumberInput = screen.getByLabelText("Nowy numer telefonu");
+        fireEvent.change(newPhoneNumberInput, { target: { value: "987654321" } });
+
+        const newStateInput = screen.getByLabelText("Nowe województwo");
+        fireEvent.change(newStateInput, { target: { value: "Małopolskie" } });
+
+        const newCityInput = screen.getByLabelText("Nowe miasto");
+        fireEvent.change(newCityInput, { target: { value: "Kraków" } });
+
+        const newStreetInput = screen.getByLabelText("Nowa ulica");
+        fireEvent.change(newStreetInput, { target: { value: "Nowa" } });
+
+        const newPostCodeInput = screen.getByLabelText("Nowy kod pocztowy");
+        fireEvent.change(newPostCodeInput, { target: { value: "54321" } });
+
+        fireEvent.click(screen.getByTestId("Zatwierdź"));
+
+        await waitFor(() => {
+            expect(axios.put).toHaveBeenCalledTimes(1);
+        });
+
+        await waitFor(() => {
+            expect(axios.put).toHaveBeenCalledWith(
+                `${process.env.REACT_APP_BACKEND_URL}/persons/${mockPersonId}`,
+                {
+                    name: "Anna",
+                    surname: "Kowalska",
+                    email: "annakowalska@gmail.com",
+                    phoneNumber: "987654321",
+                    address: {
+                        state: "Małopolskie",
+                        city: "Kraków",
+                        street: "Nowa",
+                        postCode: "54321",
+                    },
+                }
+            );
+        });
+    });
+
+    it('handles errors during user deletion', async () => {
         const mockedData = [
             {
                 personId: '1',
@@ -152,44 +230,18 @@ describe('ManageUsers', () => {
             },
         ];
 
-        jest.spyOn(axios, 'get').mockResolvedValueOnce({ data: mockedData });
-        jest.spyOn(axios, 'put').mockImplementationOnce(() => Promise.resolve());
+        axios.get = jest.fn().mockResolvedValueOnce({ data: mockedData });
+        axios.delete = jest.fn().mockRejectedValueOnce(new Error('Failed to delete user'));
 
         render(<ManageUsers />);
 
         expect(await screen.findByText('Jan')).toBeInTheDocument();
 
-        fireEvent.click(screen.getByText('Modyfikuj'));
+        const deleteButton = screen.getByText('Usuń');
+        fireEvent.click(deleteButton);
 
-        fireEvent.change(screen.getByLabelText('Nowe imię'), { target: { value: 'Anna' } });
-        fireEvent.change(screen.getByLabelText('Nowe nazwisko'), { target: { value: 'Nowak' } });
-        fireEvent.change(screen.getByLabelText('Nowy email'), { target: { value: 'annanowak@interia.com' } });
-        fireEvent.change(screen.getByLabelText('Nowy numer telefonu'), { target: { value: '987654321' } });
-        fireEvent.change(screen.getByLabelText('Nowe województwo'), { target: { value: 'Małopolskie' } });
-        fireEvent.change(screen.getByLabelText('Nowe miasto'), { target: { value: 'Kraków' } });
-        fireEvent.change(screen.getByLabelText('Nowa ulica'), { target: { value: 'Jana Pawła' } });
-        fireEvent.change(screen.getByLabelText('Nowy kod pocztowy'), { target: { value: '54321' } });
-
-        fireEvent.click(screen.getByText('Zatwierdź'));
-
-        expect(axios.put).toHaveBeenCalledWith(
-            `${process.env.REACT_APP_BACKEND_URL}/persons/1`,
-            {
-                name: 'Anna',
-                surname: 'Nowak',
-                email: 'annanowak@interia.com',
-                phoneNumber: '987654321',
-                address: {
-                    state: 'Małopolskie',
-                    city: 'Kraków',
-                    street: 'Jana Pawła',
-                    postCode: '54321',
-                },
-            }
-        );
-
-        await waitFor(() => expect(screen.queryByText('Jan')).toBeNull());
-        expect(await screen.findByText('Anna')).toBeInTheDocument();
+        await waitFor(() => expect(axios.delete).toHaveBeenCalledTimes(1));
+        expect(axios.delete).toHaveBeenCalledWith(process.env.REACT_APP_BACKEND_URL + '/persons/1');
     });
 
     it('displays "Nie znaleziono osób spełniających kryteria wyszukiwania" when no matching people are found', async () => {

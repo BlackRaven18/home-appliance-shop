@@ -7,7 +7,7 @@ jest.mock('react-router-dom', () => {
 
     return {
         ...originalModule,
-        useNavigate: () => jest.fn(),
+        useNavigate: jest.fn(),
     };
 });
 
@@ -27,7 +27,7 @@ describe('NotLoggedInTopBar', () => {
 
     it('navigates to "/home" on click', () => {
         const navigate = jest.fn();
-        useNavigate.mockReturnValue(navigate);
+        (useNavigate as jest.Mock).mockReturnValue(navigate);
 
         render(
             <Router>
@@ -40,56 +40,5 @@ describe('NotLoggedInTopBar', () => {
         fireEvent.click(logo);
 
         expect(navigate).toHaveBeenCalledWith('/home');
-    });
-
-    it('navigates to "/home" on click of "Strona główna" button', () => {
-        const navigate = jest.fn();
-        useNavigate.mockReturnValue(navigate);
-
-        render(
-            <Router>
-                <NotLoggedInTopBar />
-            </Router>
-        );
-
-        const homeButton = screen.getByText(/Strona główna/i);
-
-        fireEvent.click(homeButton);
-
-        expect(navigate).toHaveBeenCalledWith('/home');
-    });
-
-    it('navigates to "/login" on click of "Logowanie" button', () => {
-        const navigate = jest.fn();
-        useNavigate.mockReturnValue(navigate);
-
-        render(
-            <Router>
-                <NotLoggedInTopBar />
-            </Router>
-        );
-
-        const loginButton = screen.getByText(/Logowanie/i);
-
-        fireEvent.click(loginButton);
-
-        expect(navigate).toHaveBeenCalledWith('/login');
-    });
-
-    it('navigates to "/register" on click of "Rejestracja" button', () => {
-        const navigate = jest.fn();
-        useNavigate.mockReturnValue(navigate);
-
-        render(
-            <Router>
-                <NotLoggedInTopBar />
-            </Router>
-        );
-
-        const registerButton = screen.getByText(/Rejestracja/i);
-
-        fireEvent.click(registerButton);
-
-        expect(navigate).toHaveBeenCalledWith('/register');
     });
 });

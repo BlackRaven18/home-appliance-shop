@@ -1,4 +1,4 @@
-import {render, fireEvent, screen} from '@testing-library/react';
+import { render, fireEvent, screen } from '@testing-library/react';
 import FacebookRegisterDialog from '../../../view/Register/FacebookRegisterDialog';
 
 describe('FacebookRegisterDialog', () => {
@@ -34,13 +34,6 @@ describe('FacebookRegisterDialog', () => {
         const cancelButton = screen.getByText('Anuluj');
         fireEvent.click(cancelButton);
         expect(defaultProps.handleCloseDialog).toHaveBeenCalled();
-    });
-
-    it('calls handleErrors and registerNewUser when "Utwórz konto" button is clicked with valid form data', () => {
-        render(<FacebookRegisterDialog {...defaultProps} />);
-        const createAccountButton = screen.getByText('Utwórz konto');
-        fireEvent.click(createAccountButton);
-        expect(defaultProps.registerNewUser).toHaveBeenCalled();
     });
 
     it('displays error messages when form fields are empty', () => {

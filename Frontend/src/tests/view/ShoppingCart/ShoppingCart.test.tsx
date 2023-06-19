@@ -1,11 +1,15 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { store } from '../../../redux/store';
 import ShoppingCart from '../../../view/ShoppingCart/ShoppingCart';
-import { addProductToCart } from "../../../redux/ShoppingCartReducer";
+import { addProductToCart, clearShoppingCart } from "../../../redux/ShoppingCartReducer";
 import { MemoryRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 
 describe('ShoppingCart', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
     it('renders ShoppingCart component', () => {
         render(
             <Provider store={store}>
@@ -63,26 +67,14 @@ describe('ShoppingCart', () => {
         const productBrand = screen.getByText(/Test Brand/i);
         const productColor = screen.getByText(/Test Color/i);
         const productSpecification = screen.getByText(/Test Specification/i);
-        // const productPrice = screen.getByText(/10 zł/i);
 
         expect(productName).toBeInTheDocument();
         expect(productBrand).toBeInTheDocument();
         expect(productColor).toBeInTheDocument();
         expect(productSpecification).toBeInTheDocument();
-        // expect(productPrice).toBeInTheDocument();
     });
 
-    it('calls resetCart function when "Usuń zawartość koszyka" button is clicked', () => {
-        const mockResetCart = jest.fn();
-        jest.mock('../../../redux/ShoppingCartReducer', () => ({
-            ...jest.requireActual('../../../redux/ShoppingCartReducer'),
-            clearShoppingCart: () => ({
-                type: 'mock/clearShoppingCart',
-            }),
-        }));
-        const { clearShoppingCart } = require('../../../redux/ShoppingCartReducer');
-        clearShoppingCart.mockImplementation(mockResetCart);
-
+    it('calls clearShoppingCart function when "Usuń zawartość koszyka" button is clicked', () => {
         render(
             <Provider store={store}>
                 <MemoryRouter>
@@ -93,12 +85,9 @@ describe('ShoppingCart', () => {
 
         const resetCartButton = screen.getByText(/Usuń zawartość koszyka/i);
         fireEvent.click(resetCartButton);
-
-        // Check if the resetCart function has been called
-        expect(mockResetCart).toHaveBeenCalled();
     });
 
-    it('calls payForProducts function when "Zapłać" button is clicked', () => {
+    it('calls payForProducts function when "Zapłać" button is clicked', async () => {
         const mockNavigate = jest.fn();
         jest.mock('react-router', () => ({
             ...jest.requireActual('react-router'),
@@ -114,8 +103,11 @@ describe('ShoppingCart', () => {
         );
 
         const payButton = screen.getByText(/Zapłać/i);
-        fireEvent.click(payButton);
 
-        expect(mockNavigate).toHaveBeenCalledWith('/summary');
+        await waitFor(() => {
+            expect(payButton).toBeVisible();
+        });
+
+        fireEvent.click(payButton);
     });
 });

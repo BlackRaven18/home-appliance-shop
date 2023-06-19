@@ -172,6 +172,7 @@ const Login = () => {
                                 margin="normal"
                                 required
                                 fullWidth
+                                data-testid="Adres email"
                                 label="Adres email"
                                 value={formData.email}
                                 onChange={(e) => onChangeForm('email', e.target.value)}
@@ -183,6 +184,7 @@ const Login = () => {
                                 fullWidth
                                 type={isPasswordShown ? 'text' : 'password'}
                                 id="password"
+                                data-testid="Password"
                                 label="Password"
                                 name="password"
                                 autoComplete="password"

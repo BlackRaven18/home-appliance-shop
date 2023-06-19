@@ -141,7 +141,7 @@ const ManageUsers = () => {
                                     <p style={{ fontSize: '20px' }}><strong>Ulica:</strong> {person && person.address && person.address.street ? person.address.street : 'unknown'}</p>
                                     <p style={{ fontSize: '20px' }}><strong>Kod pocztowy:</strong> {person && person.address && person.address.postCode ? person.address.postCode : 'unknown'}</p>
                                     <Button variant="contained" style={{ margin: '15px' }} onClick={() => handleDeleteUser(person.personId)}>Usuń</Button>
-                                    <Button variant="contained" onClick={() => handleModifyClick(person.personId)}>Modyfikuj</Button>
+                                    <Button variant="contained" data-testid="Modyfikuj" onClick={() => handleModifyClick(person.personId)}>Modyfikuj</Button>
 
                                     {isModifyClicked && personId === person.personId && (
                                         <Grid container direction="column" spacing={2}>
@@ -204,7 +204,7 @@ const ManageUsers = () => {
                                                 />
                                             </Grid>
                                             <Grid item>
-                                                <Button variant="contained" onClick={handleModifySubmit}>
+                                                <Button variant="contained" data-testid="Zatwierdź" onClick={handleModifySubmit}>
                                                     Zatwierdź
                                                 </Button>
                                             </Grid>

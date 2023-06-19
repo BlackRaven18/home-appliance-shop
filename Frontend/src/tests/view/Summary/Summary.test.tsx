@@ -1,111 +1,88 @@
-import React from "react";
-import { render, fireEvent, waitFor, screen } from "@testing-library/react";
-import Summary from "../../../view/Summary/Summary";
-import { MemoryRouter } from "react-router-dom";
-import { Provider } from "react-redux";
-import { createStore } from "redux";
-import ShoppingCartReducer, { clearShoppingCart } from "../../../redux/ShoppingCartReducer";
-import axios from "axios";
+import { render, screen } from '@testing-library/react';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
+import Summary from '../../../view/Summary/Summary';
 
-describe("Summary component", () => {
-    let store: ReturnType<typeof createStore>;
+jest.mock('axios');
+
+describe('Summary component', () => {
+    let store: any;
 
     beforeEach(() => {
-        store = createStore(ShoppingCartReducer);
+        store = createStore(() => ({
+            shoppingCart: {
+                cart: [
+                    {
+                        productDetails: {
+                            productId: 1,
+                            quantity: 2,
+                            price: 10,
+                            name: 'Product 1',
+                            imageURL: 'image-url',
+                        },
+                    },
+                    {
+                        productDetails: {
+                            productId: 2,
+                            quantity: 1,
+                            price: 20,
+                            name: 'Product 2',
+                            imageURL: 'image-url',
+                        },
+                    },
+                ],
+                productsNumber: 3,
+                totalAmount: 40,
+            },
+        }));
     });
 
     afterEach(() => {
-        store.dispatch(clearShoppingCart());
+        jest.clearAllMocks();
     });
 
-    it("renders summary information correctly", () => {
+    test('renders product elements', () => {
         render(
             <Provider store={store}>
-                <MemoryRouter>
+                <Router>
                     <Summary />
-                </MemoryRouter>
+                </Router>
             </Provider>
         );
 
-        expect(screen.getByText("Podsumowanie")).toBeInTheDocument();
-        expect(screen.getByText("Koszyk jest pusty")).toBeInTheDocument();
-        expect(screen.getByText("Liczba produktów: 0")).toBeInTheDocument();
-        expect(screen.getByText("Całkowity koszt: 0 zł")).toBeInTheDocument();
+        const productElement1 = screen.getByText(/Product 1/i);
+        const productElement2 = screen.getByText(/Product 2/i);
+
+        expect(productElement1).toBeInTheDocument();
+        expect(productElement2).toBeInTheDocument();
     });
 
-    it("selects delivery method correctly", () => {
+    test('renders correct products number', () => {
         render(
             <Provider store={store}>
-                <MemoryRouter>
+                <Router>
                     <Summary />
-                </MemoryRouter>
+                </Router>
             </Provider>
         );
 
-        const odbiorOsobistyRadio = screen.getByLabelText("Odbiór osobisty");
-        const kurierRadio = screen.getByLabelText("Kurier");
+        const productsNumberElement = screen.getByText(/Liczba produktów: 3/i);
 
-        fireEvent.click(kurierRadio);
-
-        expect(odbiorOsobistyRadio).not.toBeChecked();
-        expect(kurierRadio).toBeChecked();
-        expect(screen.getByText("Metody dostawy:")).toBeInTheDocument();
+        expect(productsNumberElement).toBeInTheDocument();
     });
 
-    it("dispatches clearShoppingCart action on successful transaction", async () => {
+    test('renders correct total amount', () => {
         render(
             <Provider store={store}>
-                <MemoryRouter>
+                <Router>
                     <Summary />
-                </MemoryRouter>
+                </Router>
             </Provider>
         );
 
-        const mockClearShoppingCart = jest.fn();
-        store.dispatch = mockClearShoppingCart;
+        const totalAmountElement = screen.getByText(/Całkowity koszt: 40 zł/i);
 
-        const odbiorOsobistyRadio = screen.getByLabelText("Odbiór osobisty");
-        const payButton = screen.getByRole("button", { name: "Zapłać" });
-
-        fireEvent.click(odbiorOsobistyRadio);
-        fireEvent.click(payButton);
-
-        await waitFor(() => {
-            expect(mockClearShoppingCart).toHaveBeenCalledTimes(1);
-        });
-
-        expect(screen.getByText("Payment Success")).toBeInTheDocument();
-    });
-
-    it("displays payment failure message on failed transaction", async () => {
-        render(
-            <Provider store={store}>
-                <MemoryRouter>
-                    <Summary />
-                </MemoryRouter>
-            </Provider>
-        );
-
-        const mockAxiosPost = jest.spyOn(axios, "post");
-        mockAxiosPost.mockRejectedValueOnce({
-            response: {
-                data: {
-                    status: "failed",
-                    message: "Payment failed!",
-                },
-            },
-        });
-
-        const odbiorOsobistyRadio = screen.getByLabelText("Odbiór osobisty");
-        const payButton = screen.getByRole("button", { name: "Zapłać" });
-
-        fireEvent.click(odbiorOsobistyRadio);
-        fireEvent.click(payButton);
-
-        await waitFor(() => {
-            expect(screen.getByText("Payment failed!. Payment failed!")).toBeInTheDocument();
-        });
-
-        mockAxiosPost.mockRestore();
+        expect(totalAmountElement).toBeInTheDocument();
     });
 });

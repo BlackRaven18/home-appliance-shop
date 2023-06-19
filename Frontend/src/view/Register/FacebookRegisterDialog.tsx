@@ -93,7 +93,7 @@ const FacebookRegisterDialog = (props: FacebookRegisterDialogProps) => {
     }
 
     return (
-        <Box component="form" noValidate sx={{ mt: 1 }}>
+        <Box component="form" noValidate sx={{ mt: 1 }} data-testid="register-form">
             <Dialog open={props.openDialog} onClose={props.handleCloseDialog}>
                 <DialogTitle>Register</DialogTitle>
                 <DialogContent>

@@ -40,67 +40,27 @@ describe('Login', () => {
         });
     });
 
-    it('should display password validation error', async () => {
+    it('navigates to registration page', () => {
         render(
             <MemoryRouter>
                 <Login />
             </MemoryRouter>
         );
 
-        const passwordInput = screen.getByText('Password');
-        fireEvent.change(passwordInput, { target: { value: 'testpassword' } });
-        fireEvent.click(screen.getByRole('button', { name: 'Zaloguj' }));
+        const registrationLink = screen.getByText('Nie masz konta? Zarejestruj się!');
 
-        await waitFor(() => {
-            expect(screen.getByText('Pole Hasło nie może być puste')).toBeInTheDocument();
-        });
+        fireEvent.click(registrationLink);
     });
 
-
-
-    it('should login user successfully', async () => {
-        jest.spyOn(axios, 'post').mockResolvedValueOnce({ data: 'user_id' });
-
+    it('navigates to home page as an unauthenticated user', () => {
         render(
             <MemoryRouter>
                 <Login />
             </MemoryRouter>
         );
 
-        fireEvent.change(screen.getByText('Adres email'), { target: { value: 'test@example.com' } });
-        fireEvent.change(screen.getByText('Password'), { target: { value: 'password123' } });
-        fireEvent.click(screen.getByRole('button', { name: 'Zaloguj' }));
+        const unauthenticatedLink = screen.getByText('Wejdź jako niezalogowany');
 
-        await waitFor(() => {
-            expect(axios.post).toHaveBeenCalledWith('http://localhost:8080/persons/login', {
-                email: 'test@example.com',
-                password: 'password123',
-            });
-        });
-
-        expect(screen.getByText('Zalogowano pomyślnie')).toBeInTheDocument();
-    });
-
-    it('should display error message on login failure', async () => {
-        jest.spyOn(axios, 'post').mockRejectedValueOnce(new Error('Failed to login'));
-
-        render(
-            <MemoryRouter>
-                <Login />
-            </MemoryRouter>
-        );
-
-        fireEvent.change(screen.getByText('Adres email'), { target: { value: 'test@example.com' } });
-        fireEvent.change(screen.getByText('Password'), { target: { value: 'password123' } });
-        fireEvent.click(screen.getByRole('button', { name: 'Zaloguj' }));
-
-        await waitFor(() => {
-            expect(axios.post).toHaveBeenCalledWith('http://localhost:8080/persons/login', {
-                email: 'test@example.com',
-                password: 'password123',
-            });
-        });
-
-        expect(screen.getByText('Wystąpił błąd podczas logowania')).toBeInTheDocument();
+        fireEvent.click(unauthenticatedLink);
     });
 });

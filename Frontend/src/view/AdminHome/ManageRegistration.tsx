@@ -17,18 +17,16 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FacebookLoginButton } from 'react-social-login-buttons';
 import { IResolveParams, LoginSocialFacebook } from 'reactjs-social-login';
-import FacebookRegisterDialog from './FacebookRegisterDialog';
+import FacebookRegisterDialog from '../Register/FacebookRegisterDialog';
 import PersonInterface from '../shared/PersonInterface';
 import UserDataManager from '../../UserDataManager/UserDataManager';
-import CustomBackdrop from '../CustomBackdrop';
 
 const theme = createTheme({});
 
 
-const Register = () => {
+const ManageRegistration = () => {
     const navigate = useNavigate();
     const [openDialog, setOpenDialog] = useState(false);
-    const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
 
     const handleOpenDialog = () => {
         setOpenDialog(true);
@@ -215,33 +213,23 @@ const Register = () => {
 
         setErrors(newErrors);
 
-        if (!hasErrors) {
+        if(!hasErrors){
             registerNewUser();
         }
     }
 
     const postUser = () => {
         const postData = isFacebookLogging ? facebookFormData : formData;
-
-        setIsWaitingForResponse(true);
-
         axios
             .post('http://localhost:8080/persons', postData)
             .then((response) => {
-                UserDataManager.setId(response.data);
-                UserDataManager.setUsername(postData.email);
-                UserDataManager.setPassword(postData.password);
-
-                navigate('/loginhome');
+                
             })
             .catch((error) => {
                 console.log(error.response.data);
-                if (error.response.data === 'Email already exists') {
+                if(error.response.data === 'Email already exists'){
                     alert('Podany email już istnieje');
                 }
-            })
-            .finally(() => {
-                setIsWaitingForResponse(false);
             });
     }
 
@@ -264,27 +252,9 @@ const Register = () => {
 
     return (
         <ThemeProvider theme={theme}>
-
-            {isWaitingForResponse ? (
-                <CustomBackdrop label='Oczekiwanie na odpowiedź serwera...' />
-            ) : (<></>)}
-
             <Grid container component="main" sx={{ height: '100vh' }}>
                 <CssBaseline />
-                <Grid
-                    item
-                    xs={false}
-                    sm={4}
-                    md={7}
-                    sx={{
-                        backgroundImage: 'url(https://i.imgur.com/YLJCGr5.png)',
-                        backgroundRepeat: 'no-repeat',
-                        backgroundColor: (t) =>
-                            t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                    }}
-                />
+
                 <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
                     <Box
                         sx={{
@@ -299,7 +269,7 @@ const Register = () => {
                             <LockOutlinedIcon />
                         </Avatar>
                         <Typography component="h1" variant="h5">
-                            Zarejestruj się
+                            Zarejestruj
                         </Typography>
 
                         <FacebookRegisterDialog
@@ -446,7 +416,7 @@ const Register = () => {
                                 sx={{ mt: 3, mb: 2 }}
                                 onClick={handleErrors}
                             >
-                                Zarejestruj się
+                                Zarejestruj użytkownika
                             </Button>
                         </form>
                         <LoginSocialFacebook
@@ -462,13 +432,7 @@ const Register = () => {
                         >
                             <FacebookLoginButton />
                         </LoginSocialFacebook>
-                        <Grid container>
-                            <Grid item>
-                                <Link to="/login">
-                                    {'Masz już konto? Zaloguj się'}
-                                </Link>
-                            </Grid>
-                        </Grid>
+
                     </Box>
                 </Grid>
             </Grid>
@@ -476,4 +440,4 @@ const Register = () => {
     );
 };
 
-export default Register;
+export default ManageRegistration;

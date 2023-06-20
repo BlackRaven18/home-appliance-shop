@@ -1,28 +1,70 @@
-import { Button, TextField } from "@mui/material";
+import { Button, TextField, Select, MenuItem } from "@mui/material";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import axios from 'axios';
 import * as React from 'react';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ProductInterface from "../shared/ProductInterface";
+import { SelectChangeEvent } from "@mui/material";
+import UserDataManager from "../../UserDataManager/UserDataManager";
+import LoadingSpinner from "../LoadingSpinner";
 
-
-
+type Category = {
+    categoryId: string;
+    name: string;
+};
 
 const ManageProducts = () => {
     const [products, setProducts] = useState<ProductInterface[]>([]);
-    const [searchTerm, setSearchTerm] = useState<string>('');
+    const [searchText, setSearchText] = useState("");
     const [productId, setProductId] = useState("");
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [newCategory, setNewCategory] = useState("");
+    const [selectedCategory, setSelectedCategory] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
-    React.useEffect(() => {
+    const [isModifyClicked, setIsModifyClicked] = useState(false);
+    const [newName, setNewName] = useState("");
+    const [newBrand, setNewBrand] = useState("");
+    const [newColor, setNewColor] = useState("");
+    const [newSpecification, setNewSpecification] = useState("");
+    const [newPrice, setNewPrice] = useState("");
+    const [newCategoryName, setNewCategoryName] = useState("");
+    const [newImageURL, setNewImageURL] = useState("url");
+
+    useEffect(() => {
         getProducts();
+        getCategories();
     }, []);
 
     const getProducts = () => {
+        setIsLoading(true);
         axios
-            .get(process.env.REACT_APP_BACKEND_URL + `/products`)
+            .get(process.env.REACT_APP_BACKEND_URL + `/products`,{
+                auth: {
+                    username: UserDataManager.getUsername(),
+                    password: UserDataManager.getPassword()
+                }
+            })
             .then((response) => {
                 setProducts(response.data);
+                setIsLoading(false);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    };
+
+    const getCategories = () => {
+        axios
+            .get(process.env.REACT_APP_BACKEND_URL + `/categories`,{
+                auth: {
+                    username: UserDataManager.getUsername(),
+                    password: UserDataManager.getPassword()
+                }
+            }) // Endpoint do pobierania kategorii
+            .then((response) => {
+                setCategories(response.data);
             })
             .catch(function (error) {
                 console.log(error);
@@ -30,11 +72,12 @@ const ManageProducts = () => {
     };
 
     const filteredProducts = products.filter((product) => {
-        return product.name.toLowerCase().includes(searchTerm.toLowerCase());
+        const productString = `${product.name} ${product.brand} ${product.color} ${product.specification} ${product.category.name}`.toLowerCase();
+        return productString.includes(searchText.toLowerCase());
     });
 
-    const handleSearchTermChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchTerm(event.target.value);
+    const handleSearchTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchText(event.target.value);
     };
 
     const createProduct = (event: React.FormEvent<HTMLFormElement>) => {
@@ -45,12 +88,15 @@ const ManageProducts = () => {
             brand: { value: string };
             color: { value: string };
             specification: { value: string };
+            price: {value: string};
+            imageURL: {value: string};
         };
         const name = target.name.value;
         const brand = target.brand.value;
         const color = target.color.value;
         const specification = target.specification.value;
         const price = parseFloat(event.currentTarget.price.value);
+        const imageURL = target.name.value;
 
 
         const newProduct = {
@@ -59,11 +105,20 @@ const ManageProducts = () => {
             color,
             specification,
             price,
-
+            imageURL,
+            category: {
+                categoryId: selectedCategory,
+                name: "", // Możesz zostawić puste pole name, jeśli nie jest dostępne w tym miejscu
+            },
         };
 
         axios
-            .post(process.env.REACT_APP_BACKEND_URL + '/products', newProduct)
+            .post(process.env.REACT_APP_BACKEND_URL + '/products', newProduct,{
+                auth: {
+                    username: UserDataManager.getUsername(),
+                    password: UserDataManager.getPassword()
+                }
+            })
             .then((response) => {
                 setProducts([...products, response.data]);
                 event.currentTarget.reset();
@@ -75,7 +130,12 @@ const ManageProducts = () => {
 
     const handleDeleteProduct = async (productId: string) => {
         try {
-            await axios.delete(process.env.REACT_APP_BACKEND_URL + '/products/' + productId);
+            await axios.delete(process.env.REACT_APP_BACKEND_URL + '/products/' + productId,{
+                auth: {
+                    username: UserDataManager.getUsername(),
+                    password: UserDataManager.getPassword()
+                }
+            });
             getProducts(); // reload the user list after deleting the user
         } catch (error) {
             console.error(error);
@@ -83,41 +143,51 @@ const ManageProducts = () => {
     }
 
 
-
-    const [isModifyClicked, setIsModifyClicked] = useState(false);
-    const [newName, setNewName] = useState("");
-    const [newBrand, setNewBrand] = useState("");
-    const [newColor, setNewColor] = useState("");
-    const [newSpecification, setNewSpecification] = useState("");
-    const [newPrice, setNewPrice] = useState("");
-    const [newCategoryName, setNewCategoryName] = useState("");
-    const [newImageURL, setNewImageURL] = useState("url");
-
-
     const handleModifyClick = (productId: string) => {
-        setIsModifyClicked(true);
-        setProductId(productId);
+        const product = products.find((p) => p.productId === productId);
+        if (product) {
+            setIsModifyClicked(true);
+            setProductId(productId);
+            setNewName(product.name);
+            setNewBrand(product.brand);
+            setNewColor(product.color);
+            setNewSpecification(product.specification);
+            setNewPrice(product.price.toString());
+            setNewCategoryName(product.category?.name || "");
+            setNewImageURL(product.imageURL);
+        }
     };
 
     const handleModifySubmit = async () => {
-        await axios.put(process.env.REACT_APP_BACKEND_URL + '/products/' + productId, {
-            productId: productId,
-            name: newName,
-            brand: newBrand,
-            color: newColor,
-            specification: newSpecification,
-            price: newPrice,
-            category: {
-                name: newCategoryName,
-            },
-            imageURL: newImageURL,
-        }).then(() => {
+        try {
+            await axios.put(
+                process.env.REACT_APP_BACKEND_URL + '/products/' + productId,
+                {
+                    productId: productId,
+                    name: newName,
+                    brand: newBrand,
+                    color: newColor,
+                    specification: newSpecification,
+                    price: newPrice,
+                    category: {
+                        name: newCategoryName,
+                    },
+                    imageURL: newImageURL,
+                },
+                {
+                    auth: {
+                        username: UserDataManager.getUsername(),
+                        password: UserDataManager.getPassword(),
+                    },
+                }
+            );
             getProducts(); // załaduj ponownie listę produktów po modyfikacji
             setIsModifyClicked(false); // Zresetuj stan po zatwierdzeniu modyfikacji
-        }).catch((error) => {
+        } catch (error) {
             console.log(error);
-        })
+        }
     };
+
 
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setNewName(event.target.value);
@@ -138,6 +208,14 @@ const ManageProducts = () => {
         setNewCategoryName(event.target.value);
     };
 
+    const handleCategoryChange = (event: SelectChangeEvent<string>) => {
+        setNewCategory(event.target.value);
+    };
+
+    const handleImageURLChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+        setNewImageURL(event.target.value as string);
+    };
+
     return (
         <>
             <Box display="flex" flexDirection={{ xs: 'column', sm: 'row' }} gap={2}>
@@ -147,11 +225,13 @@ const ManageProducts = () => {
                             <TextField
                                 label="Wyszukaj produkt"
                                 variant="outlined"
-                                value={searchTerm}
-                                onChange={handleSearchTermChange}
+                                value={searchText}
+                                onChange={handleSearchTextChange}
                                 style={{ margin: '20px' }}
                             />
-
+                {isLoading? (
+                    <LoadingSpinner label="Trwa ładowanie produktów..."/>
+                ) : <></>}
                 {filteredProducts.map((product, index) => (
                         <div key={product.productId} style={{
                             border: '1px solid #ccc',
@@ -165,6 +245,7 @@ const ManageProducts = () => {
                         <p style={{ fontSize: '20px' }}><strong>Specyfikacja:</strong> {product.specification}</p>
                         <p style={{ fontSize: '20px' }}><strong>Cena:</strong> {product.price}</p>
                         <p style={{ fontSize: '20px' }}><strong>Kategoria:</strong> {product && product.category && product.category.name ? product.category.name : 'unknown'}</p>
+                        <p style={{ fontSize: '20px' }}><strong>Obrazek:</strong> {product.imageURL}</p>
                         <Button variant="contained" style={{ margin: '15px' }} onClick={() => handleDeleteProduct(product.productId)}>Usuń</Button>
                         <Button variant="contained" onClick={() => handleModifyClick(product.productId)}>Modyfikuj</Button>
                         {isModifyClicked && productId === product.productId && (
@@ -212,6 +293,13 @@ const ManageProducts = () => {
                                         onChange={handleCategoryNameChange}
                                         style={{ margin: '5px' }}
                                     />
+                                    <TextField
+                                        label="Nowy obrazek"
+                                        variant="outlined"
+                                        value={newImageURL}
+                                        onChange={handleImageURLChange}
+                                        style={{ margin: '5px' }}
+                                    />
                                 </Grid>
                                 <Grid item>
                                     <Button variant="contained" onClick={handleModifySubmit}>
@@ -224,18 +312,31 @@ const ManageProducts = () => {
                 ))}
             </div>
             </Box>
-            <Box flex="1">
-                <Box
-                    component="form"
-                    noValidate
-                    onSubmit={createProduct}
-                    sx={{
-                        ml: 1,
-                        width: '400px',
-                    }}
-                    style={{ margin: '5px' }}
-                >
-                <TextField
+                <Box flex="1">
+                    <Box
+                        component="form"
+                        noValidate
+                        onSubmit={createProduct}
+                        sx={{
+                            ml: 1,
+                            width: '400px',
+                        }}
+                        style={{ margin: '5px' }}
+                    >
+                        {/* Pozycja dla wyboru kategorii */}
+                        <Select
+                            value={selectedCategory}
+                            onChange={(event) => setSelectedCategory(event.target.value as string)}
+                            fullWidth
+                        >
+                            {categories.map((category) => (
+                                <MenuItem key={category.categoryId} value={category.categoryId}>
+                                    {category.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+
+                        <TextField
                     margin="normal"
                     required
                     fullWidth
@@ -281,6 +382,15 @@ const ManageProducts = () => {
                     label="Cena"
                     id="price"
                     autoComplete="price"
+                />
+                <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="imageURL"
+                    label="Obrazek link"
+                    id="imageURL"
+                    autoComplete="imageURL"
                 />
                 <Button
                     type="submit"

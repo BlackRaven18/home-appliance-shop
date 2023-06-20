@@ -1,5 +1,6 @@
 
 import {
+    Backdrop,
     Box,
     Divider,
     FormControl,
@@ -14,12 +15,13 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import Stripe from "react-stripe-checkout";
+import PriceFormatter from "../../PriceFormattingUtils/PriceFormatter";
+import SummaryTopBar from "../../TopBar/SummaryTopBar";
+import UserDataManager from "../../UserDataManager/UserDataManager";
 import { clearShoppingCart } from '../../redux/ShoppingCartReducer';
 import { RootState } from "../../redux/store";
-import SummaryTopBar from "../../TopBar/SummaryTopBar";
-import SummaryProductElement from './SummaryProductElement';
-import PriceFormatter from "../../PriceFormattingUtils/PriceFormatter";
-import UserDataManager from "../../UserDataManager/UserDataManager";
+import ShoppingCartElement from "../ShoppingCart/ShoppingCartElement";
+import CustomBackdrop from "../CustomBackdrop";
 
 interface TokenI {
     id: string;
@@ -39,6 +41,7 @@ function Summary() {
     const navigate = useNavigate();
 
     const [deliveryMethod, setDeliveryMethod] = useState<String>('odbior-osobisty');
+    const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
     const buyerId = UserDataManager.getUserId();
 
     const handleSelectShippingMethod = (deliveryMethod: String) => {
@@ -48,11 +51,11 @@ function Summary() {
     const handleSuccessfulTransaction = () => {
         dispatch(clearShoppingCart());
         navigate("/shoppingcart");
-        alert("Payment Success");
+        alert("Płatność udana! Przejdź do historii aby zobaczyć transakcje.");
     }
 
     const handleFailedTransaction = (status: PaymentStatusDTO) => {
-        alert("Payment failed!. " + status.message);
+        alert("Płatność zakończona niepowodzeniem!. komunikat: " + status.message);
     }
 
     async function handleToken(token: TokenI) {
@@ -65,6 +68,7 @@ function Summary() {
             imageURL: item.productDetails.imageURL,
         }))
 
+        setIsWaitingForResponse(true);
         await axios.post(process.env.REACT_APP_BACKEND_URL + "/api/payment/charge",
             {
                 buyerId,
@@ -83,16 +87,18 @@ function Summary() {
                 },
 
             }).then((response) => {
-                console.log(response.data);
                 if (response.data.status === 'failed') {
                     handleFailedTransaction(response.data)
                 } else {
                     handleSuccessfulTransaction();
                 }
 
+
             }).catch((error) => {
                 console.log(buyerId);
                 alert(error);
+            }).finally(() => {
+                setIsWaitingForResponse(false);
             });
     }
 
@@ -101,6 +107,9 @@ function Summary() {
         <>
             <SummaryTopBar />
 
+            {isWaitingForResponse ? (
+                <CustomBackdrop label={"Płatnosć w realizacji..."} />
+            ) : (<></>)}
             <Box>
                 <Typography variant="h4" align="center">
                     Podsumowanie
@@ -115,7 +124,7 @@ function Summary() {
                 >
                     {shoppingCart.cart.length > 0 ? (
                         shoppingCart.cart.map((cartElement) => (
-                            <SummaryProductElement
+                            <ShoppingCartElement
                                 key={cartElement.productDetails.productId}
                                 quantity={cartElement.quantity}
                                 productDetails={cartElement.productDetails} />
@@ -188,10 +197,7 @@ function Summary() {
                     </Box>
                 ) : (
                     <p></p>
-                )
-                }
-
-
+                )}
             </Box>
         </>
     );

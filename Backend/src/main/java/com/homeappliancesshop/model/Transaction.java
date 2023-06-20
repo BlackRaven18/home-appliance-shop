@@ -4,6 +4,9 @@ import com.homeappliancesshop.dto.OrderDetailsDTO;
 import com.homeappliancesshop.dto.ProductDetailsDTO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -12,10 +15,13 @@ import java.util.Date;
 
 @Data
 @NoArgsConstructor
+@Document(collection = "transactions")
 public class Transaction {
 
     private static final String DATE_FORMAT = "dd.MM.yyyy HH:mm";
 
+    @Id
+    private String transactionId;
     private String date;
     private String status;
     private ArrayList<ProductInTransaction> products;

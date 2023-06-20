@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import { store } from '../../redux/store';
 import { MemoryRouter } from 'react-router-dom';
 import UserDataManager from '../../UserDataManager/UserDataManager';
+import React from 'react';
 
 jest.mock('axios');
 
@@ -129,7 +130,7 @@ describe('History', () => {
         await waitFor(() => {
             expect(mockedAxios.get).toHaveBeenCalledTimes(1);
             expect(mockedAxios.get).toHaveBeenCalledWith(
-                `${process.env.REACT_APP_BACKEND_URL}/persons/${UserDataManager.getUserId()}/paymenthistory`,
+                `${process.env.REACT_APP_BACKEND_URL}/persons/${UserDataManager.getUserId()}/transactions-history`,
                 {
                     auth: {
                         username: UserDataManager.getUsername(),

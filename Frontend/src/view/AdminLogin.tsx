@@ -129,7 +129,7 @@ export default function AdminLogin() {
                     sm={4}
                     md={7}
                     sx={{
-                        backgroundImage: 'url(https://picsum.photos/1000/600)',
+                        backgroundImage: 'url(https://i.imgur.com/n0Q3ls5.png)',
                         backgroundRepeat: 'no-repeat',
                         backgroundColor: (t) =>
                             t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],

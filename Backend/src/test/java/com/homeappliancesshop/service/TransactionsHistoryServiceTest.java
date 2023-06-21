@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,6 +22,9 @@ class TransactionsHistoryServiceTest {
 
     @Mock
     private TransactionsHistoryRepository transactionsHistoryRepository;
+
+    @Mock
+    private TransactionsService transactionsService;
 
     @BeforeEach
     public void setUp() {
@@ -37,18 +41,21 @@ class TransactionsHistoryServiceTest {
 
         TransactionsHistory transactionsHistory = new TransactionsHistory();
         transactionsHistory.setTransactionId(transactionHistoryId);
+        transactionsHistory.setTransactions(new ArrayList<>());
 
         when(transactionsHistoryRepository.findById(transactionHistoryId)).thenReturn(Optional.of(transactionsHistory));
         when(transactionsHistoryRepository.save(transactionsHistory)).thenReturn(transactionsHistory);
 
+        TransactionsHistoryService transactionsHistoryService = new TransactionsHistoryService(transactionsHistoryRepository, transactionsService);
         TransactionsHistory result = transactionsHistoryService.addTransaction(transactionHistoryId, transaction);
 
         verify(transactionsHistoryRepository, times(1)).findById(transactionHistoryId);
         verify(transactionsHistoryRepository, times(1)).save(transactionsHistory);
         assertEquals(transactionsHistory, result);
         assertEquals(1, transactionsHistory.getTransactions().size());
-        assertEquals(transaction, transactionsHistory.getTransactions().get(0));
+        assertEquals(transaction, transactionsHistory.getTransactions());
     }
+
 
     @Test
     void addTransactionsHistory() {

@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +34,13 @@ class PersonServiceTest {
     @Mock
     private TransactionsHistoryService transactionsHistoryService;
 
+    @Mock
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @BeforeEach
-    public void setUp() { MockitoAnnotations.openMocks(this); }
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @AfterEach
     void clear() {
@@ -42,7 +48,6 @@ class PersonServiceTest {
         reset(addressService);
         reset(transactionsHistoryService);
     }
-
     @Test
     void findAllPersons() {
         List<Person> persons = new ArrayList<>();
@@ -104,6 +109,8 @@ class PersonServiceTest {
         when(addressService.addAddress(any(Address.class))).thenReturn(address);
         when(personRepository.save(person)).thenReturn(person);
 
+        String encryptedPassword = bCryptPasswordEncoder.encode(person.getPassword());
+        person.setPassword(encryptedPassword);
         Person result = personService.addPerson(person);
 
         assertEquals(address, person.getAddress());
@@ -203,7 +210,9 @@ class PersonServiceTest {
         Person person = new Person();
         person.setEmail(email);
         person.setPassword(password);
+
         when(personRepository.findByEmail(email)).thenReturn(person);
+        when(bCryptPasswordEncoder.matches(password, person.getPassword())).thenReturn(true);
 
         Person result = personService.getPersonByLoginDatas(email, password);
 

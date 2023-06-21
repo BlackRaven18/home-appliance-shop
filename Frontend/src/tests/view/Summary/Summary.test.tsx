@@ -81,7 +81,7 @@ describe('Summary component', () => {
             </Provider>
         );
 
-        const totalAmountElement = screen.getByText(/Całkowity koszt: 40 zł/i);
+        const totalAmountElement = screen.getByText(/Całkowity koszt: 40.00 zł/i);
 
         expect(totalAmountElement).toBeInTheDocument();
     });

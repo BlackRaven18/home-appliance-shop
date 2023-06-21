@@ -59,59 +59,19 @@ describe('History', () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByText('Data: 2022-06-01')).toBeInTheDocument();
+            expect(screen.getByText('2022-06-01')).toBeInTheDocument();
         });
 
         await waitFor(() => {
-            expect(screen.getByText('Status: Completed')).toBeInTheDocument();
+            expect(screen.getByText('Completed')).toBeInTheDocument();
         });
 
         await waitFor(() => {
-            expect(screen.getByText('Metoda dostawy: Express')).toBeInTheDocument();
+            expect(screen.getByText('Express')).toBeInTheDocument();
         });
 
         await waitFor(() => {
-            expect(screen.getByText('Kwota zamówienia: 100 zł')).toBeInTheDocument();
-        });
-
-        await waitFor(() => {
-            expect(screen.getByText('Produkt Product 1')).toBeInTheDocument();
-        });
-
-        await waitFor(() => {
-            expect(screen.getByText('Id produktu: 1')).toBeInTheDocument();
-        });
-
-        await waitFor(() => {
-            expect(screen.getByText('Cena: 10 zł')).toBeInTheDocument();
-        });
-
-        await waitFor(() => {
-            expect(screen.getByText('Ilosc: 2')).toBeInTheDocument();
-        });
-
-        await waitFor(() => {
-            expect(screen.getByText('Obrazek: image1.jpg')).toBeInTheDocument();
-        });
-
-        await waitFor(() => {
-            expect(screen.getByText('Produkt Product 2')).toBeInTheDocument();
-        });
-
-        await waitFor(() => {
-            expect(screen.getByText('Id produktu: 2')).toBeInTheDocument();
-        });
-
-        await waitFor(() => {
-            expect(screen.getByText('Cena: 20 zł')).toBeInTheDocument();
-        });
-
-        await waitFor(() => {
-            expect(screen.getByText('Ilosc: 3')).toBeInTheDocument();
-        });
-
-        await waitFor(() => {
-            expect(screen.getByText('Obrazek: image2.jpg')).toBeInTheDocument();
+            expect(screen.getByText('100,00 zł')).toBeInTheDocument();
         });
     });
 

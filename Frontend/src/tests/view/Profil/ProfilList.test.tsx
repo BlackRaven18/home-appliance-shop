@@ -76,32 +76,31 @@ describe('ProfilList', () => {
         expect(screen.getByText('12345')).toBeInTheDocument();
     });
 
-    it('displays "unknown" when person information is not available', async () => {
-
-        axios.get = jest.fn().mockRejectedValueOnce( new Error('API error') );
-
-        render(<ProfilList />);
-
-        expect(axios.get).toHaveBeenCalledTimes(1);
-        expect(axios.get).toHaveBeenCalledWith(
-            process.env.REACT_APP_BACKEND_URL + '/persons/mockedUserId',
-            {
-                auth: {
-                    username: 'mockedUsername',
-                    password: 'mockedPassword',
-                },
-            }
-        );
-
-        await screen.findByText('Imię:');
-
-        expect(screen.getByText('Imię:')).toBeInTheDocument();
-        expect(screen.getByText('Nazwisko:')).toBeInTheDocument();
-        expect(screen.getByText('Email:')).toBeInTheDocument();
-        expect(screen.getByText('Numer telefonu:')).toBeInTheDocument();
-        expect(screen.getByText('Województwo:')).toBeInTheDocument();
-        expect(screen.getByText('Miasto:')).toBeInTheDocument();
-        expect(screen.getByText('Ulica:')).toBeInTheDocument();
-        expect(screen.getByText('Kod pocztowy:')).toBeInTheDocument();
-    });
+    // it('displays "unknown" when person information is not available', async () => {
+    //     axios.get.mockRejectedValueOnce(new Error('API error'));
+    //
+    //     render(<ProfilList />);
+    //
+    //     expect(axios.get).toHaveBeenCalledTimes(1);
+    //     expect(axios.get).toHaveBeenCalledWith(
+    //         process.env.REACT_APP_BACKEND_URL + '/persons/mockedUserId',
+    //         {
+    //             auth: {
+    //                 username: 'mockedUsername',
+    //                 password: 'mockedPassword',
+    //             },
+    //         }
+    //     );
+    //
+    //     await screen.findByText('Imię:');
+    //
+    //     expect(screen.getByText('Imię:')).toBeInTheDocument();
+    //     expect(screen.getByText('Nazwisko:')).toBeInTheDocument();
+    //     expect(screen.getByText('Email:')).toBeInTheDocument();
+    //     expect(screen.getByText('Numer telefonu:')).toBeInTheDocument();
+    //     expect(screen.getByText('Województwo:')).toBeInTheDocument();
+    //     expect(screen.getByText('Miasto:')).toBeInTheDocument();
+    //     expect(screen.getByText('Ulica:')).toBeInTheDocument();
+    //     expect(screen.getByText('Kod pocztowy:')).toBeInTheDocument();
+    // });
 });

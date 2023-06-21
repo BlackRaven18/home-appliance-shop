@@ -185,7 +185,7 @@ const ManageUsers = () => {
                                     <Button variant="contained" style={{ margin: '15px' }}
                                         onClick={() => handleDeleteUser(person.personId)}>Usuń</Button>
 
-                                    <Button variant="contained"
+                                    <Button variant="contained" data-testid="Modyfikuj"
                                         onClick={() => handleModifyClick(person.personId)}>Modyfikuj</Button>
 
                                     {isModifyClicked && personId === person.personId && (

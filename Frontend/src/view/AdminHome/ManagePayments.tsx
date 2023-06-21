@@ -140,6 +140,7 @@ const ManagePayments = () => {
                                                                     variant="contained"
                                                                     color="primary"
                                                                     size="small"
+                                                                    data-testid="Zatwierdź"
                                                                     onClick={() => handleAcceptTransaction(transaction.transactionId)}
                                                                 >
                                                                     Zatwierdź

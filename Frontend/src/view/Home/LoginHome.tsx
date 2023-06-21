@@ -6,11 +6,11 @@ import CategoryList from "./CategoryList";
 function LoginHome() {
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-            <TopBar />
+            <TopBar data-testid="top-bar" />
             <Box sx={{ flex: 1, display: 'flex', overflow: 'auto' }}>
-                <CategoryList />
+                <CategoryList data-testid="category-list"/>
                 <div style={{ flexGrow: 1, marginTop: '5px' }}>
-                    <Products />
+                    <Products data-testid="products"/>
                 </div>
             </Box>
         </Box>

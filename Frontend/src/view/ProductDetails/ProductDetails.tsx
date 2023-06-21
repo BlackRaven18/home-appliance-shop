@@ -100,7 +100,7 @@ const ProductDetails = () => {
                         </Typography>
 
                         {UserDataManager.isLogged() ? (
-                            <Button variant="contained" color="primary" onClick={() => {
+                            <Button variant="contained" color="primary" data-testid="Dodaj do koszyka" onClick={() => {
                                 addProductToShoppingCart(productDetails);
                                 setOpen(true);
                             }}>

@@ -1,14 +1,6 @@
 
 
 class UserDataManager {
-
-
-    static TEST_printData(): void {
-        console.log("user.id: "+ localStorage.getItem("user.id"));
-        console.log("user.username: "+ localStorage.getItem("user.username"));
-        console.log("user.password: "+ localStorage.getItem("user.password"));
-    }
-
     static getUserId(): string {
         return localStorage.getItem("user.id") ?? "";
     }

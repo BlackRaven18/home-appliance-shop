@@ -74,8 +74,6 @@ const Login = () => {
                 UserDataManager.setUsername(facebookResponse.email);
                 UserDataManager.setPassword(facebookResponse.id);
 
-                UserDataManager.TEST_printData();
-
                 navigate('/loginhome');
             })
             .catch((error) => {
@@ -133,8 +131,6 @@ const Login = () => {
                 UserDataManager.setId(response.data);
                 UserDataManager.setUsername(postData.email);
                 UserDataManager.setPassword(postData.password);
-
-                UserDataManager.TEST_printData();
 
                 navigate('/loginhome');
 
@@ -194,6 +190,7 @@ const Login = () => {
                                 margin="normal"
                                 required
                                 fullWidth
+                                data-testid="Adres email"
                                 label="Adres email"
                                 value={formData.email}
                                 onChange={(e) => onChangeForm('email', e.target.value)}
@@ -205,6 +202,7 @@ const Login = () => {
                                 fullWidth
                                 type={isPasswordShown ? 'text' : 'password'}
                                 id="password"
+                                data-testid="Password"
                                 label="Password"
                                 name="password"
                                 autoComplete="password"

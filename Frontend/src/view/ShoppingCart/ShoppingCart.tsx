@@ -28,7 +28,7 @@ function ShoppingCart() {
     <>
       <TopBar />
 
-      <Typography variant="h4" align="center" sx={{ mt: 2 }}>
+      <Typography variant="h4" align="center" sx={{ mt: 2 }} data-testid="Koszyk">
         Koszyk
       </Typography>
 
